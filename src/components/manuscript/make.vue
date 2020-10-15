@@ -7,13 +7,13 @@
             <div class="grid-content bg-purple">
                <div class="iconNav">
                    <ul>
-                       <li><i class="el-icon-s-unfold"></i></li>
-                       <li><i class="el-icon-s-order"></i></li>
-                       <li><i class="el-icon-star-on"></i></li>
+                       <li><i class="el-icon-s-unfold" @click="leftToggle('letfTab1')" :class="{Navcurrent:Navcurrent=='letfTab1'}"></i></li>
+                       <li><i class="el-icon-s-order" @click="leftToggle('letfTab2')" :class="{Navcurrent:Navcurrent=='letfTab2'}"></i></li>
+                       <li><i class="el-icon-star-on" @click="leftToggle('letfTab3')" :class="{Navcurrent:Navcurrent=='letfTab3'}"></i></li>
                    </ul>
                </div>
                <div class="NavContainer">
-
+                    <component :is="Navcurrent"></component>
                </div>
             </div>
         </el-col>
@@ -56,6 +56,9 @@ import Ueditor from "../tool/ueditor"
 import Tab1 from "../Auxiliary/Signature"
 import Tab2 from "../Auxiliary/correction"
 import Tab3 from "../Auxiliary/sensitiveWords"
+import letfTab1 from "../leftmenu/templates"
+import letfTab2 from "../leftmenu/articleedit"
+import letfTab3 from "../leftmenu/collection"
 export default {
     name: 'mask',
     data() {
@@ -64,6 +67,7 @@ export default {
             input:"",
             active:0,
             currentView:'Tab1',
+            Navcurrent:'letfTab1',
             tabs:[
                 {
                     type:'Tab1',
@@ -93,7 +97,7 @@ export default {
                     type:'tab2',
                     view:'综合 分析'
                 }
-            ]
+            ],
         };
     },
     methods :{
@@ -103,10 +107,14 @@ export default {
         toggle(i,v){
             this.active=i;
             this.currentView=v.type;
+        },
+        leftToggle(v){
+          this.Navcurrent = v
         }
+
     },
     components:{
-        Tab1,Tab2,Tab3,Ueditor
+        Tab1,Tab2,Tab3,Ueditor,letfTab1,letfTab2,letfTab3
     }
 };
 
@@ -188,5 +196,10 @@ export default {
 
 ul li.active{
  background:#333;
+}
+
+/*右边菜单点击事件 */
+.Navcurrent{
+  color:red !important;
 }
 </style>
