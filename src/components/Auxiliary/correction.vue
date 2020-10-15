@@ -63,7 +63,4 @@ export default {
   line-height: 16px;
   margin-left: -68px;
 }
-.el-progress-bar__inner {
-  background-color: red;
-}
 </style>
