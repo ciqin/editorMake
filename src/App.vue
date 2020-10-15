@@ -56,4 +56,7 @@ button{outline-style: none;}
 .el-checkbox__label {
   padding-left: 5px;
 }
+.el-progress-bar__inner {
+  background-color: #c93931;
+}
 </style>

@@ -5,7 +5,7 @@
         <div :id="randomId"></div>
         <div class="OperationButton">
             <ul>
-                <li><a href="javascript:"><img src="@/assets/icon1.png"  width="20" alt=""></a>预览</li>
+                <li><a href="javascript:" @click="hasUe"><img src="@/assets/icon1.png"  width="20" alt=""></a>预览</li>
                 <li><a href="javascript:"><img src="@/assets/icon2.png" width="20" alt=""></a>保存</li>
                 <li><a href="javascript:"><img src="@/assets/icon3.png" width="20" alt=""></a>下载</li>
                 <li><a href="javascript:"><img src="@/assets/icon4.png" width="20" alt=""></a>提交审核</li>
@@ -86,6 +86,9 @@ export default {
             this.instance = UE.getEditor(this.randomId, this.ueditorConfig);
             this.instance.setContent(con);
         },
+        hasUe(){
+            console.log(window.UE)
+        }
     }
 };
 
