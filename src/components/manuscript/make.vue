@@ -31,36 +31,16 @@
                     <el-col :span="3">
                         <div class="grid-content bg-purple" style="border-right: 1px solid #DCDEE3;padding: 0 6px">
                             <ul class="rightTab">
-                                <li class="active"><span>稿签</span></li>
-                                <li><span>文稿<br/>纠错</span></li>
-                                <li><span>敏感词<br/>检测</span></li>
-                                <li><span>原创<br/>分析</span></li>
-                                <li><span>AI<br/>改写</span></li>
-                                <li><span>自动<br/>配图</span></li>
-                                <li><span>综合<br/>分析</span></li>
+                                <li v-for="(tab,index) in tabs" @click="toggle(index,tab)" :class="{active:active==index}">
+                                    <span>{{tab.view}}</span>
+                                </li>
                             </ul>
                         </div>
                     </el-col>
-                    <el-col :span="21">
-                        <div class="grid-content bg-purple-light">
-                            <div slot="open">
-                                    <ImgCutter  ref="imgCutterModal"
-                                                :cross-origin="true"
-                                                :tool-bgc="none"
-                                                :is-modal="true"
-                                                :show-choose-btn="true"
-                                                :lock-scroll="true"
-                                                :box-width="600"
-                                                :box-height="500"
-                                                :cut-width="200"
-                                                :cut-height="200"
-                                                :size-change="true"
-                                                :move-able="true"
-                                                @cutDown="xztpCutDown">
-                                                <button slot="open" class="upDataImg" style="width:100px;height:100px;"><i class="el-icon-plus" style="font-size:50px;"></i></button>
-                                    </ImgCutter>
-                            </div>
-                        </div>
+                    
+                    <el-col :span="21" style="overflow:auto;">
+                        <!--:is实现多个组件实现同一个挂载点-->
+                        <component :is="currentView"></component>
                     </el-col>
                 </el-row>
             </div>
@@ -73,23 +53,60 @@
 //主体文件引入
 // import Nav from "../nav"
 import Ueditor from "../tool/ueditor"
-import ImgCutter from 'vue-img-cutter'
-    
+import Tab1 from "../Auxiliary/Signature"
+import Tab2 from "../Auxiliary/correction"
+import Tab3 from "../Auxiliary/sensitiveWords"
 export default {
     name: 'mask',
     data() {
         return {
             tabPosition: 'left',
-            input:""
+            input:"",
+            active:0,
+            currentView:'Tab1',
+            tabs:[
+                {
+                    type:'Tab1',
+                    view:'稿签'
+                },
+                {
+                    type:'Tab2',
+                    view:'文稿 纠错'
+                },
+                {
+                    type:'Tab3',
+                    view:'敏感词 检测'
+                },
+                {
+                    type:'tab2',
+                    view:'原创 分析'
+                },
+                {
+                    type:'tab1',
+                    view:'AI改写'
+                },
+                {
+                    type:'tab2',
+                    view:'自动 配图'
+                },
+                {
+                    type:'tab2',
+                    view:'综合 分析'
+                }
+            ]
         };
     },
     methods :{
         xztpCutDown(fileName) { 
             console.log(fileName)
+        },
+        toggle(i,v){
+            this.active=i;
+            this.currentView=v.type;
         }
     },
     components:{
-        Ueditor,ImgCutter
+        Tab1,Tab2,Tab3,Ueditor
     }
 };
 
@@ -167,5 +184,9 @@ export default {
     background: #f6f7f9;
     border: 1px dashed #dfe1e5;
     cursor: pointer;
+}
+
+ul li.active{
+ background:#333;
 }
 </style>
