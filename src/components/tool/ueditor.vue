@@ -5,22 +5,34 @@
         <div :id="randomId"></div>
         <div class="OperationButton">
             <ul>
-                <li><a href="javascript:" @click="hasUe"><img src="@/assets/icon1.png"  width="20" alt=""></a>预览</li>
-                <li><a href="javascript:"><img src="@/assets/icon2.png" width="20" alt=""></a>保存</li>
+                <li><el-button type="text" @click="centerDialogVisible = true"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>预览</span></el-button></li>
+                <li><a href="javascript:" @click="save"><img src="@/assets/icon2.png" width="20" alt=""></a>保存</li>
                 <li><a href="javascript:"><img src="@/assets/icon3.png" width="20" alt=""></a>下载</li>
                 <li><a href="javascript:"><img src="@/assets/icon4.png" width="20" alt=""></a>提交审核</li>
             </ul>
         </div>
+        <el-dialog
+            title=""
+            :visible.sync="centerDialogVisible"
+            width="400px" class="mobileM">
+            <div :style="styles"></div>
+            <div class="preview-btn">
+                <div class="preview-btn1">5.5寸以上</div>
+                <div class="preview-btn2">5.5寸屏</div>
+                <div class="preview-btn3 active">5寸以下</div>
+            </div>
+        </el-dialog>
     </div>
   </div>
 </template>
 
 <script>
-	//主体文件引入
-	import '../../../static/UEditor/themes/default/css/ueditor.min.css'
-    import '../../../static/UEditor/ueditor.config.js'
-    import '../../../static/UEditor/ueditor.all.min.js'
-    import '../../../static/UEditor/lang/zh-cn/zh-cn.js'
+//主体文件引入
+import '../../../static/UEditor/themes/default/css/ueditor.min.css'
+import '../../../static/UEditor/ueditor.config.js'
+import '../../../static/UEditor/ueditor.all.min.js'
+import '../../../static/UEditor/lang/zh-cn/zh-cn.js'
+import { submitData } from "@/http/api"
     
 export default {
     name: 'UE',
@@ -38,6 +50,7 @@ export default {
             randomId: 'editor_' + (Math.random() * 100000000000000000),
             //编辑器实例
             instance: null,
+            centerDialogVisible: false,
             ready: false,
             //配置可以传递进来
             ueditorConfig: {
@@ -47,6 +60,109 @@ export default {
                 initialFrameHeight: 580,
                 // 初始容器宽度
                 initialFrameWidth: 500,
+                toolbars: [
+                    [
+                    // 'anchor', //锚点
+                    'undo', //撤销
+                    'redo', //重做
+                    'bold', //加粗
+                    'indent', //首行缩进
+                    'justifyleft', //居左对齐
+                    'justifyright', //居右对齐
+                    'justifycenter', //居中对齐
+                    'justifyjustify', //两端对齐
+                    // 'snapscreen', //截图
+                    'italic', //斜体
+                    'underline', //下划线
+                    'strikethrough', //删除线
+                    'subscript', //下标
+                    'fontborder', //字符边框
+                    'superscript', //上标
+                    'formatmatch', //格式刷
+                    'source', //源代码
+                    'blockquote', //引用
+                    // 'pasteplain', //纯文本粘贴模式
+                    'selectall', //全选
+                    // 'print', //打印
+                    // 'preview', //预览
+                    'horizontal', //分隔线
+                    'removeformat', //清除格式
+                    // 'time', //时间
+                    // 'date', //日期
+                    'unlink', //取消链接
+                    // 'insertrow', //前插入行
+                    // 'insertcol', //前插入列
+                    // 'mergeright', //右合并单元格
+                    // 'mergedown', //下合并单元格
+                    // 'deleterow', //删除行
+                    // 'deletecol', //删除列
+                    // 'splittorows', //拆分成行
+                    // 'splittocols', //拆分成列
+                    // 'splittocells', //完全拆分单元格
+                    // 'deletecaption', //删除表格标题
+                    // 'inserttitle', //插入标题
+                    // 'mergecells', //合并多个单元格
+                    // 'deletetable', //删除表格
+                    'cleardoc', //清空文档
+                    // 'insertparagraphbeforetable', //"表格前插入行"
+                    // 'insertcode', //代码语言
+                    'fontfamily', //字体
+                    'fontsize', //字号
+                    'paragraph', //段落格式
+                    // 'simpleupload', //单图上传
+                    // 'insertimage', //多图上传
+                    // 'edittable', //表格属性
+                    // 'edittd', //单元格属性
+                    'link', //超链接
+                    'emotion', //表情
+                    'spechars', //特殊字符
+                    'searchreplace', //查询替换
+                    // 'map', //Baidu地图
+                    // 'gmap', //Google地图
+                    // 'insertvideo', //视频
+                    // 'help', //帮助
+                    'forecolor', //字体颜色
+                    'backcolor', //背景色
+                    'insertorderedlist', //有序列表
+                    'insertunorderedlist', //无序列表
+                    'fullscreen', //全屏
+                    'directionalityltr', //从左向右输入
+                    'directionalityrtl', //从右向左输入
+                    'rowspacingtop', //段前距
+                    'rowspacingbottom', //段后距
+                    'pagebreak', //分页
+                    'insertframe', //插入Iframe
+                    'imagenone', //默认
+                    'imageleft', //左浮动
+                    'imageright', //右浮动
+                    'attachment', //附件
+                    'imagecenter', //居中
+                    // 'wordimage', //图片转存
+                    'lineheight', //行间距
+                    // 'edittip ', //编辑提示
+                    'customstyle', //自定义标题
+                    'autotypeset', //自动排版
+                    // 'webapp', //百度应用
+                    'touppercase', //字母大写
+                    'tolowercase', //字母小写
+                    // 'background', //背景
+                    // 'template', //模板
+                    // 'scrawl', //涂鸦
+                    // 'music', //音乐
+                    'inserttable', //插入表格
+                    // 'drafts', // 从草稿箱加载
+                    // 'charts', // 图表
+                ]
+            ]
+            },
+            styles:{
+                "width":"348px",
+                "height": "638.5px",
+                "background":"url(../../../../../static/img/iPhone.png) no-repeat",
+                "box-sizing":"border-box",
+                "background-size": "100% 100%",
+                "padding-top":"127px",
+                "padding-left":"47px"
             }
         };
     },
@@ -88,6 +204,11 @@ export default {
         },
         hasUe(){
             console.log(window.UE)
+        },
+        save(){
+            submitData().then(res=>{
+                
+            })
         }
     }
 };
@@ -117,5 +238,43 @@ export default {
     font-size: 12px;   
     text-align: center;
     cursor: pointer;
+}
+.el-button--text {
+    color: #000000;
+    font-size: 12px;
+    padding: 0;
+}
+.el-button--text span {
+    margin-top: 6px;;
+    display: inline-block;
+}
+.preview-btn {
+    height: 80px;
+    width: 120px;
+    position: absolute;
+    right: -95px;
+    bottom: 50px;
+    max-width: 100%;
+}
+.preview-btn1, .preview-btn2, .preview-btn3, .preview-btn4 {
+    box-shadow: 0 0 3px #eee;
+    width: 100px;
+    height: 30px;
+    background-color: #fefefe;
+    border-radius: 5px;
+    border: 1px solid #e3e3e3;
+    font-size: 13px;
+    box-sizing: border-box;
+    line-height: 28px;
+    text-align: center;
+    cursor: pointer;
+    letter-spacing: 1px;
+    color: #000;
+    margin-bottom: 4px;
+}
+.preview-btn>div.active {
+    background: #f37e77;
+    color: #fff;
+    border: 0;
 }
 </style>

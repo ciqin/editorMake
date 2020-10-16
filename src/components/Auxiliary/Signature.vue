@@ -1,6 +1,6 @@
 <template>
   <div>
-        <div class="grid-content bg-purple-light">
+        <div class="grid-content bg-purple-light" style="padding-right:16px;">
             <el-form ref="form" :model="form" label-width="80px">
                 <el-form-item label="文章封面">
                     <el-radio-group v-model="radio">
