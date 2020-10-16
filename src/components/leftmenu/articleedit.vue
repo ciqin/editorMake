@@ -70,7 +70,7 @@ export default {
         ]
       };
     },
-    methods: {
+     methods: {
       handleClick(tab, event) {
       },
       collectionIconclick(index){
