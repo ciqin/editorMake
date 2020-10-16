@@ -59,4 +59,12 @@ button{outline-style: none;}
 .el-progress-bar__inner {
   background-color: #c93931;
 }
+.mobileM>div{
+    margin-top:0!important;
+    background: transparent;
+    box-shadow: none;
+}
+.mobileM .el-dialog__body{
+  position: relative;
+}
 </style>

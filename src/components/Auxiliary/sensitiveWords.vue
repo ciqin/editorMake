@@ -38,7 +38,14 @@
   </div>
 </template>
 <script>
+import { getJson } from '@/http/api'
+
 export default {
+  created(){
+    getJson({aaa:true,id:111}).then(res => {
+        // this.productArr = res
+    })
+  },
   data(){
     return {
       tableData: [{
@@ -59,7 +66,7 @@ export default {
             address: '上海市普'
           }]
     }
-  }
+  },
 }
 </script>
 <style scoped>

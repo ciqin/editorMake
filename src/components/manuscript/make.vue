@@ -17,7 +17,7 @@
                </div>
             </div>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="11">
             <div class="grid-content bg-purple" style="position:relative">
                 <div class="">
                     <el-input type="text" v-model="input" placeholder="请输入内容" maxlength="100" show-word-limit style="width:500px;position: relative;margin: 16px 0;left: 50%;transform: translateX(-50%);"></el-input>
@@ -25,7 +25,7 @@
                 <Ueditor></Ueditor>
             </div>
         </el-col>
-        <el-col :span="6" class="Signature">
+        <el-col :span="7" class="Signature">
             <div class="grid-content bg-purple">
                 <el-row>
                     <el-col :span="3">
