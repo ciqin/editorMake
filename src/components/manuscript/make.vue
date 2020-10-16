@@ -7,9 +7,9 @@
             <div class="grid-content bg-purple">
                <div class="iconNav">
                    <ul>
-                       <li><i class="el-icon-s-unfold" @click="leftToggle('letfTab1')" :class="{Navcurrent:Navcurrent=='letfTab1'}"></i></li>
-                       <li><i class="el-icon-s-order" @click="leftToggle('letfTab2')" :class="{Navcurrent:Navcurrent=='letfTab2'}"></i></li>
-                       <li><i class="el-icon-star-on" @click="leftToggle('letfTab3')" :class="{Navcurrent:Navcurrent=='letfTab3'}"></i></li>
+                       <li  @click="leftToggle('letfTab1')" :class="{Navcurrent:Navcurrent=='letfTab1'}"><i class="el-icon-s-unfold"></i></li>
+                       <li  @click="leftToggle('letfTab2')" :class="{Navcurrent:Navcurrent=='letfTab2'}"><i class="el-icon-s-order" ></i></li>
+                       <li  @click="leftToggle('letfTab3')" :class="{Navcurrent:Navcurrent=='letfTab3'}"><i class="el-icon-star-on"></i></li>
                    </ul>
                </div>
                <div class="NavContainer">
@@ -144,7 +144,7 @@ export default {
 }
 /* 导航展示内容 */
 .NavContainer {
-    width: 350px;
+    width: 400px;
     background: #fff;
     height: 100%;
     margin-left: 90px;
@@ -192,7 +192,7 @@ ul li.active{
 }
 
 /*右边菜单点击事件 */
-.Navcurrent{
+.Navcurrent i{
   color:red !important;
 }
 
