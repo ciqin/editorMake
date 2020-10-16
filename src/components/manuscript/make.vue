@@ -37,8 +37,7 @@
                             </ul>
                         </div>
                     </el-col>
-                    
-                    <el-col :span="21" style="overflow:auto;">
+                    <el-col :span="21" style="overflow:auto;padding-top:16px;">
                         <!--:is实现多个组件实现同一个挂载点-->
                         <component :is="currentView"></component>
                     </el-col>
@@ -59,6 +58,7 @@ import Tab3 from "../Auxiliary/sensitiveWords"
 import letfTab1 from "../leftmenu/templates"
 import letfTab2 from "../leftmenu/articleedit"
 import letfTab3 from "../leftmenu/collection"
+import Tab4 from "../Auxiliary/pictureMatching"
 export default {
     name: 'mask',
     data() {
@@ -81,23 +81,23 @@ export default {
                     type:'Tab3',
                     view:'敏感词 检测'
                 },
+                // {
+                //     type:'tab2',
+                //     view:'原创 分析'
+                // },
+                // {
+                //     type:'tab1',
+                //     view:'AI改写'
+                // },
                 {
-                    type:'tab2',
-                    view:'原创 分析'
-                },
-                {
-                    type:'tab1',
-                    view:'AI改写'
-                },
-                {
-                    type:'tab2',
+                    type:'Tab4',
                     view:'自动 配图'
                 },
-                {
-                    type:'tab2',
-                    view:'综合 分析'
-                }
-            ],
+                // {
+                //     type:'tab2',
+                //     view:'综合 分析'
+                // }
+            ]
         };
     },
     methods :{
@@ -114,7 +114,7 @@ export default {
 
     },
     components:{
-        Tab1,Tab2,Tab3,Ueditor,letfTab1,letfTab2,letfTab3
+        Tab1,Tab2,Tab3,Ueditor,letfTab1,letfTab2,letfTab3,Tab4
     }
 };
 
@@ -185,13 +185,6 @@ export default {
     display:block;
     width: 100%;
     text-align: center;
-}
-.upDataImg {
-    width: 100px;
-    height: 100px;
-    background: #f6f7f9;
-    border: 1px dashed #dfe1e5;
-    cursor: pointer;
 }
 
 ul li.active{

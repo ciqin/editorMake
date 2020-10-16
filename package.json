@@ -18,6 +18,7 @@
     "html2canvas": "^1.0.0-rc.7",
     "kscreenshot": "^1.2.3",
     "vue": "^2.5.2",
+    "vue-cropper": "^0.5.5",
     "vue-img-cutter": "^2.1.10",
     "vue-router": "^3.0.1",
     "vue-ueditor-wrap": "^2.4.4",
