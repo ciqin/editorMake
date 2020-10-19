@@ -1,43 +1,38 @@
 <template>
   <div class='nav_top_articleedit'>
-      <el-tabs v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane label="关联文章" name="first">
-          <div>
-
-            <div v-for="(item,key) in  Relatedarr" :key = key  class='acticle_list'>
-                <div class='collection_icon' @click="collectionIconclick(key)" :class='item.iscollection===true ? "collectionAcitve" : "nocollectionAcitve" '>
-                  <i class="el-icon-star-on"></i>
-                </div>
-
-
-                <div>
-                  <div :class="item.iscontent===true?'arrow_up_icon arrow_down_icon':'arrow_up_icon'" @click="arrowupIconclick(key)">
-                    <i :class="item.iscontent===true?'el-icon-arrow-down':'el-icon-arrow-up'"></i>
-                  </div>
-                </div>
-
-                <div class='acticle_list_title'>{{item.title}}</div>
-
-                <div v-if='item.content!=""'>
-                  <div class="acticle_list_bottom">
-                    <div class='acticle_list_content' v-if="item.iscontent===true">{{item.content}}</div>
-                    <div class='acticle_list_content' v-else>{{item.partcontent}}</div>
-                    <div class='acticle_list_keyword'>关联点：{{item.keyword}}</div>
-                    <div class='acticle_list_Similarity'>关联度：{{item.Similarity}}</div>
-                  </div>
-                </div>
-
-                <div v-else>
-                     <div class='acticle_list_keyword'>关联点：{{item.keyword}}</div>
-                     <div class='acticle_list_Similarity' style="padding-bottom: 10px;">关联度：{{item.Similarity}}</div>
-                </div>
+     <p class='htitle'>关联文章</p>
+          
+      <div>
+        <div v-for="(item,key) in  Relatedarr" :key = key  class='acticle_list'>
+            <div class='collection_icon' @click="collectionIconclick(key)" :class='item.iscollection===true ? "collectionAcitve" : "nocollectionAcitve" '>
+              <i class="el-icon-star-on"></i>
             </div>
-          </div>
-        </el-tab-pane>
-        <el-tab-pane label="知识图谱" name="second">知识图谱</el-tab-pane>
-        <el-tab-pane label="热文分析" name="third">热文分析</el-tab-pane>
-        <el-tab-pane label="智能报告" name="fourth">智能报告</el-tab-pane>
-      </el-tabs>
+
+
+            <div>
+              <div :class="item.iscontent===true?'arrow_up_icon arrow_down_icon':'arrow_up_icon'" @click="arrowupIconclick(key)">
+                <i :class="item.iscontent===true?'el-icon-arrow-down':'el-icon-arrow-up'"></i>
+              </div>
+            </div>
+
+            <div class='acticle_list_title'>{{item.title}}</div>
+
+            <div v-if='item.content!=""'>
+              <div class="acticle_list_bottom">
+                <div class='acticle_list_content' v-if="item.iscontent===true">{{item.content}}</div>
+                <div class='acticle_list_content' v-else>{{item.partcontent}}</div>
+                <div class='acticle_list_keyword'>关联点：{{item.keyword}}</div>
+                <div class='acticle_list_Similarity'>关联度：{{item.Similarity}}</div>
+              </div>
+            </div>
+
+            <div v-else>
+                  <div class='acticle_list_keyword'>关联点：{{item.keyword}}</div>
+                  <div class='acticle_list_Similarity' style="padding-bottom: 10px;">关联度：{{item.Similarity}}</div>
+            </div>
+        </div>
+      </div>
+        
   </div>
 </template>
 <script>
@@ -269,7 +264,11 @@ export default {
     height: auto;
     display: block;
 }
-.arrowupAcitve{
-
+.htitle{
+    height: 60px;
+    border-bottom: 4px solid #D72323;
+    text-align: center;
+    line-height: 60px;
+    color: #D72323;
 }
 </style>
