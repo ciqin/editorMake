@@ -75,11 +75,11 @@ export default {
                 },
                 {
                     type:'Tab2',
-                    view:'文稿 纠错'
+                    view:'文稿纠错'
                 },
                 {
                     type:'Tab3',
-                    view:'敏感词 检测'
+                    view:'敏感词检测'
                 },
                 // {
                 //     type:'tab2',
@@ -91,7 +91,7 @@ export default {
                 // },
                 {
                     type:'Tab4',
-                    view:'自动 配图'
+                    view:'自动配图'
                 },
                 // {
                 //     type:'tab2',

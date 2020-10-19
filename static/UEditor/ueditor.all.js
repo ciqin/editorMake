@@ -14457,7 +14457,7 @@ UE.plugins['undo'] = function () {
 UE.plugin.register('copy', function () {
 
     var me = this;
-
+    
     function initZeroClipboard() {
 
         ZeroClipboard.config({
