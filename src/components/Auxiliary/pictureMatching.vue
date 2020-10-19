@@ -18,7 +18,7 @@
           <div class="Refresh"><i class="el-icon-refresh" style="color:#1a8afa;"></i>换一批</div>
           <div class="imgContainer">
             <ul>
-              <li v-for="(tab,index) in tabs"><img src="@/assets/container.jpg" alt="" width="160"><el-checkbox v-model="checked" style="position:absolute;right:10px;"></el-checkbox></li>
+              <li v-for="(tab,index) in tabs"><img src="@/assets/container.jpg" alt="" width="160"><el-checkbox v-model="checked" style="position:absolute;right:24px;top:-2px;"></el-checkbox></li>
             </ul>
             
           </div>
@@ -112,7 +112,7 @@ export default {
   font-family: MicrosoftYaHei;
   color: #999999;
   line-height: 16px;
-  margin-top: 20px;
+  margin:16px 0;
 }
 .imgContainer ul li{
   width: 50%;

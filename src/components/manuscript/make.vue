@@ -89,10 +89,10 @@ export default {
                 //     type:'tab1',
                 //     view:'AI改写'
                 // },
-                {
-                    type:'Tab4',
-                    view:'自动配图'
-                },
+                // {
+                //     type:'Tab4',
+                //     view:'自动配图'
+                // },
                 // {
                 //     type:'tab2',
                 //     view:'综合 分析'

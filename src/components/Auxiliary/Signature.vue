@@ -12,8 +12,27 @@
                 </el-form-item>
             <el-form-item label=""  class="cover">  
                     <el-row :gutter="20">
+                            <el-col :span="8">
+                                <div class="grid-content bg-purple">
+                                        <ImgCutter v-if="coverList[0].opaBtn"
+                                                :cross-origin="true"
+                                                :is-modal="true"
+                                                :show-choose-btn="true"
+                                                :lock-scroll="true"
+                                                :box-width="600"
+                                                :box-height="500"
+                                                :cut-width="200"
+                                                :cut-height="200"
+                                                :size-change="true"
+                                                :move-able="true"
+                                                @cutDown="xztpCutDownSmall">
+                                                <!-- <button slot="open" class="upDataImg" style="width:100px;height:100px;"><i class="el-icon-plus" style="font-size:50px;"></i></button> -->
+                                    </ImgCutter>
+                                    <img  v-if="coverList[0].opaImg" :src="coverList[0].baseUrl" alt="" width="70">
+                                </div>
+                            </el-col>
                             <el-col :span="8"><div class="grid-content bg-purple">
-                                    <ImgCutter v-if="opaBtn1"
+                                <ImgCutter v-if="coverList[1].opaBtn"
                                             :cross-origin="true"
                                             :is-modal="true"
                                             :show-choose-btn="true"
@@ -24,30 +43,13 @@
                                             :cut-height="200"
                                             :size-change="true"
                                             :move-able="true"
-                                            @cutDown="xztpCutDown">
+                                            @cutDown="xztpCutDownBig">
                                             <!-- <button slot="open" class="upDataImg" style="width:100px;height:100px;"><i class="el-icon-plus" style="font-size:50px;"></i></button> -->
                                 </ImgCutter>
-                                <img  v-if="opaImg1" :src="baseUrl" alt="" width="70">
-                                </div></el-col>
-                            <el-col :span="8"><div class="grid-content bg-purple">
-                                <ImgCutter v-if="opaBtn2"
-                                            :cross-origin="true"
-                                            :is-modal="true"
-                                            :show-choose-btn="true"
-                                            :lock-scroll="true"
-                                            :box-width="600"
-                                            :box-height="500"
-                                            :cut-width="200"
-                                            :cut-height="200"
-                                            :size-change="true"
-                                            :move-able="true"
-                                            @cutDown="xztpCutDown">
-                                            <!-- <button slot="open" class="upDataImg" style="width:100px;height:100px;"><i class="el-icon-plus" style="font-size:50px;"></i></button> -->
-                                </ImgCutter>
-                                <img  v-if="opaImg1" :src="baseUrl" alt="" width="70">
+                                <img  v-if="coverList[1].opaImg" :src="coverList[1].baseUrl" alt="" width="70">
                                 </div></el-col>
                                 <el-col   el-col :span="8"><div class="grid-content bg-purple">
-                                <ImgCutter v-if="opaBtn3"
+                                <ImgCutter v-if="coverList[2].opaBtn"
                                             :cross-origin="true"
                                             :is-modal="true"
                                             :show-choose-btn="true"
@@ -58,42 +60,44 @@
                                             :cut-height="200"
                                             :size-change="true"
                                             :move-able="true"
-                                            @cutDown="xztpCutDown">
+                                            @cutDown="xztpCutDownMany">
                                             <!-- <button slot="open" class="upDataImg" style="width:100px;height:100px;"><i class="el-icon-plus" style="font-size:50px;"></i></button> -->
                                 </ImgCutter>
-                                <img  v-if="opaImg1" :src="baseUrl" alt="" width="70">
+                                <img  v-if="coverList[2].opaImg" :src="coverList[2].baseUrl" alt="" width="70">
                                 </div></el-col>
                     </el-row>
                     
                 </el-form-item>
                 <el-form-item label="文章封面"  class="cover">
-                    <ImgCutter  ref="imgCutterModal333"
-                                :cross-origin="true"
-                                :is-modal="true"
-                                :show-choose-btn="true"
-                                :lock-scroll="true"
-                                :box-width="600"
-                                :box-height="500"
-                                :cut-width="200"
-                                :cut-height="200"
-                                :size-change="true"
-                                :move-able="true"
-                                @cutDown="xztpCutDown"
-                                @onPrintImg="printDown">
-                                <!-- <button slot="open" class="upDataImg" style="width:100px;height:100px;"><i class="el-icon-plus" style="font-size:50px;"></i></button> -->
-                    </ImgCutter>
+                    <div  style="padding-top:12px;">
+                        <ImgCutter v-if="coverImg.opaBtn"
+                                    :cross-origin="true"
+                                    :is-modal="true"
+                                    :show-choose-btn="true"
+                                    :lock-scroll="true"
+                                    :box-width="600"
+                                    :box-height="500"
+                                    :cut-width="200"
+                                    :cut-height="200"
+                                    :size-change="true"
+                                    :move-able="true"
+                                    @cutDown="xztpCutDownCover">
+                                    <!-- <button slot="open" class="upDataImg" style="width:100px;height:100px;"><i class="el-icon-plus" style="font-size:50px;"></i></button> -->
+                        </ImgCutter>
+                         <img v-if="coverImg.opaImg" :src="coverImg.baseUrl" alt="" width="70">
+                    </div>
                 </el-form-item>
                 <el-form-item label="摘要">
-                    <el-input type="textarea" v-model="form.desc"></el-input>
+                    <el-input type="textarea" v-model="form.abstract"></el-input>
                 </el-form-item>
                 <el-form-item label="来源">
-                    <el-input v-model="form.name" size="mini"></el-input>
+                    <el-input v-model="form.source" size="mini"></el-input>
                 </el-form-item>
                 <el-form-item label="作者">
-                    <el-input v-model="form.name" size="mini"></el-input>
+                    <el-input v-model="form.author" size="mini"></el-input>
                 </el-form-item>
                     <el-form-item label="关键字">
-                    <el-input v-model="form.name" size="mini"></el-input>
+                    <el-input v-model="form.keyWord" size="mini"></el-input>
                 </el-form-item>
                 <el-form-item label="稿件级别">
                     <el-select v-model="value" placeholder="请选择" size="mini">
@@ -171,14 +175,17 @@ export default {
     data(){
         return {
             form: {
-                name: '',
+                abstract: '',
+                source:'',
+                author:'',
+                keyWord: '',
                 region: '',
                 date1: '',
                 date2: '',
                 delivery: false,
                 type: [],
-                resource: '',
-                desc: ''
+                resource: ''
+               
             },
             options: [{
                 value: '选项1',
@@ -187,46 +194,88 @@ export default {
             radio:"",
             value:"",
             baseUrl:"",
-            opaBtn1:true,
-            opaBtn2:false,
-            opaBtn3:false,
-            opaImg1:false,
+            coverList:[
+                {
+                    opaBtn:true,
+                    opaImg:false,
+                    baseUrl:""
+                },
+                {
+                    opaBtn:false,
+                    opaImg:false,
+                    baseUrl:""
+                },
+                {
+                    opaBtn:false,
+                    opaImg:false,
+                    baseUrl:""
+                }
+            ],
+            coverImg:{
+                opaBtn:true,
+                opaImg:false,
+                baseUrl:""
+            },
             radio: 3
             
         }
     },
      methods :{ 
-        xztpCutDown(fileName) { 
-            this.opaBtn1 = false;
-            this.opaImg1 = true;
-            this.baseUrl = fileName.dataURL
+        xztpCutDownSmall(fileName) { 
+            this.coverList[0].opaBtn = false;
+            this.coverList[0].opaImg = true
+            this.coverList[0].baseUrl = fileName.dataURL
         },
-        printDown (){
-            console.log(111111)
+        xztpCutDownBig(fileName) { 
+            this.coverList[1].opaBtn = false;
+            this.coverList[1].opaImg = true
+            this.coverList[1].baseUrl = fileName.dataURL
+        },
+        xztpCutDownMany(fileName) { 
+            this.coverList[2].opaBtn = false;
+            this.coverList[2].opaImg = true
+            this.coverList[2].baseUrl = fileName.dataURL
+        },
+        xztpCutDownCover (fileName){
+            this.coverImg.opaBtn = false;
+            this.coverImg.opaImg = true;
+            this.coverImg.baseUrl = fileName.dataURL;
+            
         },
         // 小图操作函数
         coverSmall(){
-            this.opaBtn1 = true;
-            this.opaBtn2 = false;
-            this.opaBtn3 = false;
+            this.coverList.forEach((val ,index)=>{
+                if(index == 0) {
+                    val.opaBtn = true;
+                }else {
+                    val.opaBtn = false;
+                    val.opaImg = false;
+                }
+            })
         },
         // 大图操作函数
         coverBig(){
-            this.opaBtn1 = true;
-            this.opaBtn2 = false;
-            this.opaBtn3 = false;
+            this.coverList.forEach((val ,index)=>{
+                if(index == 1) {
+                    val.opaBtn = true;
+                }else {
+                    val.opaBtn = false;
+                    val.opaImg = false;
+                }
+            })
         },
         // 三图操作函数
         coverMany(){
-            this.opaBtn1 = true;
-            this.opaBtn2 = true;
-            this.opaBtn3 = true;
+            this.coverList.forEach((val ,index)=>{
+                 val.opaBtn = true;
+                 val.opaImg = false;
+            })
         },
         // 无图操作函数
         coverNone(){
-            this.opaBtn1 = false;
-            this.opaBtn2 = false;
-            this.opaBtn3 = false;
+            this.coverList.forEach((val ,index)=>{
+                 val.opaBtn = false;
+            })
         }
      },
      components:{
