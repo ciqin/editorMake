@@ -33,7 +33,6 @@ import '../../../static/UEditor/ueditor.config.js'
 import '../../../static/UEditor/ueditor.all.min.js'
 import '../../../static/UEditor/lang/zh-cn/zh-cn.js'
 import { submitData } from "@/http/api"
-    
 export default {
     name: 'UE',
     props: {
@@ -153,7 +152,8 @@ export default {
                     // 'drafts', // 从草稿箱加载
                     // 'charts', // 图表
                 ]
-            ]
+            ],
+
             },
             styles:{
                 "width":"348px",
@@ -206,9 +206,10 @@ export default {
             console.log(window.UE)
         },
         save(){
-            submitData().then(res=>{
+            console.log(this.instance.setContent("1111"))
+            // submitData().then(res=>{
                 
-            })
+            // })
         }
     }
 };
