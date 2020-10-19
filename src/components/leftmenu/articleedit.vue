@@ -1,32 +1,42 @@
 <template>
-  <div class='nav_top_articleedit'> 
-      <el-tabs v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane label="关联文章" name="first">
-          <div>
-
-            <div v-for="(item,key) in  Relatedarr" :key = key  class='acticle_list'>
-                <div class='collection_icon' @click="collectionIconclick(key)" :class='item.iscollection===true ? "collectionAcitve" : "nocollectionAcitve" '>
-                  <i class="el-icon-star-on"></i>
-                </div>
-                <div class='arrow_up_icon' @click="arrowupIconclick(key)">
-                  <i class="el-icon-arrow-up"></i>
-                </div>
-                <div class='acticle_list_title'>{{item.title}}</div>
-                <div class="acticle_list_bottom">
-                  <div class='acticle_list_content'>{{item.content}}</div>
-                  <div class='acticle_list_keyword'>关联点：{{item.keyword}}</div>
-                  <div class='acticle_list_Similarity'>关联度：{{item.Similarity}}</div>
-                </div>
+  <div class='nav_top_articleedit'>
+     <p class='htitle'>关联文章</p>
+          
+      <div>
+        <div v-for="(item,key) in  Relatedarr" :key = key  class='acticle_list'>
+            <div class='collection_icon' @click="collectionIconclick(key)" :class='item.iscollection===true ? "collectionAcitve" : "nocollectionAcitve" '>
+              <i class="el-icon-star-on"></i>
             </div>
-          </div>
-        </el-tab-pane>
-        <el-tab-pane label="知识图谱" name="second">知识图谱</el-tab-pane>
-        <el-tab-pane label="热文分析" name="third">热文分析</el-tab-pane>
-        <el-tab-pane label="智能报告" name="fourth">智能报告</el-tab-pane>
-      </el-tabs>
+
+
+            <div>
+              <div :class="item.iscontent===true?'arrow_up_icon arrow_down_icon':'arrow_up_icon'" @click="arrowupIconclick(key)">
+                <i :class="item.iscontent===true?'el-icon-arrow-down':'el-icon-arrow-up'"></i>
+              </div>
+            </div>
+
+            <div class='acticle_list_title'>{{item.title}}</div>
+
+            <div v-if='item.content!=""'>
+              <div class="acticle_list_bottom">
+                <div class='acticle_list_content' v-if="item.iscontent===true">{{item.content}}</div>
+                <div class='acticle_list_content' v-else>{{item.partcontent}}</div>
+                <div class='acticle_list_keyword'>关联点：{{item.keyword}}</div>
+                <div class='acticle_list_Similarity'>关联度：{{item.Similarity}}</div>
+              </div>
+            </div>
+
+            <div v-else>
+                  <div class='acticle_list_keyword'>关联点：{{item.keyword}}</div>
+                  <div class='acticle_list_Similarity' style="padding-bottom: 10px;">关联度：{{item.Similarity}}</div>
+            </div>
+        </div>
+      </div>
+        
   </div>
 </template>
 <script>
+
 export default {
      data() {
       return {
@@ -36,7 +46,17 @@ export default {
         arrowupIndex:false,
         Relatedarr:[
             {
+                title:'标题',
+                iscontent:false,
+                content:'',
+                iscollection:true,
+                keyword:'习近平，特朗普',
+                Similarity:'30%'
+
+            },
+            {
                 title:'标题一',
+                iscontent:true,
                 content:'百度翻译依托互联网数据资源和自然语言处理技术优势，致力于帮助用户跨越语言鸿沟，方便快捷地获取信息和服务。百度翻译依托互联网数据资源和自然语言处理技术优势，致力于帮助用户跨越语言鸿沟，方便快捷地获取信息和服务支持全球200种语言互译，包括中文（简体）、英语、日语、韩语、西班牙语、泰语、法语和阿拉伯语等，覆盖约4万个翻译方向，是国内市场份额第一的翻',
                 iscollection:true,
                 keyword:'习近平，特朗普',
@@ -45,6 +65,7 @@ export default {
             },
             {
                 title:'标题二',
+                iscontent:true,
                 content:'百度翻译依托互联网数据资源和自然语言处理技术优势，致力于帮助用户跨越语言鸿沟，方便快捷地获取信息和服务。支持全球200种语言互译，包括中文（简体）、英语、日语、韩语、西班牙语、泰语、法语和阿拉伯语等，覆盖约4万个翻译方向，是国内市场份额第一的翻',
                 iscollection:false,
                 keyword:'习近平，特朗普',
@@ -53,6 +74,7 @@ export default {
             },
             {
                 title:'标题三',
+                iscontent:true,
                 content:'百度翻译依托互联网数据资源和自然语言处理技术优势，致力于帮助用户跨越语言鸿沟，方便快捷地获取信息和服务。支持全球200种语言互译，包括中文（简体）、英语、日语、韩语、西班牙语、泰语、法语和阿拉伯语等，覆盖约4万个翻译方向，是国内市场份额第一的翻',
                 iscollection:false,
                 keyword:'习近平，特朗普',
@@ -61,6 +83,7 @@ export default {
             },
             {
                 title:'标题四',
+                iscontent:true,
                 content:'百度翻译依托互联网数据资源和自然语言处理技术优势，致力于帮助用户跨越语言鸿沟，方便快捷地获取信息和服务。支持全球200种语言互译，包括中文（简体）、英语、日语、韩语、西班牙语、泰语、法语和阿拉伯语等，覆盖约4万个翻译方向，是国内市场份额第一的翻',
                 iscollection:false,
                 keyword:'习近平，特朗普',
@@ -69,6 +92,22 @@ export default {
             }
         ]
       };
+    },
+    created(){
+      this.Relatedarr.forEach((item,key)=>{
+        if(item.content!==''){
+          item.iscontent = false;
+        }else{
+          item.iscontent = true;
+        }
+
+         if(item.content.length>125){
+            item.partcontent = item.content.slice(0,125) + '...';
+         }else{
+            item.partcontent = item.content
+         }
+        
+      })
     },
      methods: {
       handleClick(tab, event) {
@@ -81,7 +120,15 @@ export default {
         }
       },
       arrowupIconclick(index){
-        this.arrowupIndex = index
+        if(this.Relatedarr[index].content===''||this.Relatedarr[index].content===null){
+          return
+        }
+
+        if(this.Relatedarr[index].iscontent===true){
+          this.Relatedarr[index].iscontent = false
+        }else{
+          this.Relatedarr[index].iscontent = true
+        }
       }
     }
 }
@@ -96,7 +143,7 @@ export default {
     line-height: 70px;
     font-size: 14px;
   }
-  
+
   .nav_top_articleedit .el-tabs__nav .el-tabs__item{
       padding: 0;
       width: 25%;
@@ -122,7 +169,6 @@ export default {
 }
 .acticle_list{
     width: 368px;
-    height:253px;
     margin: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -140,12 +186,7 @@ export default {
   text-overflow: -o-ellipsis-lastline;
   overflow: hidden;
   text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp:5;
-  line-clamp: 5;
-  -webkit-box-orient: vertical;
   width: 336px;
-  height: 135px;
   font-family: MicrosoftYaHei;
   font-size: 13px;
   color: #333333;
@@ -158,7 +199,7 @@ export default {
   border-radius: 4px;
   border-radius: 4px;
   padding: 10px;
-  height: 200px;
+  margin-bottom: 5px;
 }
 .acticle_list_title{
     font-family: MicrosoftYaHei;
@@ -175,9 +216,7 @@ export default {
   color: #212B36;
   line-height: 24px;
 }
-.acticle_list_Similarity{
-  padding-bottom: 37px;
-}
+
 .collection_icon{
     width: 22px;
     height: 22px;
@@ -206,6 +245,11 @@ export default {
     top: 8px;
     font-size: 14px;
 }
+.arrow_down_icon{
+  border: 1px solid #DCDFE6;
+  color: #DCDFE6;
+  background: #ffffff;
+}
 .collectionAcitve{
     color: #ffffff;
     background: #f99b47;
@@ -218,9 +262,13 @@ export default {
 }
 .listcontentAcitve{
     height: auto;
-    display: block; 
+    display: block;
 }
-.arrowupAcitve{
-    
+.htitle{
+    height: 60px;
+    border-bottom: 4px solid #D72323;
+    text-align: center;
+    line-height: 60px;
+    color: #D72323;
 }
 </style>
