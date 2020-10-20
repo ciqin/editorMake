@@ -6,20 +6,8 @@
         <div class="OperationButton">
             <ul>
                 <li><el-button type="text" @click="centerDialogVisible = true"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>预览</span></el-button></li>
-                <li><a href="javascript:" @click="save" >
-                    <img src="@/assets/icon2.png" width="20" alt=""></a>保存
-                </li>
-                <li @mouseenter="onMouseOver" @mouseleave="onMouseOut" style="position:relative;"><a href="javascript:">
-                    <img src="@/assets/icon3.png" width="20" alt=""></a>下载
-                    <div style="position:absolute;left: 50px;top: 5px;">
-                        <transition name="fade">
-                            <ul class="download" v-if="show" >
-                                <li @click="downloadImg">下载img</li>
-                                <li @click="downloadPdf">下载pdf</li>
-                            </ul>
-                        </transition> 
-                    </div>
-                </li>
+                <li><a href="javascript:" @click="save"><img src="@/assets/icon2.png" width="20" alt=""></a>保存</li>
+                <li><a href="javascript:"><img src="@/assets/icon3.png" width="20" alt=""></a>下载</li>
                 <li><a href="javascript:"><img src="@/assets/icon4.png" width="20" alt=""></a>提交审核</li>
             </ul>
         </div>
@@ -44,10 +32,6 @@ import '../../../static/UEditor/themes/default/css/ueditor.min.css'
 import '../../../static/UEditor/ueditor.config.js'
 import '../../../static/UEditor/ueditor.all.min.js'
 import '../../../static/UEditor/lang/zh-cn/zh-cn.js'
-// 保存生成图片资源加载
-import html2Canvas from 'html2canvas'
-import JsPDF from 'jspdf'
-// 接口加载
 import { submitData } from "@/http/api"
 export default {
     name: 'UE',
@@ -180,7 +164,7 @@ export default {
                 "padding-top":"127px",
                 "padding-left":"47px"
             },
-            show:false
+            ueconter:''
         };
     },
     watch: {
@@ -212,6 +196,34 @@ export default {
                 this.instance.addListener('ready', () => {
                     this.ready = true;
                     this.$emit('ready', this.instance);
+
+                    let _that = this
+
+                    UE.dom.domUtils.on(this.instance.body,"keyup",function(oEvent){
+                        
+                        var oEvent = oEvent || window.oEvent; 
+                        //获取键盘的keyCode值
+                        var nKeyCode = oEvent.keyCode || oEvent.which || oEvent.charCode;
+                        let str = _that.instance.getContentTxt()
+                        //do something
+                        if(nKeyCode==13){
+                         this.ueconter = str
+                         console.log(_that.instance,str)
+                        }else if(nKeyCode==186){
+                           
+                        }else if(nKeyCode==222){
+
+                        }else if(nKeyCode==188){
+                            console.log(_that.instance,str)
+                        }else if(nKeyCode==190){
+
+                        }else if(nKeyCode==191){
+
+                        }
+                          
+           
+                    })
+
                 });
             });
         },
@@ -355,39 +367,5 @@ export default {
     background: #f37e77;
     color: #fff;
     border: 0;
-}
-/* 动画 */
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
-}
-/* 下载 */
-.download {
-    width: 70px;
-    height: 60px;
-    background: #FFFFFF;
-    box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.13);
-    border: 1px solid #E4E7ED;
-    padding: 5px;
-}
-.download li {
-    width: 56px;
-    height: 16px;
-    font-size: 14px;
-    font-family: MicrosoftYaHei;
-    color: #22272E;
-    line-height: 16px;
-}
-.download::after{
-    position: absolute;
-    content: '';
-    border-right: 8px solid transparent;
-    border-left: 8px solid transparent;
-    border-bottom: 8px solid #fff;
-    transform: rotate(-90deg);
-    top: 5px;
-    left: -11px;
 }
 </style>
