@@ -204,17 +204,27 @@ export default {
                         var oEvent = oEvent || window.oEvent; 
                         //获取键盘的keyCode值
                         var nKeyCode = oEvent.keyCode || oEvent.which || oEvent.charCode;
+
+                        let selection = _that.instance.selection._bakRange
                         let str = _that.instance.getContentTxt()
                         //do something
                         if(nKeyCode==13){
-                         this.ueconter = str
+                         _that.ueconter = str
                          console.log(_that.instance,str)
                         }else if(nKeyCode==186){
-                           
+                            let newstr = str.substring(0,selection.endOffset+1);
+                            let uearr = newstr.split(";")
+                            let i = uearr.length-2<0?0:uearr.length-2
+                            _that.ueconter = uearr[i]
+                            console.log(i,uearr[i],newstr.split(";"))
                         }else if(nKeyCode==222){
 
                         }else if(nKeyCode==188){
-                            console.log(_that.instance,str)
+                            let newstr = str.substring(0,selection.endOffset+1);
+                            let uearr = newstr.split(",")
+                            let i = uearr.length-2<0?0:uearr.length-2
+                            _that.ueconter = uearr[i]
+                            console.log(i,uearr[i],newstr.split(","))
                         }else if(nKeyCode==190){
 
                         }else if(nKeyCode==191){
@@ -222,6 +232,7 @@ export default {
                         }
                           
            
+                        _that.$emit('listenEvent',_that.ueconter)
                     })
 
                 });
