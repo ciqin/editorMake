@@ -2,33 +2,38 @@
   <div class='nav_top_articleedit'>
      <p class='htitle'>关联文章</p>
           
-      <div>
-        <div v-for="(item,key) in  Relatedarr" :key = key  class='acticle_list'>
-            <!-- <div class='collection_icon' @click="collectionIconclick(key)" :class='item.iscollection===true ? "collectionAcitve" : "nocollectionAcitve" '>
-              <i class="el-icon-star-on"></i>
-            </div> -->
+      <div v-loading="loading">
+        <div v-if="Relatedarr.length>0 && loading==false"> 
+          <div v-for="(item,key) in  Relatedarr" :key = key  class='acticle_list'>
+              <!-- <div class='collection_icon' @click="collectionIconclick(key)" :class='item.iscollection===true ? "collectionAcitve" : "nocollectionAcitve" '>
+                <i class="el-icon-star-on"></i>
+              </div> -->
 
-            <div>
-              <div :class="item.iscontent===true?'arrow_up_icon arrow_down_icon':'arrow_up_icon'" @click="arrowupIconclick(key,item)">
-                <i :class="item.iscontent===true?'el-icon-arrow-down':'el-icon-arrow-up'"></i>
+              <div>
+                <div :class="item.iscontent===true?'arrow_up_icon arrow_down_icon':'arrow_up_icon'" @click="arrowupIconclick(key,item)">
+                  <i :class="item.iscontent===true?'el-icon-arrow-down':'el-icon-arrow-up'"></i>
+                </div>
               </div>
-            </div>
 
-            <div class='acticle_list_title' :title='item.title'>{{item.title}}</div>
+              <div class='acticle_list_title' :title='item.title'>{{item.title}}</div>
 
-            <div v-if='item.content!=""'>
-              <div class="acticle_list_bottom">
-                <div class='acticle_list_content' v-if="item.iscontent">{{item.content}}</div>
-                <div class='acticle_list_content' v-else>{{item.partcontent}}</div>
-                <div class='acticle_list_keyword'>关联点：{{item.keyword}}</div>
-                <div class='acticle_list_Similarity'>关联度：{{item.Similarity}}</div>
+              <div v-if='item.content!=""'>
+                <div class="acticle_list_bottom">
+                  <div class='acticle_list_content' v-if="item.iscontent">{{item.content}}</div>
+                  <div class='acticle_list_content' v-else>{{item.partcontent}}</div>
+                  <div class='acticle_list_keyword'>关联点：{{item.words}}</div>
+                  <div class='acticle_list_Similarity'>关联度：{{item.similarity}}</div>
+                </div>
               </div>
-            </div>
 
-            <div v-else>
-                  <div class='acticle_list_keyword'>关联点：{{item.keyword}}</div>
-                  <div class='acticle_list_Similarity' style="padding-bottom: 10px;">关联度：{{item.Similarity}}</div>
-            </div>
+              <div v-else>
+                    <div class='acticle_list_keyword'>关联点：{{item.words}}</div>
+                    <div class='acticle_list_Similarity' style="padding-bottom: 10px;">关联度：{{item.similarity}}</div>
+              </div>
+          </div>
+        </div>
+        <div v-else>
+            <p style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;'><i class='el-icon-warning-outline'></i>暂无数据</p>
         </div>
       </div>
         
@@ -46,7 +51,8 @@ export default {
         arrowupAcitve:false,
         collectionIndex:0,
         arrowupIndex:false,
-        Relatedarr:[]
+        Relatedarr:[],
+        loading:true
       };
     },
     mounted(){
@@ -54,10 +60,11 @@ export default {
     },
     created(){
       let param = {
-           content: ''
+           content: this.uestrvalue
         }
         getRelatedArticles(param).then(res=>{
             if(res){  
+              this.loading = false
               this.Relatedarr = res.data 
 
                this.Relatedarr.forEach((item,key)=>{
@@ -76,6 +83,8 @@ export default {
                 }
               })
               console.log(this.Relatedarr)
+            }else{
+              this.loading = false
             }
         })
     },
@@ -146,6 +155,12 @@ export default {
     height: 60px;
     line-height: 70px;
     font-size: 14px;
+  }
+  .nav_top_articleedit .el-loading-mask{
+    margin:100px
+  }
+  .nav_top_articleedit .el-loading-mask .el-loading-spinner .path {
+    stroke: #d72323;
   }
 
   .nav_top_articleedit .el-tabs__nav .el-tabs__item{

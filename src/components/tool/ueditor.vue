@@ -268,6 +268,9 @@ export default {
         },
         save(){
             console.log(this.instance.setContent("1111"))
+            bus.$on('getData', e => {
+                console.log(e)
+            })
         },
         onMouseOver(){
             this.show  = true

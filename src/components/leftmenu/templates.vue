@@ -5,18 +5,25 @@
         <div class='first_nav_top'>
           <ul>
             <li v-for="(item,key) in templatearr" :key=key @click="templatearrclick(key)" :class="{templateactive:key==texttemp}">{{item}}</li>
-            <li><i class='el-icon-search' style='font-weight:bolder'></i></li>
           </ul>
         </div>
-        <div class='first_texttemp'>内部资源 > 模板 > {{templatearr[texttemp]}} </div>
-        <div class="first_main_imgs">
-            <ul>
-              <li v-for="(item,key) in templateimgarr" :key = key>
-                 <img :src="item.img" alt="">
-              </li>
-            </ul>
+        <div class='third_search' style='padding: 20px 21px 10px 19px;display:flex'>
+          <el-input v-model="templateinput" placeholder="请输入关键字(名称,内容)"></el-input>
+          <el-button icon="el-icon-search" @click="searchtemplate()">搜索</el-button>
         </div>
+        <div class='first_texttemp'>内部资源 > 模板 > {{templatearr[texttemp]}} </div>
+        <div style='height: 755px;overflow: auto;'>
+          <div class="first_main_imgs" v-loading="loading">
+              <ul>
+                <li v-for="(item,key) in templateimgarr" :key = key :title="item.label">
+                  <section v-html = item.templeteSource></section>
+                </li>
+              </ul>
+          </div>
+        </div>
+        
       </el-tab-pane>
+
       <el-tab-pane label="媒资库" name="second">
         
        <div class="labelselect">
@@ -48,21 +55,29 @@
           <el-button icon="el-icon-search" @click="searchShare()">搜索</el-button>
         </div>
 
-        <div>
+        <div v-if="Libraryarr.length>0">
            <div class="libisryarr" v-for="(item,key) in Libraryarr" :key = key>
                <div class='libisryarr_list'>
                   <!-- <div class='collection_icon' @click="collectionIconclick(key)" :class='item.iscollection===true ? "collectionAcitve" : "nocollectionAcitve" '>
                       <i class="el-icon-star-on"></i>
                     </div> -->
-                  <div class="libisryarr_img">
-                      <img :src="item.img" alt="">
+                  <div class="libisryarr_img" v-if="item.fileFormat=='mp4'">
+                      <video :src="item.url" controls="controls" :poster="item.coverImageUrl">
+                      </video>
+                  </div>
+
+                  <div class="libisryarr_img" v-else-if="item.fileFormat=='jpg'">
+                      <img :src="item.url" alt="">
                   </div>
                </div>
                <div class="libisryarr_botal">
-                 <p>{{item.title}}</p>
-                 <p>{{item.time}}</p>
+                 <p>{{item.mediaName}}</p>
+                 <p>{{item.createTime}}</p>
                </div>
            </div>
+        </div>
+        <div v-else>
+           <p style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;'><i class='el-icon-warning-outline'></i>暂无数据</p>
         </div>
       </el-tab-pane>
 
@@ -103,53 +118,19 @@
 <script>
   import { classifygetAll } from '@/http/api'
   import { SearchShareAssets } from '@/http/api'
+  import { getTempleteSourceList } from '@/http/api'
   export default {
     data() {
       return {
         datavalue: '',
         activeName: 'first',
-        templatearr:['标题','正文','引导','图文','布局','行业'],
+        templatearr:['标题','正文','图文','引导','分割线','二维码','其他'],
         texttemp:0,
         Shareinput:'',//媒资库检索的关键字
-        templateimgarr:[
-          {
-              img:require('@/assets/temimg/tem1.jpg')
-          },
-          {
-              img:require('@/assets/temimg/tem2.jpg')
-          },
-          {
-              img:require('@/assets/temimg/tem3.jpg')
-          },
-          {
-              img:require('@/assets/temimg/tem4.jpg')
-          },
-          {
-              img:require('@/assets/temimg/tem2.jpg')
-          },
-        ],
-        Libraryarr:[
-          {
-            title:'标题1',
-            time:'2020-08-12',
-            img:require('@/assets/container.jpg'),
-            iscollection:true,
-          },
-           {
-            title:'标题2',
-            time:'2020-08-12',
-            img:require('@/assets/container.jpg'),
-            iscollection:false,
-          },
-           {
-            title:'标题3',
-            time:'2020-08-12',
-            img:require('@/assets/container.jpg'),
-            iscollection:false,
-          }
-        ],
+        Libraryarr:[],//媒资库检索结果
+        templateimgarr:[],
         options1: [],
-        value1: '',
+        value1: '分类',
         options2: [{
           value: 1,
           label: '图片'
@@ -163,14 +144,17 @@
           value: 0,
           label: '全部'
         }],
-        value2: '',
+        value2: '图片',
+        templateinput:'',//模板搜索的关键字
+        loading:true,
       };
     },
     created(){
+        //获取分类
          let param = {
            tenantId: 5,
          }
-         classifygetAll(param).then(res=>{  //获取分类
+         classifygetAll(param).then(res=>{  
            if(res){
              res.data.forEach((val,ind)=>{
                  this.options1.push({
@@ -181,13 +165,47 @@
            }
          })
 
+         //获取标题模板
+         let Listparam = {
+            label: '',
+            templeteType: 1,
+            status: 0,
+            size: 10,
+            page: 1,
+            sort: 'use_num,desc',
+            ContentType:true
+         }
+         getTempleteSourceList(Listparam).then(res=>{
+            if(res){
+              console.log(res)
+              this.loading = false
+              this.templateimgarr = res.content
+            }
+         })
+
     },
     methods: {
       handleClick(tab, event) {
         console.log(tab, event);
       },
       templatearrclick(index){
-        this.texttemp = index
+         this.texttemp = index
+         let Listparam = {
+            label: '',
+            templeteType: index+1,
+            status: 0,
+            size: 10,
+            page: 0,
+            sort: 'use_num,desc',
+            ContentType:true
+         }
+         getTempleteSourceList(Listparam).then(res=>{
+            if(res){
+              console.log(res)
+              this.loading = false
+              this.templateimgarr = res.content
+            }
+         })
       },
       collectionIconclick(index){
         if(this.Libraryarr[index].iscollection===true){
@@ -197,6 +215,10 @@
         }
       },
       searchShare(){
+         if(this.value1=='分类' || this.value2=='全部'){
+           this.value1 = 1 
+           this.value2 = 0
+         }
          let value1arr = []
          value1arr.push(this.value1.toString())
          let Searchparam = {
@@ -207,9 +229,31 @@
          }
          SearchShareAssets(Searchparam).then(res=>{  //媒资库检索
            if(res){
+             this.Libraryarr = res.data
+
              console.log(res)
            }
          })
+      },
+      searchtemplate(){
+        //获取标题模板
+         let Listparam = {
+            label: this.templateinput,
+            templeteType: 1,
+            status: 0,
+            size: 10,
+            page: 1,
+            sort: 'use_num,desc',
+            ContentType:true
+         }
+         getTempleteSourceList(Listparam).then(res=>{
+            if(res){
+              this.loading = false
+              this.templateimgarr = res.content
+            }
+         })
+
+        console.log(this.templateinput)
       }
 
     }
@@ -223,6 +267,9 @@
       width: 112px;
       height: 4px;
       background-color: #D72323;
+   }
+   .nav_top_temlaptes .el-loading-mask .el-loading-spinner .path {
+    stroke: #d72323;
    }
    .nav_top_temlaptes .el-tabs--top .el-tabs__item.is-top{
       width: 112px;
@@ -287,7 +334,7 @@
     font-size: 12px;
     color: #666666;
     letter-spacing: 2.2px;
-    margin-top: 20px;
+    margin-top: 10px;
     margin-left: 20px;
  }
 
@@ -347,13 +394,13 @@
   position: relative;
 }
 .libisryarr_img{
-  width: 157px;
-  height:103px
+    width: 157px;
+    height: 125px;
 }
-.libisryarr_img img{
+.libisryarr_img img,.libisryarr_img video{
     width: 100%;
     height: 100%;
-    margin: 28px 10px 0.7% 10px;
+    margin: 8px 10px 0.7% 9px;
 }
 .libisryarr_botal{
   font-family: MicrosoftYaHei;
@@ -364,6 +411,9 @@
 }
 .libisryarr_botal p:first-child{
   margin-top: 6px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .labelselect{
     width: 50%;

@@ -28,6 +28,7 @@ const API_URL  = {
 
 // 请求拦截
 Axios.interceptors.request.use(config => {
+  console.log(config.data,'-------')
   if (config.data && config.data.ContentType) {
     delete config.data.ContentType
     config.data = qs.stringify(config.data);
