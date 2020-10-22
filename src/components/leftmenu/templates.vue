@@ -21,7 +21,7 @@
         
        <div class="labelselect">
           <label for="">分类</label>
-          <el-select v-model="value" placeholder="请选择">
+          <el-select v-model="value1" placeholder="请选择">
             <el-option
               v-for="item in options1"
               :key="item.value"
@@ -33,7 +33,7 @@
 
         <div class="labelselect">
           <label for="">类型</label>
-          <el-select v-model="value" placeholder="请选择">
+          <el-select v-model="value2" placeholder="请选择">
             <el-option
               v-for="item in options2"
               :key="item.value"
@@ -44,16 +44,16 @@
        </div>
 
         <div class='third_search' style='padding: 10px 20px;display:flex'>
-          <el-input v-model="input" placeholder="请输入关键字(名称,内容)"></el-input>
-          <el-button icon="el-icon-search">搜索</el-button>
+          <el-input v-model="Shareinput" placeholder="请输入关键字(名称,内容)"></el-input>
+          <el-button icon="el-icon-search" @click="searchShare()">搜索</el-button>
         </div>
 
         <div>
            <div class="libisryarr" v-for="(item,key) in Libraryarr" :key = key>
                <div class='libisryarr_list'>
-                  <div class='collection_icon' @click="collectionIconclick(key)" :class='item.iscollection===true ? "collectionAcitve" : "nocollectionAcitve" '>
+                  <!-- <div class='collection_icon' @click="collectionIconclick(key)" :class='item.iscollection===true ? "collectionAcitve" : "nocollectionAcitve" '>
                       <i class="el-icon-star-on"></i>
-                    </div>
+                    </div> -->
                   <div class="libisryarr_img">
                       <img :src="item.img" alt="">
                   </div>
@@ -101,6 +101,8 @@
 
 </template>
 <script>
+  import { classifygetAll } from '@/http/api'
+  import { SearchShareAssets } from '@/http/api'
   export default {
     data() {
       return {
@@ -108,6 +110,7 @@
         activeName: 'first',
         templatearr:['标题','正文','引导','图文','布局','行业'],
         texttemp:0,
+        Shareinput:'',//媒资库检索的关键字
         templateimgarr:[
           {
               img:require('@/assets/temimg/tem1.jpg')
@@ -145,41 +148,39 @@
             iscollection:false,
           }
         ],
-        options1: [{
-          value: '选项1',
-          label: '黄金糕'
-        }, {
-          value: '选项2',
-          label: '双皮奶'
-        }, {
-          value: '选项3',
-          label: '蚵仔煎'
-        }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
-        }],
+        options1: [],
         value1: '',
         options2: [{
-          value: '选项1',
-          label: '黄金糕'
+          value: 1,
+          label: '图片'
         }, {
-          value: '选项2',
-          label: '双皮奶'
+          value: 2,
+          label: '音频'
         }, {
-          value: '选项3',
-          label: '蚵仔煎'
+          value: 3,
+          label: '视频'
         }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
+          value: 0,
+          label: '全部'
         }],
         value2: '',
       };
+    },
+    created(){
+         let param = {
+           tenantId: 5,
+         }
+         classifygetAll(param).then(res=>{  //获取分类
+           if(res){
+             res.data.forEach((val,ind)=>{
+                 this.options1.push({
+                   value: val.classifyId,
+                   label: val.classifyName
+                 })
+             })
+           }
+         })
+
     },
     methods: {
       handleClick(tab, event) {
@@ -195,6 +196,22 @@
           this.Libraryarr[index].iscollection = true
         }
       },
+      searchShare(){
+         let value1arr = []
+         value1arr.push(this.value1.toString())
+         let Searchparam = {
+             classifyIds:value1arr, //分类的id
+             keyWords:this.Shareinput,//关键字
+             mediaType:this.value2, //类型
+             tenantId:5 //组织id
+         }
+         SearchShareAssets(Searchparam).then(res=>{  //媒资库检索
+           if(res){
+             console.log(res)
+           }
+         })
+      }
+
     }
   };
 </script>

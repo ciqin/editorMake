@@ -1,26 +1,24 @@
 <template>
   <div class='nav_top_articleedit'>
-    {{uestrvalue}}
      <p class='htitle'>关联文章</p>
           
       <div>
         <div v-for="(item,key) in  Relatedarr" :key = key  class='acticle_list'>
-            <div class='collection_icon' @click="collectionIconclick(key)" :class='item.iscollection===true ? "collectionAcitve" : "nocollectionAcitve" '>
+            <!-- <div class='collection_icon' @click="collectionIconclick(key)" :class='item.iscollection===true ? "collectionAcitve" : "nocollectionAcitve" '>
               <i class="el-icon-star-on"></i>
-            </div>
-
+            </div> -->
 
             <div>
-              <div :class="item.iscontent===true?'arrow_up_icon arrow_down_icon':'arrow_up_icon'" @click="arrowupIconclick(key)">
+              <div :class="item.iscontent===true?'arrow_up_icon arrow_down_icon':'arrow_up_icon'" @click="arrowupIconclick(key,item)">
                 <i :class="item.iscontent===true?'el-icon-arrow-down':'el-icon-arrow-up'"></i>
               </div>
             </div>
 
-            <div class='acticle_list_title'>{{item.title}}</div>
+            <div class='acticle_list_title' :title='item.title'>{{item.title}}</div>
 
             <div v-if='item.content!=""'>
               <div class="acticle_list_bottom">
-                <div class='acticle_list_content' v-if="item.iscontent===true">{{item.content}}</div>
+                <div class='acticle_list_content' v-if="item.iscontent">{{item.content}}</div>
                 <div class='acticle_list_content' v-else>{{item.partcontent}}</div>
                 <div class='acticle_list_keyword'>关联点：{{item.keyword}}</div>
                 <div class='acticle_list_Similarity'>关联度：{{item.Similarity}}</div>
@@ -37,7 +35,7 @@
   </div>
 </template>
 <script>
-
+import { getRelatedArticles } from '@/http/api'
 export default {
     props:{
        uestrvalue:String
@@ -48,92 +46,94 @@ export default {
         arrowupAcitve:false,
         collectionIndex:0,
         arrowupIndex:false,
-        Relatedarr:[
-            {
-                title:'标题',
-                iscontent:false,
-                content:'',
-                iscollection:true,
-                keyword:'习近平，特朗普',
-                Similarity:'30%'
-
-            },
-            {
-                title:'标题一',
-                iscontent:true,
-                content:'百度翻译依托互联网数据资源和自然语言处理技术优势，致力于帮助用户跨越语言鸿沟，方便快捷地获取信息和服务。百度翻译依托互联网数据资源和自然语言处理技术优势，致力于帮助用户跨越语言鸿沟，方便快捷地获取信息和服务支持全球200种语言互译，包括中文（简体）、英语、日语、韩语、西班牙语、泰语、法语和阿拉伯语等，覆盖约4万个翻译方向，是国内市场份额第一的翻',
-                iscollection:true,
-                keyword:'习近平，特朗普',
-                Similarity:'30%'
-
-            },
-            {
-                title:'标题二',
-                iscontent:true,
-                content:'百度翻译依托互联网数据资源和自然语言处理技术优势，致力于帮助用户跨越语言鸿沟，方便快捷地获取信息和服务。支持全球200种语言互译，包括中文（简体）、英语、日语、韩语、西班牙语、泰语、法语和阿拉伯语等，覆盖约4万个翻译方向，是国内市场份额第一的翻',
-                iscollection:false,
-                keyword:'习近平，特朗普',
-                Similarity:'30%'
-
-            },
-            {
-                title:'标题三',
-                iscontent:true,
-                content:'百度翻译依托互联网数据资源和自然语言处理技术优势，致力于帮助用户跨越语言鸿沟，方便快捷地获取信息和服务。支持全球200种语言互译，包括中文（简体）、英语、日语、韩语、西班牙语、泰语、法语和阿拉伯语等，覆盖约4万个翻译方向，是国内市场份额第一的翻',
-                iscollection:false,
-                keyword:'习近平，特朗普',
-                Similarity:'30%'
-
-            },
-            {
-                title:'标题四',
-                iscontent:true,
-                content:'百度翻译依托互联网数据资源和自然语言处理技术优势，致力于帮助用户跨越语言鸿沟，方便快捷地获取信息和服务。支持全球200种语言互译，包括中文（简体）、英语、日语、韩语、西班牙语、泰语、法语和阿拉伯语等，覆盖约4万个翻译方向，是国内市场份额第一的翻',
-                iscollection:false,
-                keyword:'习近平，特朗普',
-                Similarity:'30%'
-
-            }
-        ]
+        Relatedarr:[]
       };
     },
-    created(){
-      this.Relatedarr.forEach((item,key)=>{
-        if(item.content!==''){
-          item.iscontent = false;
-        }else{
-          item.iscontent = true;
-        }
-
-         if(item.content.length>125){
-            item.partcontent = item.content.slice(0,125) + '...';
-         }else{
-            item.partcontent = item.content
-         }
-        
-      })
+    mounted(){
+     
     },
-     methods: {
-      handleClick(tab, event) {
-      },
-      collectionIconclick(index){
-        if(this.Relatedarr[index].iscollection===true){
-         this.Relatedarr[index].iscollection = false
-        }else{
-          this.Relatedarr[index].iscollection = true
+    created(){
+      let param = {
+           content: ''
         }
-      },
-      arrowupIconclick(index){
-        if(this.Relatedarr[index].content===''||this.Relatedarr[index].content===null){
-          return
-        }
+        getRelatedArticles(param).then(res=>{
+            if(res){  
+              this.Relatedarr = res.data 
 
-        if(this.Relatedarr[index].iscontent===true){
-          this.Relatedarr[index].iscontent = false
-        }else{
-          this.Relatedarr[index].iscontent = true
+               this.Relatedarr.forEach((item,key)=>{
+                item.iscontent = false;
+                item.partcontent = item.content
+                if(item.content!==''){
+                  item.iscontent = false;
+                }else{
+                  item.iscontent  = true;
+                }
+
+                if(item.content.length>125){
+                    item.partcontent = item.content.slice(0,125) + '...';
+                }else{
+                    item.partcontent = item.content
+                }
+              })
+              console.log(this.Relatedarr)
+            }
+        })
+    },
+    watch:{
+      uestrvalue:function(uestrvalue,newuestrvalue){
+       let param = {
+           content: this.uestrvalue
         }
+        getRelatedArticles(param).then(res=>{
+            if(res){  
+              this.Relatedarr = res.data 
+
+               this.Relatedarr.forEach((item,key)=>{
+                item.iscontent = false;
+                item.partcontent = item.content
+                if(item.content!==''){
+                  item.iscontent = false;
+                }else{
+                  item.iscontent  = true;
+                }
+
+                if(item.content.length>125){
+                    item.partcontent = item.content.slice(0,125) + '...';
+                }else{
+                    item.partcontent = item.content
+                }
+              })
+              console.log(this.Relatedarr)
+            }
+        })
       }
+      
+     },
+    methods: {
+    handleClick(tab, event) {
+    },
+    collectionIconclick(index){
+      if(this.Relatedarr[index].iscollection===true){
+        this.Relatedarr[index].iscollection = false
+      }else{
+        this.Relatedarr[index].iscollection = true
+      }
+    },
+    arrowupIconclick(index,item){
+      let newList = [];
+      this.Relatedarr.forEach((val,ind)=>{
+        if(ind == index) {
+          if(val.iscontent == true){
+            val.iscontent = false
+          }else{
+            val.iscontent = true
+          }
+        }
+        newList.push(val)
+      })
+      this.Relatedarr = newList;
+
+    }
     }
 }
 </script>
@@ -212,6 +212,11 @@ export default {
     letter-spacing: 0;
     line-height: 22px;
     padding-bottom: 6px;
+    width: 80%;
+    cursor: pointer;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 .acticle_list_Similarity,.acticle_list_keyword{
   letter-spacing: 0;
