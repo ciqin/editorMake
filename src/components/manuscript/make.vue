@@ -13,7 +13,7 @@
                    </ul>
                </div>
                <div class="NavContainer">
-                    <component :is="Navcurrent"></component>
+                    <component :is="Navcurrent" :uestrvalue = uedstr></component>
                </div>
             </div>
         </el-col>
@@ -22,7 +22,7 @@
                 <div class="">
                     <el-input type="text" v-model="input" placeholder="请输入内容" maxlength="100" show-word-limit style="width:500px;position: relative;margin: 16px 0;left: 50%;transform: translateX(-50%);"></el-input>
                 </div>
-                <Ueditor></Ueditor>
+                <Ueditor @listenEvent = 'uedior'></Ueditor>
             </div>
         </el-col>
         <el-col :span="7" class="Signature">
@@ -68,6 +68,7 @@ export default {
             active:0,
             currentView:'Tab1',
             Navcurrent:'letfTab1',
+            uedstr:'' ,//获取ueditor根据符号检索的值
             tabs:[
                 {
                     type:'Tab1',
@@ -110,6 +111,10 @@ export default {
         },
         leftToggle(v){
           this.Navcurrent = v
+        },
+        uedior(param){  //获取ueditor根据符号检索的值
+          this.uedstr = param
+          console.log(this.uedstr,"++++++++++")
         }
 
     },

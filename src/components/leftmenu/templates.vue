@@ -17,7 +17,55 @@
             </ul>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="媒资库" name="second">媒资库</el-tab-pane>
+      <el-tab-pane label="媒资库" name="second">
+        
+       <div class="labelselect">
+          <label for="">分类</label>
+          <el-select v-model="value" placeholder="请选择">
+            <el-option
+              v-for="item in options1"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+       </div>
+
+        <div class="labelselect">
+          <label for="">类型</label>
+          <el-select v-model="value" placeholder="请选择">
+            <el-option
+              v-for="item in options2"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+       </div>
+
+        <div class='third_search' style='padding: 10px 20px;display:flex'>
+          <el-input v-model="input" placeholder="请输入关键字(名称,内容)"></el-input>
+          <el-button icon="el-icon-search">搜索</el-button>
+        </div>
+
+        <div>
+           <div class="libisryarr" v-for="(item,key) in Libraryarr" :key = key>
+               <div class='libisryarr_list'>
+                  <div class='collection_icon' @click="collectionIconclick(key)" :class='item.iscollection===true ? "collectionAcitve" : "nocollectionAcitve" '>
+                      <i class="el-icon-star-on"></i>
+                    </div>
+                  <div class="libisryarr_img">
+                      <img :src="item.img" alt="">
+                  </div>
+               </div>
+               <div class="libisryarr_botal">
+                 <p>{{item.title}}</p>
+                 <p>{{item.time}}</p>
+               </div>
+           </div>
+        </div>
+      </el-tab-pane>
+
       <el-tab-pane label="稿库" name="third">
         <div class='third_search' style='padding: 10px 20px;display:flex'>
           <el-input v-model="input" placeholder="请输入关键字(名称,内容)"></el-input>
@@ -96,7 +144,41 @@
             img:require('@/assets/container.jpg'),
             iscollection:false,
           }
-        ]
+        ],
+        options1: [{
+          value: '选项1',
+          label: '黄金糕'
+        }, {
+          value: '选项2',
+          label: '双皮奶'
+        }, {
+          value: '选项3',
+          label: '蚵仔煎'
+        }, {
+          value: '选项4',
+          label: '龙须面'
+        }, {
+          value: '选项5',
+          label: '北京烤鸭'
+        }],
+        value1: '',
+        options2: [{
+          value: '选项1',
+          label: '黄金糕'
+        }, {
+          value: '选项2',
+          label: '双皮奶'
+        }, {
+          value: '选项3',
+          label: '蚵仔煎'
+        }, {
+          value: '选项4',
+          label: '龙须面'
+        }, {
+          value: '选项5',
+          label: '北京烤鸭'
+        }],
+        value2: '',
       };
     },
     methods: {
@@ -144,6 +226,11 @@
    .third_data .el-input__inner{
      width: 140px;
      height: 35px;
+   }
+   .nav_top_temlaptes .labelselect .el-input--suffix .el-input__inner{
+      background: #FFFFFF;
+      border: 1px solid #D9D9D9;
+      border-radius: 4px;
    }
 </style>
 <style scoped>
@@ -260,5 +347,26 @@
 }
 .libisryarr_botal p:first-child{
   margin-top: 6px;
+}
+.labelselect{
+    width: 50%;
+    float: left;
+    padding: 10px 20px;
+    display: flex;
+}
+.labelselect label{
+    width: 82px;
+    line-height: 38px;
+    font-family: MicrosoftYaHei;
+    font-size: 14px;
+    color: #333333;
+}
+.sort_naver{
+    padding: 10px 20px;
+    display: flex;
+}
+.sort_naver label{
+    font-size: 14px;
+    color: #333333;
 }
 </style>

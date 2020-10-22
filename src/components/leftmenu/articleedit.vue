@@ -1,5 +1,6 @@
 <template>
   <div class='nav_top_articleedit'>
+    {{uestrvalue}}
      <p class='htitle'>关联文章</p>
           
       <div>
@@ -38,7 +39,10 @@
 <script>
 
 export default {
-     data() {
+    props:{
+       uestrvalue:String
+    },
+    data() {
       return {
         activeName: 'first',
         arrowupAcitve:false,

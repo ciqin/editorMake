@@ -183,7 +183,8 @@ export default {
             },
             show:false,
             mobileHtml:"",
-            activeIndex:2
+            activeIndex:2,
+            ueconter:''
         };
     },
     watch: {
@@ -215,6 +216,45 @@ export default {
                 this.instance.addListener('ready', () => {
                     this.ready = true;
                     this.$emit('ready', this.instance);
+
+                    let _that = this
+
+                    UE.dom.domUtils.on(this.instance.body,"keyup",function(oEvent){
+                        
+                        var oEvent = oEvent || window.oEvent; 
+                        //获取键盘的keyCode值
+                        var nKeyCode = oEvent.keyCode || oEvent.which || oEvent.charCode;
+
+                        let selection = _that.instance.selection._bakRange
+                        let str = _that.instance.getContentTxt()
+                        //do something
+                        if(nKeyCode==13){
+                         _that.ueconter = str
+                         console.log(_that.instance,str)
+                        }else if(nKeyCode==186){
+                            let newstr = str.substring(0,selection.endOffset+1);
+                            let uearr = newstr.split(";")
+                            let i = uearr.length-2<0?0:uearr.length-2
+                            _that.ueconter = uearr[i]
+                            console.log(i,uearr[i],newstr.split(";"))
+                        }else if(nKeyCode==222){
+
+                        }else if(nKeyCode==188){
+                            let newstr = str.substring(0,selection.endOffset+1);
+                            let uearr = newstr.split(",")
+                            let i = uearr.length-2<0?0:uearr.length-2
+                            _that.ueconter = uearr[i]
+                            console.log(i,uearr[i],newstr.split(","))
+                        }else if(nKeyCode==190){
+
+                        }else if(nKeyCode==191){
+
+                        }
+                          
+           
+                        _that.$emit('listenEvent',_that.ueconter)
+                    })
+
                 });
                 store.ueditor = this.instance;
             });
