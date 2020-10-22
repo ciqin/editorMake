@@ -1,46 +1,78 @@
 <template>
   <div> 
-    <el-form ref="form"  label-width="80px">
-      <el-form-item label="文稿纠错"   class="p30">
-              <el-switch
-                  v-model="value"
-                  active-color="#d52324"
-                  inactive-color="#d52324">
-              </el-switch>
-              <span class="tip">识别文稿中的字词、标点、语法等方面的错误</span>  
-      </el-form-item>
+      <el-form ref="form"  label-width="80px">
+      <div class="p30">
+          <h6 class="wordTitle">文稿纠错</h6>
+          <span class="tip">识别文稿中的字词、标点、语法等方面的错误</span> 
+      </div>
+      
       <div class="line"></div>
-      <el-form-item label="字词错误"   class="p30">
-              <el-progress :percentage="3" :format="format" class="mt11" style="color:red;"></el-progress>
-      </el-form-item>
-      <el-form-item label="标点误用"   class="p30">
-              <el-progress :percentage="50" :format="format" class="mt11"></el-progress>
-      </el-form-item>
-      <el-form-item label="语序问题"   class="p30">
-             <el-progress :percentage="55" :format="format" class="mt11"></el-progress>
-      </el-form-item>
-      <el-form-item label="语法问题"   class="p30">
-             <el-progress :percentage="22" :format="format" class="mt11"></el-progress>
-      </el-form-item>
-      <el-form-item label="同义混淆"   class="p30">
-             <el-progress :percentage="43" :format="format" class="mt11"></el-progress>
-      </el-form-item>
+      <div style="text-align:center;padding:0 20px;">
+         <el-button type="primary" size="mini" @click="sensitiveWords" style="background: #303841;border:none;">开始分析</el-button>
+         <div>
+           <el-table
+              :data="tableData"
+              stripe
+              border
+              style="width: 100%;margin-top:40px;">
+              <el-table-column
+                prop="date"
+                label="错误字词"
+                width="120">
+              </el-table-column>
+              <el-table-column
+                prop="name"
+                label="错误原因">
+              </el-table-column>
+            </el-table>
+         </div>
+         
+      </div>
     </el-form>
   </div>
 </template>
 <script>
+import {sensitivityAnalysis} from '@/http/api'
+import { store } from '@/store'
 export default {
+  created(){
+    getJson({aaa:true,id:111}).then(res => {
+        // this.productArr = res
+    })
+  },
   data(){
-    return{
-      form :1,
-      value:"",
+    return {
+      tableData: [{
+            date: '无',
+            name: '无',
+          }]
     }
   },
-   methods: {
-      format(percentage) {
-        return percentage === 100 ? '满' : `${percentage}个`;
+  methods:{
+    sensitiveWords(){
+      // console.log()
+      let data = {
+        "checkType": 1,"text": "Ikeqang 习大大中华民国腾讯今年中国人民共和国下半年上世纪将在微信账户钱包帐户的九宫格中开设快遮的笑着"
       }
+      let data1 = {
+        "content": "Ikeqang 习大大中华民国腾讯今年中国人民共和国下半年上世纪将在微信账户钱包帐户的九宫格中开设快遮的笑着","title": "Ikeqang 习大大中华民国腾讯今年中国人民共和国下半年上世纪将在微信账户钱包帐户的九宫格中开设快遮的笑着"
+      }
+      sensitivityAnalysis(data).then(res=>{
+        store.ueditor.setContent(res.data[0].content);
+        let newData=[];
+        res.data[0].hintwords.forEach((val,index)=>{
+          newData.push({
+            date:val.hintword,
+            name:val.suggestion
+          })
+        })
+        this.tableData = newData;
+      })
+      //  correction(data1).then(res=>{
+      //   console.log(res,"---------")
+      // })
     }
+  }
 }
 </script>
 <style scoped>
@@ -53,14 +85,21 @@ export default {
 .line {
   border-bottom: 1px solid #DCDEE3;
   margin-bottom: 60px;
+  margin-top: 12px;
+}
+.wordTitle {
+  width: 80px;
+  height: 21px;
+  font-size: 16px;
+  font-family: MicrosoftYaHei;
+  color: #666666;
+  line-height: 21px;
+  margin-bottom: 12px;
 }
 .tip {
   height: 16px;
-  display: block;
   font-size: 12px;
-  font-family: MicrosoftYaHei;
   color: #999999;
   line-height: 16px;
-  margin-left: -68px;
 }
 </style>

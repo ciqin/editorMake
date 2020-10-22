@@ -9,10 +9,15 @@ import Axios from "axios"
 //创建vue实例，以便访问vue原型的方法
 const vue = new Vue()
 
-const API_URL = process.env.NODE_ENV === 'development' ? {
-  API_URL: 'http://localhost:8096'
-} : {
-  API_URL: 'http://localhost:8096'
+// const API_URL = process.env.NODE_ENV === 'development' ? {
+//   API_URL: 'http://localhost:8096'
+// } : {
+//   API_URL: 'http://localhost:8096'
+// }
+const API_URL  = {
+  caiApi:'http://localhost:8080',
+  swaggerApi:"http://192.168.4.68:9117",
+  localApi:"http://localhost:8080"
 }
 
 // 创建Axios实例对象，配置请求前缀，请求超时时间以及不需要带跨域凭证

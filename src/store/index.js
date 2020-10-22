@@ -5,7 +5,10 @@ export const store = Vue.observable({
     avatar:"高红兵",
     navText:"我的工作区",
     mediaMax:78,
-    listObj:[{name:"312",index:0},{name:"312",index:1},{name:"312",index:2},{name:"312",index:3}]
+    listObj:[{name:"312",index:0},{name:"312",index:1},{name:"312",index:2},{name:"312",index:3}],
+    ueditor:null,
+    savedata:{},
+    objid:"",
 })
 
 export const mutations = {
@@ -26,5 +29,8 @@ export const mutations = {
     },
     setListObj (listObj) {
       store.listObj = listObj
+    },
+    setSaveData (savedata) {
+      store.savedata = savedata
     }
 }
