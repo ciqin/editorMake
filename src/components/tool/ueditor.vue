@@ -7,7 +7,7 @@
             <ul>
                 <li><el-button type="text" @click="centerDialogVisible = true"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>预览</span></el-button></li>
                 <li><a href="javascript:" @click="save" >
-                    <img src="@/assets/icon2.png" width="20" alt=""></a>保存
+                    <img src="@/assets/icon2.png" width="20" alt="" @click="save"></a>保存
                 </li>
                 <li @mouseenter="onMouseOver" @mouseleave="onMouseOut" style="position:relative;"><a href="javascript:">
                     <img src="@/assets/icon3.png" width="20" alt=""></a>下载
@@ -27,11 +27,11 @@
             title=""
             :visible.sync="centerDialogVisible"
             width="400px" class="mobileM">
-            <div :style="styles"></div>
+            <div class="mobileContainer" :style="styles" v-html="mobileHtml"></div>
             <div class="preview-btn">
-                <div class="preview-btn1">5.5寸以上</div>
-                <div class="preview-btn2">5.5寸屏</div>
-                <div class="preview-btn3 active">5寸以下</div>
+                <div :class="[activeIndex==0?'active preview-btn1':'preview-btn1']" @click="mobileD">5.5寸以上</div>
+                <div :class="[activeIndex==1?'active preview-btn2':'preview-btn2']" @click="mobileZ">5.5寸屏</div>
+                <div :class="[activeIndex==2?'active preview-btn3':'preview-btn3']" @click="mobileX">5寸以下</div>
             </div>
         </el-dialog>
     </div>
@@ -40,15 +40,16 @@
 
 <script>
 //主体文件引入
-import '../../../static/UEditor/themes/default/css/ueditor.min.css'
-import '../../../static/UEditor/ueditor.config.js'
-import '../../../static/UEditor/ueditor.all.min.js'
-import '../../../static/UEditor/lang/zh-cn/zh-cn.js'
+import '#/UEditor/themes/default/css/ueditor.min.css'
+import '#/UEditor/ueditor.config.js'
+import '#/UEditor/ueditor.all.min.js'
+import '#/UEditor/lang/zh-cn/zh-cn.js'
 // 保存生成图片资源加载
 import html2Canvas from 'html2canvas'
 import JsPDF from 'jspdf'
 // 接口加载
-import { submitData } from "@/http/api"
+import { submitData ,newSave} from "@/http/api"
+import { store} from '@/store'
 export default {
     name: 'UE',
     props: {
@@ -67,6 +68,7 @@ export default {
             instance: null,
             centerDialogVisible: false,
             ready: false,
+            enableAutoSave: false,
             //配置可以传递进来
             ueditorConfig: {
                 // 编辑器不自动被内容撑高
@@ -177,10 +179,11 @@ export default {
                 "background":"url(../../../../../static/img/iPhone.png) no-repeat",
                 "box-sizing":"border-box",
                 "background-size": "100% 100%",
-                "padding-top":"127px",
-                "padding-left":"47px"
+                "padding":"127px 38px 87px 47px"
             },
-            show:false
+            show:false,
+            mobileHtml:"",
+            activeIndex:2
         };
     },
     watch: {
@@ -213,6 +216,7 @@ export default {
                     this.ready = true;
                     this.$emit('ready', this.instance);
                 });
+                store.ueditor = this.instance;
             });
         },
         setText(con) {
@@ -220,13 +224,10 @@ export default {
             this.instance.setContent(con);
         },
         hasUe(){
-            console.log(window.UE)
+            this.mobileHtml = this.instance.getContent();
         },
         save(){
             console.log(this.instance.setContent("1111"))
-            // submitData().then(res=>{
-                
-            // })
         },
         onMouseOver(){
             this.show  = true
@@ -288,7 +289,43 @@ export default {
                 }
                 PDF.save(Math.random() * 100000000000000000 + '.pdf')
             })
+        },
+        mobileD(){
+            this.activeIndex = 0;
+            this.styles.width = "389px",
+            this.styles.height = "725px"
+            this.styles.background = "url(../../../../../static/img/iPhoneX.png) 0% 0% / 100% 100% no-repeat"
+            
+            this.styles.padding = "89px 23px 22px 16px;"
+            console.log(this.styles.padding )
+        },
+        mobileZ(){
+            this.activeIndex = 1;
+            this.styles = {
+                "width":"389px",
+                "height": "713px",
+                "background":"url(../../../../../static/img/iPhone.png) 0% 0% / 100% 100% no-repeat",
+                "box-sizing":"border-box",
+                "padding":"127px 38px 87px 47px"
+            }
+        },
+        mobileX(){
+            this.activeIndex = 2;
+            this.styles = {
+                "width":"348px",
+                "height": "638.5px",
+                "background":"url(../../../../../static/img/iPhone.png) 0% 0% / 100% 100% no-repeat",
+                "box-sizing":"border-box",
+                "background-size": "100% 100%",
+                "padding":"127px 38px 87px 47px"
+            }
+        },
+        save(){
+            newSave().then(res=>{
+
+            })
         }
+
     }
 };
 
@@ -331,7 +368,7 @@ export default {
     height: 80px;
     width: 120px;
     position: absolute;
-    right: -95px;
+    right: -130px;
     bottom: 50px;
     max-width: 100%;
 }
@@ -389,5 +426,8 @@ export default {
     transform: rotate(-90deg);
     top: 5px;
     left: -11px;
+}
+.mobileContainer {
+    overflow: auto;
 }
 </style>
