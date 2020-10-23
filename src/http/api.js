@@ -29,4 +29,4 @@ export const sensitivityAnalysis = data => postHttp(swaggerApi+'/ilgcreation/tex
 export const newSignature = data => getHttp(caiApi+'/sprint/rest/stories/workspace/'+newManuscriptId+'/tags/edit?type=COMPO', data)
 
 // 自动保存
-export const newSave = data => postHttp(caiApi+'/sprint/rest/stories/workspace/'+newManuscriptId+'/save/process', data)
+export const newSave = data => postHttp(caiApi+'/sprint/rest/workflow/stories/workspace/'+newManuscriptId+'/save/zhiZuo/process', data)

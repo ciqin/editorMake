@@ -34,7 +34,7 @@ export default {
     background-color: #ddd;
 }
 /* base样式 */
-body,ul,li,ol,dl,dd,h1,h2,h3,h4,h5,h6,input,p{ margin:0;}
+body,ul,li,ol,dl,dd,h1,h2,h3,h4,h5,h6,input,p{ margin:0;color: #666666;}
 ul,ol { padding:0;}
 img { border:none;}
 .clear{zoom:1;}
@@ -66,5 +66,13 @@ button{outline-style: none;}
 }
 .mobileM .el-dialog__body{
   position: relative;
+}
+.el-tabs__item,.el-form-item__label,.first_nav_top ul li{
+  color: #666666;
+}
+.impression .el-form-item__label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 </style>

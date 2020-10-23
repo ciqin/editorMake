@@ -29,7 +29,7 @@
                                                 @cutDown="xztpCutDownSmall">
                                                 <button slot="open" style="display:none;"></button>
                                     </ImgCutter>
-                                    <img  v-if="opaBtn1" :src="opaImg1" alt="" slot="open" style="cursor: pointer;" width="70" @click="loadSmall(index)">
+                                    <img  v-if="opaBtn1" :src="form.opaImg1" alt="" slot="open" style="cursor: pointer;" width="70" @click="loadSmall(index)">
                                 </div>
                             </el-col>
                             <el-col :span="8"><div class="grid-content bg-purple">
@@ -48,7 +48,7 @@
                                                 @cutDown="xztpCutDownBig">
                                                 <button slot="open" style="display:none;"></button>
                                     </ImgCutter>
-                                    <img  v-if="opaBtn2" :src="opaImg2" alt="" slot="open" style="cursor: pointer;" width="70" @click="loadBig(index)">
+                                    <img  v-if="opaBtn2" :src="form.opaImg2" alt="" slot="open" style="cursor: pointer;" width="70" @click="loadBig(index)">
                                 
                                 </div></el-col>
                                 <el-col   el-col :span="8"><div class="grid-content bg-purple">
@@ -67,7 +67,7 @@
                                                     @cutDown="xztpCutDownMany">
                                                     <button slot="open" style="display:none;"></button>
                                     </ImgCutter>
-                                    <img  v-if="opaBtn3" :src="opaImg3" alt="" slot="open" width="70" style="cursor: pointer;" @click="loadMany(index)">
+                                    <img  v-if="opaBtn3" :src="form.opaImg3" alt="" slot="open" width="70" style="cursor: pointer;" @click="loadMany(index)">
                                 </div></el-col>
                     </el-row>
                     
@@ -89,40 +89,60 @@
                                     @cutDown="xztpCutDownCover">
                                     <button slot="open" style="display:none;"></button>
                         </ImgCutter>
-                         <img v-if="true" :src="addImg"  @click="forIe9(index)" alt="" width="70" style="cursor: pointer;">
+                         <img v-if="true" :src="form.addImg"  @click="forIe9(index)" alt="" width="70" style="cursor: pointer;">
                     </div>
                 </el-form-item>
                 <el-form-item label="摘要">
-                    <el-input type="textarea" v-model="form.summary"></el-input>
+                    <el-input type="textarea" v-model="form.summary"  size="mini"></el-input>
                 </el-form-item>
                 <el-form-item label="来源">
-                    <el-select v-model="form.originations.value" placeholder="请选择来源">
+                    <el-select v-model="form.origination" placeholder="请选择来源"  size="mini">
                          <el-option
                             v-for="item in form.originations"
                             :key="item.value"
                             :label="item.label"
-                            :value="item.value">
+                            :value="item.label">
                         </el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="作者">
                     <el-input v-model="form.signature" size="mini"></el-input>
                 </el-form-item>
-                    <el-form-item label="关键字">
-                    <el-input v-model="form.keyWord" size="mini"></el-input>
+               
+                <el-form-item label="关键字">
+                     <div class="tabsContainer">
+                         <el-tag
+                            :key="tag"
+                            v-for="tag in form.dynamicTags"
+                            closable
+                            :disable-transitions="false"
+                            @close="handleClose(tag)">
+                            {{tag}}
+                        </el-tag>
+                        <el-input
+                        class="input-new-tag"
+                        v-if="form.inputVisible"
+                        v-model="form.inputValue"
+                        ref="saveTagInput"
+                        size="small"
+                        @keyup.enter.native="handleInputConfirm"
+                        @blur="handleInputConfirm">
+                        </el-input>
+                        <el-button v-else class="button-new-tag" size="small" @click="showInput">+</el-button>
+                    </div>
                 </el-form-item>
                 <el-form-item label="稿件级别">
-                    <el-select v-model="form.level.index" placeholder="请选择" size="mini">
+                    <el-select v-model="form.levelId" placeholder="请选择" size="mini">
                         <el-option
                         v-for="item in form.level"
-                        :key="item.index"
+                        :key="item.levelId"
                         :label="item.name"
-                        :value="item.index">
+                        :value="item.levelId">
                         </el-option>
                     </el-select>
                 </el-form-item>
                     <el-form-item label="选题">
-                    <el-select v-model="form.topics.pid" placeholder="请选择" size="mini">
+                    <el-select v-model="form.topicsId" placeholder="请选择" size="mini">
                         <el-option
                             v-for="item in form.topics"
                             :key="item.pid"
@@ -131,14 +151,14 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="链接标题">
+                <!-- <el-form-item label="链接标题">
                     <el-input v-model="form.linkHeadline" size="mini"></el-input>
                 </el-form-item>
                 <el-form-item label="引题链接">
                     <el-input v-model="form.properties.leadinLineUrl" size="mini"></el-input>
                 </el-form-item>
                 <el-form-item label="引题样式">
-                    <el-select v-model="form.IntroductionList.index" placeholder="请选择" size="mini">
+                    <el-select v-model="form.leadinLineStyle" placeholder="请选择" size="mini">
                         <el-option
                         v-for="item in form.IntroductionList"
                         :key="item.index"
@@ -146,9 +166,9 @@
                         :value="item.index">
                         </el-option>
                     </el-select>
-                </el-form-item>
-                <el-form-item label="原创分类">
-                    <el-select v-model="form.classificationList.index" placeholder="请选择" size="mini">
+                </el-form-item> -->
+                <!-- <el-form-item label="原创分类">
+                    <el-select v-model="form.originalCategory" placeholder="请选择" size="mini">
                         <el-option
                         v-for="item in form.classificationList"
                         :key="item.index"
@@ -156,19 +176,17 @@
                         :value="item.index">
                         </el-option>
                     </el-select>
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item label="">
-                    <el-checkbox-group v-model="form.type">
-                    <el-checkbox label="引题" name="type"></el-checkbox>
-                    <el-checkbox label="副题" name="type"></el-checkbox>
-                    <el-checkbox label="有水印" name="type" v-model="form.properties.watermark"></el-checkbox>
-                    <el-checkbox label="广告" name="type" v-model="form.properties.ad"></el-checkbox>
-                    <el-checkbox label="自动保存" name="type"></el-checkbox>
-                    <el-checkbox label="可评论" name="type" v-model="form.canComment"></el-checkbox>
-                    </el-checkbox-group>
+                    <!-- <el-checkbox label="引题" name="type"></el-checkbox>
+                    <el-checkbox label="副题" name="type"></el-checkbox> -->
+                    <el-checkbox label="自动保存"></el-checkbox>
+                    <el-checkbox label="有水印" v-model="form.properties.watermark"></el-checkbox>
+                    <el-checkbox label="广告" v-model="form.properties.ad"></el-checkbox>
+                    <el-checkbox label="可评论" v-model="form.canComment"></el-checkbox>
                 </el-form-item>
                 <el-form-item label="备注">
-                    <el-input type="textarea" v-model="form.comment"></el-input>
+                    <el-input type="textarea" v-model="form.comment"  size="mini"></el-input>
                 </el-form-item>
             </el-form>
         </div>
@@ -176,8 +194,9 @@
 </template>
 <script>
 import ImgCutter from 'vue-img-cutter'
-import {newSignature ,newSave } from '@/http/api'
-import { store } from '@/store'
+import {newSignature} from '@/http/api'
+import { store , mutations} from '@/store'
+import {mapActions, mapGetters} from 'vuex';
 export default {
     name: 'Signature',
     data(){
@@ -194,72 +213,82 @@ export default {
                 delivery: false,
                 type: [],
                 htmlContent:"",
-                libid: "workspace",
-                objid:store.objid,
-                folder:"561a41a40aaa748fb64ca229",
-                title: 12321321,
+                title:"",
                 resource: '',
                 originations:[],
+                origination:"",
                 topics:[],
+                topicsId:"",
                 comment:"",
                 canComment: false,
                 linkHeadline:"",
                 properties:{
-                    ad: "0",
+                    ad: false,
                     leadinLineUrl: "",
-                    watermark: "0"
+                    watermark: false
                 },
+                dynamicTags: [],
+                inputVisible: false,
+                inputValue: '',
                 level:[
                     {
-                        index:1,
+                        levelId:1,
                         name:"普通稿"
                     },{
-                        index:2,
+                        levelId:2,
                         name:"重要稿"
                     },{
-                        index:3,
+                        levelId:3,
                         name:"急稿"
                     }
                 ],
-                IntroductionList:[
-                    {
-                        index:1,
-                        name:"默认"
-                    },{
-                        index:2,
-                        name:"强调"
-                    },{
-                        index:3,
-                        name:"一般"
-                    },{
-                        index:4,
-                        name:"明亮"
-                    },{
-                        index:5,
-                        name:"淡雅"
-                    }
-                ],
-                classificationList:[
-                    {
-                        index:1,
-                        name:"网稿"
-                    },{
-                        index:2,
-                        name:"自采"
-                    },{
-                        index:3,
-                        name:"编译"
-                    },{
-                        index:4,
-                        name:"改写"
-                    }
-                ]
-               
+                levelId:1,
+                // IntroductionList:[
+                //     {
+                //         index:0,
+                //         name:"默认"
+                //     },{
+                //         index:1,
+                //         name:"强调"
+                //     },{
+                //         index:2,
+                //         name:"一般"
+                //     },{
+                //         index:3,
+                //         name:"明亮"
+                //     },{
+                //         index:4,
+                //         name:"淡雅"
+                //     }
+                // ],
+                // leadinLineStyle:0,
+                // classificationList:[
+                //     {
+                //         index:0,
+                //         name:"网稿"
+                //     },{
+                //         index:1,
+                //         name:"自采"
+                //     },{
+                //         index:2,
+                //         name:"编译"
+                //     },{
+                //         index:3,
+                //         name:"改写"
+                //     }
+                // ],
+                // originalCategory:0,
+                coverType:1,
+                addImg:"http://127.0.0.1:9080/sprint/assets/img/add.png",
+                opaImg1:"http://127.0.0.1:9080/sprint/assets/img/add.png",
+                opaImg2:"http://127.0.0.1:9080/sprint/assets/img/add.png",
+                opaImg3:"http://127.0.0.1:9080/sprint/assets/img/add.png",
             },
             options: [{
                 value: '选项1',
                 label: '黄金糕'
             }],
+            checked:true,
             radio:"",
             value:"",
             baseUrl:"",
@@ -286,10 +315,6 @@ export default {
                 baseUrl:""
             },
             radio: 3,
-            addImg:"http://source.wengegroup.com:8001/app/public_app/servies_images/images/uplode.png",
-            opaImg1:"http://source.wengegroup.com:8001/app/public_app/servies_images/images/uplode.png",
-            opaImg2:"http://source.wengegroup.com:8001/app/public_app/servies_images/images/uplode.png",
-            opaImg3:"http://source.wengegroup.com:8001/app/public_app/servies_images/images/uplode.png",
             opaBtn1:true,
             opaBtn2:false,
             opaBtn3:false,
@@ -297,15 +322,19 @@ export default {
         }
     },
     created(){
-        // 初始化稿签数据
+          // 初始化稿签数据
         newSignature().then(res=>{
+            this.$store.dispatch('modifyDataTitle',res.story.title);
+            this.$store.dispatch('modifyDatahtmlContent',res.story.htmlContent);
             let originations = [];
-            res.originations.split(",").forEach(item=>{
+            res.originations.split(",").forEach((item,index)=>{
                 originations.push({
                     label:item,
-                    value:item
+                    value:index
                 })
             })
+            // 组件值回传
+            this.app.form = this.form
             this.form.originations = originations;
             this.form.summary = res.story.summary;
             this.form.signature = res.story.signature;
@@ -314,97 +343,134 @@ export default {
             this.form.linkHeadline = res.linkHeadline;
             this.form.properties.leadinLineUrl = res.properties.leadinLineUrl;
             this.form.comment = res.comment;
-            
+            res.story.keywords?res.story.keywords.split(",").forEach(item=>{
+                this.form.dynamicTags.push(item)
+            }):"";
+            this.form.origination = res.story.origination;
+            this.form.levelId = res.story.level;
+            this.form.topicsId= res.story.topic;
+            this.form.canComment=res.story.canComment;
+            this.form.properties.ad=res.properties.ad==1?true:false;
+            this.form.properties.watermark=res.properties.watermark==1?true:false;  
         })
     },
-     methods :{ 
-        xztpCutDownSmall(fileName) { 
-            this.opaImg1 = fileName.dataURL
-        },
-        xztpCutDownBig(fileName) { 
-           this.opaImg2 = fileName.dataURL
-        },
-        xztpCutDownMany(fileName) { 
-            this.opaImg3 = fileName.dataURL
-        },
-        xztpCutDownCover (fileName){
-            this.addImg = fileName.dataURL
-        },
-        // 小图操作函数
-        coverSmall(){
-            this.opaBtn1 = true;
-            this.opaBtn2 = false;
-            this.opaBtn3 = false;
-            this.opaImg1 = "http://source.wengegroup.com:8001/app/public_app/servies_images/images/uplode.png";
-            this.opaImg2 = "http://source.wengegroup.com:8001/app/public_app/servies_images/images/uplode.png";
-            this.opaImg3 = "http://source.wengegroup.com:8001/app/public_app/servies_images/images/uplode.png";
-        },
-        // 大图操作函数
-        coverBig(){
-            this.opaBtn1 = false;
-            this.opaBtn2 = true;
-            this.opaBtn3 = false;
-            this.opaImg1 = "http://source.wengegroup.com:8001/app/public_app/servies_images/images/uplode.png";
-            this.opaImg2 = "http://source.wengegroup.com:8001/app/public_app/servies_images/images/uplode.png";
-            this.opaImg3 = "http://source.wengegroup.com:8001/app/public_app/servies_images/images/uplode.png";
-        },
-        // 三图操作函数
-        coverMany(){
-            this.opaBtn1 = true;
-            this.opaBtn2 = true;
-            this.opaBtn3 = true;
-            this.opaImg1 = "http://source.wengegroup.com:8001/app/public_app/servies_images/images/uplode.png";
-            this.opaImg2 = "http://source.wengegroup.com:8001/app/public_app/servies_images/images/uplode.png";
-            this.opaImg3 = "http://source.wengegroup.com:8001/app/public_app/servies_images/images/uplode.png";
-        },
-        // 无图操作函数
-        coverNone(){
-            this.opaBtn1 = false;
-            this.opaBtn2 = false;
-            this.opaBtn3 = false;
-        },
-        loadSmall(index){
-            console.log(11111)
-            this.$refs.imgCutterModal1.handleOpen({
-                name:'img',
-                src:this.opaImg1,
-                "cross-origin":true,
-                width:400,
-                height:400,
-            });
-        },
-        loadBig(index){
-            this.$refs.imgCutterModal2.handleOpen({
-                name:'img',
-                src:this.opaImg2,
-                width:400,
-                height:400,
-            });
-        },
-        loadMany(index){
-            this.$refs.imgCutterModal3.handleOpen({
-                name:'img',
-                src:this.opaImg3,
-                "cross-origin":true,
-                width:400,
-                height:400,
-            });
-        },
-        forIe9(index){
-            this.$refs.imgCutterModal0.handleOpen({
-                name:'img',
-                src:this.addImg ,
-                "cross-origin":true,
-                width:400,
-                height:400,
-            });
-        },
-        saveData(){
-            let data = this.form;
-            newSave(data),then(res=>{
-                console.log(res);
-            })
+    inject:['app'],
+    computed:{
+        ...mapGetters(['resTitle']),
+    },
+    methods :{ 
+    xztpCutDownSmall(fileName) { 
+        this.form.opaImg1 = fileName.dataURL
+    },
+    xztpCutDownBig(fileName) { 
+        this.form.opaImg2 = fileName.dataURL
+    },
+    xztpCutDownMany(fileName) { 
+        this.form.opaImg3 = fileName.dataURL
+    },
+    xztpCutDownCover (fileName){
+        this.form.addImg = fileName.dataURL
+    },
+    // 小图操作函数
+    coverSmall(){
+        this.opaBtn1 = true;
+        this.opaBtn2 = false;
+        this.opaBtn3 = false;
+        this.form.opaImg1 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
+        this.form.opaImg2 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
+        this.form.opaImg3 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
+        this.form.coverType = 1;
+    },
+    // 大图操作函数
+    coverBig(){
+        this.opaBtn1 = false;
+        this.opaBtn2 = true;
+        this.opaBtn3 = false;
+        this.form.opaImg1 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
+        this.form.opaImg2 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
+        this.form.opaImg3 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
+        this.form.coverType = 2;
+    },
+    // 三图操作函数
+    coverMany(){
+        this.opaBtn1 = true;
+        this.opaBtn2 = true;
+        this.opaBtn3 = true;
+        this.form.opaImg1 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
+        this.form.opaImg2 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
+        this.form.opaImg3 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
+        this.form.coverType = 3;
+    },
+    // 无图操作函数
+    coverNone(){
+        this.opaBtn1 = false;
+        this.opaBtn2 = false;
+        this.opaBtn3 = false;
+        this.form.coverType = 0;
+    },
+    loadSmall(index){
+        this.$refs.imgCutterModal1.handleOpen({
+            name:'img',
+            src:this.form.opaImg1,
+            "cross-origin":true,
+            width:400,
+            height:400,
+        });
+    },
+    loadBig(index){
+        this.$refs.imgCutterModal2.handleOpen({
+            name:'img',
+            src:this.form.opaImg2,
+            width:400,
+            height:400,
+        });
+    },
+    loadMany(index){
+        this.$refs.imgCutterModal3.handleOpen({
+            name:'img',
+            src:this.form.opaImg3,
+            "cross-origin":true,
+            width:400,
+            height:400,
+        });
+    },
+    forIe9(index){
+        this.$refs.imgCutterModal0.handleOpen({
+            name:'img',
+            src:this.form.addImg ,
+            "cross-origin":true,
+            width:400,
+            height:400,
+        });
+    },
+    handleClose(tag) {
+        this.form.dynamicTags.splice(this.form.dynamicTags.indexOf(tag), 1);
+    },
+
+    showInput() {
+        this.form.inputVisible = true;
+        this.$nextTick(_ => {
+        this.$refs.saveTagInput.$refs.input.focus();
+        });
+    },
+
+    handleInputConfirm() {
+        let inputValue = this.form.inputValue;
+        if (inputValue) {
+        this.form.dynamicTags.push(inputValue);
         }
+        this.form.inputVisible = false;
+        this.form.inputValue = '';
+    },
+    hasHtmlContent(){
+        // console.log("111133333333333333333")
+        // store.ueditor.setContent("1111")
+    }
+    
+    },
+     mounted(){
+        
+       
      },
      components:{
          ImgCutter
@@ -418,5 +484,20 @@ export default {
 }
 .el-radio__input.is-checked+.el-radio__label {
     color: #d62425;
+}
+.el-tag {
+    margin-right: 10px;  
+}
+.button-new-tag {
+    margin-right: 10px;
+    height: 32px;
+    line-height: 30px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+.input-new-tag {
+    width: 90px;
+    margin-right: 10px;
+    vertical-align: bottom;
 }
 </style>

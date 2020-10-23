@@ -20,7 +20,7 @@
         <el-col :span="11">
             <div class="grid-content bg-purple" style="position:relative">
                 <div class="">
-                    <el-input type="text" v-model="input" placeholder="请输入内容" maxlength="100" show-word-limit style="width:500px;position: relative;margin: 16px 0;left: 50%;transform: translateX(-50%);"></el-input>
+                    <el-input type="text" v-model="input" @input="inputChange" placeholder="请输入内容" maxlength="100" show-word-limit style="width:500px;position: relative;margin: 16px 0;left: 50%;transform: translateX(-50%);"></el-input>
                 </div>
                 <Ueditor @listenEvent = 'uedior'></Ueditor>
             </div>
@@ -59,6 +59,8 @@ import letfTab1 from "../leftmenu/templates"
 import letfTab2 from "../leftmenu/articleedit"
 import letfTab3 from "../leftmenu/collection"
 import Tab4 from "../Auxiliary/pictureMatching"
+import { store } from '@/store'
+import {mapActions, mapGetters} from 'vuex';
 export default {
     name: 'mask',
     data() {
@@ -66,6 +68,7 @@ export default {
             tabPosition: 'left',
             input:"",
             active:0,
+            form:'',
             currentView:'Tab1',
             Navcurrent:'letfTab1',
             uedstr:'' ,//获取ueditor根据符号检索的值
@@ -101,10 +104,25 @@ export default {
             ]
         };
     },
-    methods :{
-        xztpCutDown(fileName) { 
-            console.log(fileName)
+    watch:{
+        form(newVal){
+            deep:true;
         },
+        resTitle(newVal){
+            console.log(newVal)
+            this.input = newVal
+        }
+    },
+    
+    provide(){
+        return {
+            'app':this
+        }
+    },
+    computed:{
+        ...mapGetters(["resTitle"])
+    },
+    methods :{
         toggle(i,v){
             this.active=i;
             this.currentView=v.type;
@@ -114,13 +132,14 @@ export default {
         },
         uedior(param){  //获取ueditor根据符号检索的值
           this.uedstr = param
-          console.log(this.uedstr,"++++++++++")
+        },
+        inputChange(e){
+            this.$store.dispatch('modifyDataTitle',this.input);
         }
-
     },
     components:{
         Tab1,Tab2,Tab3,Ueditor,letfTab1,letfTab2,letfTab3,Tab4
-    }
+    },
 };
 
 </script>

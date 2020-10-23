@@ -18,11 +18,11 @@
               <el-table-column
                 prop="date"
                 label="错误字词"
-                width="120">
+                width="120" align="center">
               </el-table-column>
               <el-table-column
                 prop="name"
-                label="错误原因">
+                label="错误原因" align="center">
               </el-table-column>
             </el-table>
          </div>

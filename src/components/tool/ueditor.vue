@@ -2,12 +2,12 @@
   <div>
     <!--下面通过传递进来的id完成初始化-->
     <div style="position:relative;width: 500px;margin: 0 auto;">
-        <div :id="randomId"></div>
+        <div :id="randomId" ref="ueditor"></div>
         <div class="OperationButton">
             <ul>
                 <li><el-button type="text" @click="centerDialogVisible = true"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>预览</span></el-button></li>
                 <li><a href="javascript:" @click="save" >
-                    <img src="@/assets/icon2.png" width="20" alt="" @click="save"></a>保存
+                    <img src="@/assets/icon2.png" width="20" alt=""></a>保存
                 </li>
                 <li @mouseenter="onMouseOver" @mouseleave="onMouseOut" style="position:relative;"><a href="javascript:">
                     <img src="@/assets/icon3.png" width="20" alt=""></a>下载
@@ -50,6 +50,7 @@ import JsPDF from 'jspdf'
 // 接口加载
 import { submitData ,newSave} from "@/http/api"
 import { store} from '@/store'
+import {mapActions, mapGetters} from 'vuex';
 export default {
     name: 'UE',
     props: {
@@ -60,6 +61,7 @@ export default {
         },
         
     },
+    inject:['app'],
     data() {
         return {
             //每个编辑器生成不同的id,以防止冲突
@@ -176,7 +178,7 @@ export default {
             styles:{
                 "width":"348px",
                 "height": "638.5px",
-                "background":"url(../../../../../static/img/iPhone.png) no-repeat",
+                "background":"url(http://127.0.0.1:9080/sprint/assets/img/iPhone.png) no-repeat",
                 "box-sizing":"border-box",
                 "background-size": "100% 100%",
                 "padding":"127px 38px 87px 47px"
@@ -193,11 +195,22 @@ export default {
                 this.instance = UE.getEditor(this.randomId, this.ueditorConfig);
                 this.instance.setContent(val);
             }
+        },
+        reshtmlContent(newval){
+            // this.$nextTick(res=>{
+            //     console.log(this.instance,"----------")
+            // })
+            
         }
     },
     //此时--el挂载到实例上去了,可以初始化对应的编辑器了
     mounted() {
         this.initEditor();
+        // 定时获取百度编辑器并赋值
+        let that  = this;
+        setTimeout(() => {
+            that.instance.setContent(that.$store.state.htmlContent)
+        }, 200);
     },
 
     beforeDestroy() {
@@ -205,6 +218,9 @@ export default {
         if(this.instance !== null && this.instance.destroy) {
             this.instance.destroy();
         }
+    },
+    computed:{
+        ...mapGetters(["reshtmlContent","resUeditor"])
     },
     methods: {
         initEditor() {
@@ -267,7 +283,79 @@ export default {
             this.mobileHtml = this.instance.getContent();
         },
         save(){
-            console.log(this.instance.setContent("1111"))
+            let data = this.app.form;
+            let customMetas = {
+                // leadinLineUrl:data.properties.leadinLineUrl,
+                // leadinLineStyle: data.leadinLineStyle,
+                // originalCategory: data.originalCategory,
+                watermark: data.properties.watermark?1:0,
+                ad: data.properties.ad?1:0
+            };
+            let newData = {
+                libid: "workspace",
+                objid:store.objid,
+                folder:"561a41a40aaa748fb64ca229",
+                title: this.$store.state.title,
+                keywords: data.dynamicTags.join(","),
+                content: "编辑器内容",
+                summary: data.summary,
+                signature: data.signature,
+                linkHeadline: data.linkHeadline,
+                level: data.levelId,
+                comment: data.comment,
+                reference: "",
+                htmlContent:store.ueditor.getContent(),
+                elated:"",
+                topic:data.topicsId,
+                newStory: false,
+                origination:data.origination,
+                sourceType: "用户创建",
+                system: "智能采编",
+                canComment: data.canComment?1:0,
+                relateModifyStories:"", 
+                coverType: data.coverType,
+                defaultCoverSwitch: 0,
+                isNewEditor: 0,
+                primersTitle: "",
+                subTitle:"",
+                coverListCount: 0,
+                sensitiveWord: false,
+                customMetas:customMetas,
+                ContentType:true
+            }
+            // 封面图动态添加
+            if(data.coverType == 1 && (/add\.png/.test(data.opaImg1) == false)) {
+                newData["coverList[0].data"] = data.opaImg1;
+                newData["coverList[0].ratioName"] ="1:1";
+                newData["coverList[0].compressFlag"] = 1;
+                newData.coverListCount = 1;
+            }else if(data.coverType == 2 && (/add\.png/.test(data.opaImg2) == false)){
+                newData["coverList[0].data"] = data.opaImg2;
+                newData["coverList[0].ratioName"] ="1:1";
+                newData["coverList[0].compressFlag"] = 1;
+                newData.coverListCount = 1;
+            }else if(data.coverType == 3){
+                let count = 0;
+                for(let i=0;i<3;i++) {
+                    if(/add\.png/.test(data["opaImg"+(i+1)]) == false){
+                        count ++;
+                        newData["coverList["+i+"].data"] = data["opaImg"+(i+1)];
+                        newData["coverList["+i+"].ratioName"] ="1:1";
+                        newData["coverList["+i+"].compressFlag"] = 1;
+                    }
+                }
+                newData.coverListCount = 3;
+            }
+            // 分享封面参数
+            /add\.png/.test(data.addImg)?newData.shareCover= "":newData.shareCover= data.addImg;
+            newSave(newData).then(res=>{
+                if(res) {
+                    this.$message({
+                        message: '保存成功！',
+                        type: 'success'
+                    });
+                }
+            })
         },
         onMouseOver(){
             this.show  = true
@@ -334,7 +422,7 @@ export default {
             this.activeIndex = 0;
             this.styles.width = "389px",
             this.styles.height = "725px"
-            this.styles.background = "url(../../../../../static/img/iPhoneX.png) 0% 0% / 100% 100% no-repeat"
+            this.styles.background = "url(http://127.0.0.1:9080/sprint/assets/img/iPhoneX.png) 0% 0% / 100% 100% no-repeat"
             
             this.styles.padding = "89px 23px 22px 16px;"
             console.log(this.styles.padding )
@@ -344,7 +432,7 @@ export default {
             this.styles = {
                 "width":"389px",
                 "height": "713px",
-                "background":"url(../../../../../static/img/iPhone.png) 0% 0% / 100% 100% no-repeat",
+                "background":"url(http://127.0.0.1:9080/sprint/assets/img/iPhone.png) 0% 0% / 100% 100% no-repeat",
                 "box-sizing":"border-box",
                 "padding":"127px 38px 87px 47px"
             }
@@ -354,18 +442,12 @@ export default {
             this.styles = {
                 "width":"348px",
                 "height": "638.5px",
-                "background":"url(../../../../../static/img/iPhone.png) 0% 0% / 100% 100% no-repeat",
+                "background":"url(http://127.0.0.1:9080/sprint/assets/img/iPhone.png) 0% 0% / 100% 100% no-repeat",
                 "box-sizing":"border-box",
                 "background-size": "100% 100%",
                 "padding":"127px 38px 87px 47px"
             }
         },
-        save(){
-            newSave().then(res=>{
-
-            })
-        }
-
     }
 };
 
@@ -454,7 +536,7 @@ export default {
     height: 16px;
     font-size: 14px;
     font-family: MicrosoftYaHei;
-    color: #22272E;
+    color: #666666;
     line-height: 16px;
 }
 .download::after{

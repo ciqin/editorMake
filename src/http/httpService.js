@@ -31,7 +31,7 @@ Axios.interceptors.request.use(config => {
   if (config.data && config.data.ContentType) {
     delete config.data.ContentType
     config.data = qs.stringify(config.data);
-    config.headers = Object.assign(config.headers, { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'})
+    config.headers = Object.assign(config.headers, { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',"X-CSRF-TOKEN":"f3a8f26e-3416-46dc-8957-abe46967f88a"})
   }
   return config
 }, error => {
