@@ -12,20 +12,24 @@
           <el-button icon="el-icon-search" @click="searchtemplate()">搜索</el-button>
         </div>
         <div class='first_texttemp'>内部资源 > 模板 > {{templatearr[texttemp]}} </div>
-        <div style='height: 755px;overflow: auto;'>
-          <div class="first_main_imgs" v-loading="loading">
-              <ul>
-                <li v-for="(item,key) in templateimgarr" :key = key :title="item.label">
-                  <section v-html = item.templeteSource></section>
-                </li>
-              </ul>
+
+          <div style='height: 755px;overflow: auto;'>
+            <div class="first_main_imgs" v-loading="loading">
+                <ul v-if="templateimgarr.length>0">
+                  <li v-for="(item,key) in templateimgarr" :key = key :title="item.label">
+                    <section v-html = item.templeteSource></section>
+                  </li>
+                </ul>
+
+                <div v-else>
+                   <p style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;'><i class='el-icon-warning-outline'></i>暂无数据</p>
+                </div>
+            </div>
           </div>
-        </div>
-        
+
       </el-tab-pane>
 
-      <el-tab-pane label="媒资库" name="second">
-        
+      <el-tab-pane label="媒资库" name="second">     
        <div class="labelselect">
           <label for="">分类</label>
           <el-select v-model="value1" placeholder="请选择">
@@ -55,30 +59,33 @@
           <el-button icon="el-icon-search" @click="searchShare()">搜索</el-button>
         </div>
 
-        <div v-if="Libraryarr.length>0">
-           <div class="libisryarr" v-for="(item,key) in Libraryarr" :key = key>
-               <div class='libisryarr_list'>
-                  <!-- <div class='collection_icon' @click="collectionIconclick(key)" :class='item.iscollection===true ? "collectionAcitve" : "nocollectionAcitve" '>
-                      <i class="el-icon-star-on"></i>
-                    </div> -->
-                  <div class="libisryarr_img" v-if="item.fileFormat=='mp4'">
-                      <video :src="item.url" controls="controls" :poster="item.coverImageUrl">
-                      </video>
-                  </div>
+　　　　　<div v-loading="loading">
+            <div v-if="Libraryarr.length>0">
+                      <div class="libisryarr" v-for="(item,key) in Libraryarr" :key = key>
+                          <div class='libisryarr_list'>
+                              <!-- <div class='collection_icon' @click="collectionIconclick(key)" :class='item.iscollection===true ? "collectionAcitve" : "nocollectionAcitve" '>
+                                  <i class="el-icon-star-on"></i>
+                                </div> -->
+                              <div class="libisryarr_img" v-if="item.fileFormat=='mp4'">
+                                  <video :src="item.url" controls="controls" :poster="item.coverImageUrl">
+                                  </video>
+                              </div>
 
-                  <div class="libisryarr_img" v-else-if="item.fileFormat=='jpg'">
-                      <img :src="item.url" alt="">
-                  </div>
-               </div>
-               <div class="libisryarr_botal">
-                 <p>{{item.mediaName}}</p>
-                 <p>{{item.createTime}}</p>
-               </div>
-           </div>
-        </div>
-        <div v-else>
-           <p style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;'><i class='el-icon-warning-outline'></i>暂无数据</p>
-        </div>
+                              <div class="libisryarr_img" v-else-if="item.fileFormat=='jpg'">
+                                  <img :src="item.url" alt="">
+                              </div>
+                          </div>
+                          <div class="libisryarr_botal">
+                            <p>{{item.mediaName}}</p>
+                            <p>{{item.createTime}}</p>
+                          </div>
+                      </div>
+              </div>
+              <div v-else>
+                <p style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;'><i class='el-icon-warning-outline'></i>暂无数据</p>
+              </div>
+         </div>
+        
       </el-tab-pane>
 
       <el-tab-pane label="稿库" name="third">
@@ -94,21 +101,26 @@
           </el-date-picker>
         </div>
 
-        <div>
-           <div class="libisryarr" v-for="(item,key) in Libraryarr" :key = key>
-               <div class='libisryarr_list'>
-                  <div class='collection_icon' @click="collectionIconclick(key)" :class='item.iscollection===true ? "collectionAcitve" : "nocollectionAcitve" '>
-                      <i class="el-icon-star-on"></i>
-                    </div>
-                  <div class="libisryarr_img">
-                      <img :src="item.img" alt="">
+         <div style="height: 784px;overflow-y: auto;" v-loading="loading">
+            <div v-if="Manuscript.length>0">
+              <div class="libisryarr" v-for="(item,key) in Manuscript" :key = key>
+                  <div class='libisryarr_list'>
+                      <!-- <div class='collection_icon' @click="collectionIconclick(key)" :class='item.iscollection===true ? "collectionAcitve" : "nocollectionAcitve" '>
+                          <i class="el-icon-star-on"></i>
+                      </div> -->
+                      <div class="libisryarr_img">
+                          <img :src="item.img" alt="">
+                      </div>
                   </div>
-               </div>
-               <div class="libisryarr_botal">
-                 <p>{{item.title}}</p>
-                 <p>{{item.time}}</p>
-               </div>
-           </div>
+                  <div class="libisryarr_botal">
+                    <p>{{item.title?item.title:'暂无标题'}}</p>
+                    <p>{{item.time}}</p>
+                  </div>
+              </div>
+            </div>
+            <div v-else>
+                <p style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;'><i class='el-icon-warning-outline'></i>暂无数据</p>
+            </div>
         </div>
       </el-tab-pane>
     </el-tabs>
@@ -118,7 +130,8 @@
 <script>
   import { classifygetAll } from '@/http/api'
   import { SearchShareAssets } from '@/http/api'
-  import { getTempleteSourceList } from '@/http/api'
+  import { getTempleteSourceList } from '@/http/api'  // 获取模板
+  import { listObjects } from '@/http/api'           //稿库
   export default {
     data() {
       return {
@@ -147,6 +160,7 @@
         value2: '图片',
         templateinput:'',//模板搜索的关键字
         loading:true,
+        Manuscript:[]  //稿库
       };
     },
     created(){
@@ -183,6 +197,24 @@
             }
          })
 
+         let Objectparam = {
+            ContentType:true,
+            keywords: '',
+            library: 'workspace',
+            types: 'TEXT,COMPO,LIVE',
+            excludedIds: this.$route.query.id,
+            editorType: 'COMPO',
+            page: 0,
+            size: 10
+         }
+         listObjects(Objectparam).then(res=>{
+           if(res){
+             this.loading = false
+             this.Manuscript = res.content
+              console.log(this.Manuscript)
+           }
+         })
+         
     },
     methods: {
       handleClick(tab, event) {
@@ -215,6 +247,7 @@
         }
       },
       searchShare(){
+         this.loading = true
          if(this.value1=='分类' || this.value2=='全部'){
            this.value1 = 1 
            this.value2 = 0
@@ -229,9 +262,8 @@
          }
          SearchShareAssets(Searchparam).then(res=>{  //媒资库检索
            if(res){
+             this.loading = false
              this.Libraryarr = res.data
-
-             console.log(res)
            }
          })
       },
@@ -327,6 +359,7 @@
     border: 1px solid #E7ECF2;
     margin-left: 25px;
     margin-top: 10px;
+    min-height: 745px;
  }
 
  .first_texttemp{
@@ -340,12 +373,16 @@
 
  .first_main_imgs ul{
    padding-bottom: 10px;
+   min-height: 735px;
  }
 
  .first_main_imgs ul li{
-   width:325px;
-   margin-left: 8px;
-   text-align: center;
+    width: 100%;
+    text-align: center;
+    padding: 15px 0px;
+ }
+ .first_main_imgs ul li:hover{
+   box-shadow: inset 0 0 10px 0px #ccc;
  }
  .first_main_imgs ul li img{
    max-width: 100%;

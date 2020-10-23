@@ -41,3 +41,6 @@ export const newSave = data => postHttp(caiApi+'/sprint/rest/stories/workspace/'
 
 // 获取模板
 export const getTempleteSourceList = data => postHttp(caiApi+'/sprint/rest/story/getTempleteSourceList', data)
+
+//稿库
+export const listObjects = data => postHttp(caiApi+'/sprint/view/libraries/workspace/zhiZuo/listObjects', data)
