@@ -16,7 +16,7 @@
           <div style='height: 755px;overflow: auto;'>
             <div class="first_main_imgs" v-loading="loading">
                 <ul v-if="templateimgarr.length>0">
-                  <li v-for="(item,key) in templateimgarr" :key = key :title="item.label">
+                  <li v-for="(item,key) in templateimgarr" :key = key :title="item.label" @click="templeteSource(key,item)">
                     <section v-html = item.templeteSource></section>
                   </li>
                 </ul>
@@ -219,6 +219,9 @@
     methods: {
       handleClick(tab, event) {
         console.log(tab, event);
+      },
+      templeteSource(index,item){
+        console.log(index,item)
       },
       templatearrclick(index){
          this.texttemp = index
