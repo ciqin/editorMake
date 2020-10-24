@@ -9,7 +9,7 @@
                    <ul>
                        <li  @click="leftToggle('letfTab1')" :class="{Navcurrent:Navcurrent=='letfTab1'}"><i class="el-icon-s-unfold"></i></li>
                        <li  @click="leftToggle('letfTab2')" :class="{Navcurrent:Navcurrent=='letfTab2'}"><i class="el-icon-s-order" ></i></li>
-                       <!-- <li  @click="leftToggle('letfTab3')" :class="{Navcurrent:Navcurrent=='letfTab3'}"><i class="el-icon-star-on"></i></li> -->
+                       <li  @click="leftToggle('letfTab3')" :class="{Navcurrent:Navcurrent=='letfTab3'}"><i class="el-icon-star-on"></i></li>
                    </ul>
                </div>
                <div class="NavContainer">
@@ -57,7 +57,7 @@ import Tab2 from "../Auxiliary/correction"
 import Tab3 from "../Auxiliary/sensitiveWords"
 import letfTab1 from "../leftmenu/templates"
 import letfTab2 from "../leftmenu/articleedit"
-// import letfTab3 from "../leftmenu/collection"
+import letfTab3 from "../leftmenu/collection"
 import Tab4 from "../Auxiliary/pictureMatching"
 import { store } from '@/store'
 import {mapActions, mapGetters} from 'vuex';
@@ -135,10 +135,11 @@ export default {
         },
         inputChange(e){
             this.$store.dispatch('modifyDataTitle',this.input);
-        }
+        },
+        
     },
     components:{
-        Tab1,Tab2,Tab3,Ueditor,letfTab1,letfTab2,Tab4
+        Tab1,Tab2,Tab3,Ueditor,letfTab1,letfTab2,Tab4,letfTab3
     }
 };
 
