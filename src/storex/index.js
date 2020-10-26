@@ -14,7 +14,11 @@ const state = {
     sidebarByid:1,
     dataType:null,
     title:'',
-    htmlContent:""
+    htmlContent:"",
+    submit:false,
+    censorship:false,
+    adopt:false,
+    checkIn:false
 }
  
 // 注册上面引入的各大模块

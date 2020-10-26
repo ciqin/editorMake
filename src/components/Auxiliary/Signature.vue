@@ -324,6 +324,9 @@ export default {
     created(){
           // 初始化稿签数据
         newSignature().then(res=>{
+            if(/系统登录认证信息输入区域/.test(res) && /智能采编平台/.test(res)) {
+                this.$router.push("/login") 
+            }
             this.$store.dispatch('modifyDataTitle',res.story.title);
             this.$store.dispatch('modifyDatahtmlContent',res.story.htmlContent);
             let originations = [];

@@ -49,30 +49,37 @@
         <!-- 提交弹出框 -->
         <el-dialog
             title="提交"
-            :visible.sync="submit"
-            width="600px">
+            :visible.sync="hasSubmit"
+            width="600px" :before-close="CloseSubmit">
             <Submit></Submit>
         </el-dialog>
         <!-- 传稿弹出框 -->
         <el-dialog
             title="传稿"
-            :visible.sync="adopt"
-            width="600px">
+            :visible.sync="hasAdopt"
+            width="600px" :before-close="CloseSubmit">
             <Adopt></Adopt>
         </el-dialog>
         <!-- 签入弹出窗 -->
         <el-dialog
             title="签入"
-            :visible.sync="censorship"
-            width="600px">
+            :visible.sync="hasCensorship"
+            width="600px" :before-close="CloseSubmit">
             <Censorship></Censorship>
         </el-dialog>
         <!-- 选用弹出窗 -->
         <el-dialog
             title="选用"
             :visible.sync="ceshi"
-            width="600px">
+            width="600px" :before-close="CloseSubmit">
             <Selection></Selection>
+        </el-dialog>
+        <!-- 送审弹出窗 -->
+        <el-dialog
+            title="送审"
+            :visible.sync="hasCheckIn"
+            width="600px" :before-close="CloseSubmit">
+            <CheckIn></CheckIn>
         </el-dialog>
     </div>
   </div>
@@ -95,6 +102,7 @@ import Submit from "../Popup/submit"
 import Adopt from "../Popup/adopt"
 import Censorship from "../Popup/censorship"
 import Selection from "../Popup/selection"
+import CheckIn from "../Popup/checkIn"
 export default {
     name: 'UE',
     props: {
@@ -259,6 +267,7 @@ export default {
             that.instance.setContent(that.$store.state.htmlContent)
         }, 500);
         listBtn().then(res=>{
+
             res.forEach(item=>{
                 switch(item.code){
                     case "story-deliver":
@@ -282,7 +291,7 @@ export default {
         }
     },
     computed:{
-        ...mapGetters(["reshtmlContent","resUeditor"])
+        ...mapGetters(["reshtmlContent","resUeditor","hasSubmit","hasCensorship","hasAdopt","hasCheckIn"])
     },
     components:{
         Submit,Adopt,Censorship
@@ -290,13 +299,18 @@ export default {
     methods: {
         // 按钮操作
         opaBtn1(){
-            this.adopt = true
+            this.$store.dispatch('modifyAdopt',true);
         },
         opaBtn2(){
-            this.censorship = true
+            this.$store.dispatch('modifyCensorship',true);
         },
         opaBtn3(){
-            this.submit = true
+            this.$store.dispatch('modifySubmit',true);
+        },
+        CloseSubmit(){
+            this.$store.dispatch('modifySubmit',false);
+            this.$store.dispatch('modifyCensorship',false);
+            this.$store.dispatch('modifyAdopt',false);
         },
         opaBtn4(){
             this.ceshi = true

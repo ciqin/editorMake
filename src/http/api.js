@@ -11,9 +11,8 @@ import { store } from '@/store'
 // let id = window.location.href.split().split("?")[1].split("=")[1];
 let manuscriptId = window.location.href;
 let newManuscriptId = manuscriptId.split("?")[1].split("&")[0].split("=")[1];
-console.log(newManuscriptId)
-// let libId = manuscriptId.split("?")[1].split("&")[1].split("=")[1];
-store.objid = newManuscriptId;
+let libId = manuscriptId.split("?")[1].split("&")[1].split("=")[1];
+// store.objid = newManuscriptId;
 //  test
 export const getJson = data => getHttp('../../static/test/test.json', data)
 
@@ -36,17 +35,45 @@ export const correction = data => postHttp(swaggerApi+'/ilgcreation/sensitiveAna
 export const sensitivityAnalysis = data => postHttp(swaggerApi+'/ilgcreation/text/check', data)
 
 // 新建获取稿签Id
-export const newSignature = data => getHttp(caiApi+'/sprint/rest/stories/workspace/'+newManuscriptId+'/tags/edit?type=COMPO', data)
+export const newSignature = data => getHttp(caiApi+'/sprint/rest/stories/'+libId+'/'+newManuscriptId+'/tags/edit?type=COMPO', data)
 
 // 自动保存
 
-export const newSave = data => postHttp(caiApi+'/sprint/rest/workflow/stories/workspace/'+newManuscriptId+'/save/zhiZuo/process', data)
+export const newSave = data => postHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/save/zhiZuo/process', data)
 
 // 获取模板
 export const getTempleteSourceList = data => postHttp(caiApi+'/sprint/rest/story/getTempleteSourceList', data)
 
 //稿库
-export const listObjects = data => postHttp(caiApi+'/sprint/view/libraries/workspace/zhiZuo/listObjects', data)
+export const listObjects = data => postHttp(caiApi+'/sprint/view/libraries/'+libId+'/zhiZuo/listObjects', data)
 
 // 获取按钮接口
-export const listBtn = data => postHttp(caiApi+'/sprint/rest/story/workspace/'+newManuscriptId+'/actions/edit', data)
+export const listBtn = data => postHttp(caiApi+'/sprint/rest/story/'+libId+'/'+newManuscriptId+'/actions/edit', data)
+
+// 提交获取id接口
+export const hasSubmitId = data => postHttp(caiApi+'/sprint/rest/story/'+libId+'/'+newManuscriptId+'/submit', data)
+
+// 获取用户select
+export const hasSubmitUser = data => getHttp(caiApi+'/sprint/security/users/search', data)
+
+// 稿件提交接口
+export const SubmitGj = data => getHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/submit/process', data)
+
+// 获取稿件签入接口
+export const checkIn = data => postHttp(caiApi+'/sprint/rest/story/'+libId+'/'+newManuscriptId+'/checkin', data)
+
+// 获取目录接口
+export const hasCatalog= data => getHttp(caiApi+'/sprint/rest/libraries/manuscript/select/allFolders', data)
+
+
+// 稿件签入提交接口
+export const checkInData = data => postHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/checkin/process', data)
+
+// 传稿获取数据接口
+export const manuscript = data => postHttp(caiApi+'/sprint/rest/story/'+libId+'/'+newManuscriptId+'/deliver', data)
+
+// 传稿提交接口
+export const manuscriptSubmit = data => postHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/deliver/process', data)
+
+// 获取用户部门接口
+export const hasDepartment = data => getHttp(caiApi+'/sprint/security/groups/leaf/list', data)

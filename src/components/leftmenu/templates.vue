@@ -106,12 +106,12 @@
 
         <div class='infinite-list-wrapper' style="height: 776px;overflow-y: auto;margin-top: 20px;" v-loading="loading">
             <div v-if="Manuscript.length>0 && loading==false" v-infinite-scroll="loadManuscript" infinite-scroll-disabled="disabled">
-              <div class="third_libisryarr" v-for="(item,key) in Manuscript" :key = key @click='ManuscriptClick(item)'>
-                 <div v-if="item.thumbnailUrl && item.htmlContent" style='display:flex'>
+              <div class="third_libisryarr" v-for="(item,key) in Manuscript" :key = key @click='ManuscriptClick(item)' @mouseover="collectionIconmouseover" @mouseout="collectionIconmouseout" >
+                 <div v-if="item.thumbnailUrl && item.htmlContent" style='display: flex;position: relative;'>
                       <div class='third_libisryarr_list'>
-                          <!-- <div class='collection_icon' @click="collectionIconclick(key)" :class='item.iscollection===true ? "collectionAcitve" : "nocollectionAcitve" '>
+                           <div class='collection_icon' @click.stop="collectionIconclick(key,e)" :class='item.iscollection===true ? "collectionAcitve" : "nocollectionAcitve" '>
                               <i class="el-icon-star-on"></i>
-                          </div> -->
+                          </div> 
                           <div class="third_libisryarr_img">
                               <img  :src="item.thumbnailUrl.indexOf('http')? caiApi+item.thumbnailUrl : item.thumbnailUrl">
                           </div>
@@ -123,7 +123,10 @@
                  </div>
 
                  <div v-else-if="!item.thumbnailUrl && item.htmlContent">
-                     <div class="third_libisryarr_botal">
+                     <div class="third_libisryarr_botal" style='position: relative;'>
+                          <div class='collection_icon'  @click.stop="collectionIconclick(key,e)" :class='item.iscollection===true ? "collectionAcitve" : "nocollectionAcitve" '>
+                              <i class="el-icon-star-on"></i>
+                          </div> 
                         <p class='third_libisryarr_botal_title'>{{item.title}}</p>
                       </div>
                  </div>
@@ -161,6 +164,7 @@
         templateimgarr:[],
         options1: [],
         value1: '分类',
+        seen:false,
         options2: [{
           value: 1,
           label: '图片'
@@ -183,6 +187,7 @@
         Manuscriptotal:'',   //稿库的总条数
         loadimg:false, //稿件滚动加载
         Manuscrippage:0,//稿库的页数
+        ManuscrippageNum:10,//稿件每次加载条数
       };
     },
     created(){
@@ -201,45 +206,19 @@
               this.loading = false
               this.templateimgarr = res.content
             }
-<<<<<<< HEAD
-         })
-
-         let Objectparam = {
-            ContentType:true,
-            keywords: '',
-            library: 'workspace',
-            types: 'TEXT,COMPO,LIVE',
-            excludedIds: this.$route.query.id,
-            editorType: 'COMPO',
-            page: 0,
-            size: 10
-         }
-         listObjects(Objectparam).then(res=>{
-           if(res){
-             this.loading = false
-             this.Manuscript = res.content
-           }
-         })
-         
-=======
         })
     },
     computed: {
       noMore () {
-        return this.Manuscript.length > this.Manuscriptotal
+        return this.Manuscript.length-1 > this.Manuscriptotal
       },
       disabled () {
         return this.loadimg || this.noMore
       }
->>>>>>> 904f08ac91e1a0c2f12c94dba5c22b786428e9a0
     },
 
     methods: {
       handleClick(tab, event) {
-<<<<<<< HEAD
-      },
-      templeteSource(index,item){
-=======
         if(tab.label=='媒资库'){
             this.options1 = []
             //获取分类
@@ -301,7 +280,6 @@
       },
       templeteSource(index,item){
         store.ueditor.setContent(item.templeteSource,true)
->>>>>>> 904f08ac91e1a0c2f12c94dba5c22b786428e9a0
       },
       templatearrclick(index){
          this.texttemp = index
@@ -316,18 +294,18 @@
          }
          getTempleteSourceList(Listparam).then(res=>{
             if(res){
-              console.log(res)
               this.loading = false
               this.templateimgarr = res.content
             }
          })
       },
-      collectionIconclick(index){
+      collectionIconclick(index,e){
         if(this.Libraryarr[index].iscollection===true){
          this.Libraryarr[index].iscollection = false
         }else{
           this.Libraryarr[index].iscollection = true
         }
+        
       },
       LibraryClick(item){
        let str = ''
@@ -377,9 +355,6 @@
             }
          })
 
-<<<<<<< HEAD
-      }
-=======
       },
       Manuscriptsearch(){
            this.loading = true
@@ -405,33 +380,38 @@
       ManuscriptClick(item){
           store.ueditor.setContent(item.htmlContent)
       },
+      collectionIconmouseover(){
+      
+      },
+      collectionIconmouseout(){
+      },
       loadManuscript () {
-         this.loadimg = true
->>>>>>> 904f08ac91e1a0c2f12c94dba5c22b786428e9a0
+          let _that = this
+           _that.loadimg = true
 
-         let Objectparam = {
-              ContentType:true,
-              keywords: '',
-              library: 'workspace',
-              types: 'TEXT,COMPO,LIVE',
-              excludedIds: this.$route.query.id,
-              editorType: 'COMPO',
-              page: this.Manuscrippage+1,
-              size: 10
-          }
-          listObjects(Objectparam).then(res=>{
+          let Objectparam = {
+                ContentType:true,
+                keywords: '',
+                library: 'workspace',
+                types: 'TEXT,COMPO,LIVE',
+                excludedIds: _that.$route.query.id,
+                editorType: 'COMPO',
+                page: _that.Manuscrippage,
+                size: _that.ManuscrippageNum
+            }
+          if(_that.loadimg){
+            listObjects(Objectparam).then(res=>{
             if(res){
-              let _that = this
+               _that.loadimg = false
+               _that.Manuscrippage = _that.Manuscrippage+1
+               _that.Manuscriptotal = res.totalElements
               res.content.forEach(function (item) {
                 _that.Manuscript.push(item);
-              });
-              _that.Manuscrippage = res.number
-
-              _that.loadimg = false
+              });          
             }
           })
-
-          this.loadimg = false
+          }
+         
 
       }
     }
@@ -550,7 +530,7 @@
     text-align: center;
     border-radius: 4px;
     position: absolute;
-    right: 10px;
+    right: 0px;
     top: 5px;
     font-size: 14px;
 }
@@ -649,7 +629,6 @@
 }
 .third_libisryarr_list{
   border-radius: 3px;
-  position: relative;
 }
 
 .third_libisryarr_img{

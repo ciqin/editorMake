@@ -3,7 +3,7 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   // mode: '',
   base:"/make/",
   routes: [
@@ -45,8 +45,8 @@ export default new Router({
       ]
     },
     {
-      path: '/login',
-      name: 'login',
+      path: '/logins',
+      name: 'logins',
       component: resolve => require(['@/components/login'], resolve),
     },
     {
@@ -81,3 +81,12 @@ export default new Router({
     }
   ]
 })
+router.beforeEach(function(to, from, next) {
+  if(!document.cookie){
+    next('/login')
+  }else {
+    next()
+  }
+})
+export default router
+
