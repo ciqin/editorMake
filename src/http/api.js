@@ -1,10 +1,10 @@
 /**
  * 此文件为接口统一管理文件
  */
-const swaggerApi = "http://192.168.4.68:9117";
+const swaggerApi = "http://192.168.18.12:9117";
 const caiApi = "http://127.0.0.1:9080";
 const hongApi = "http://qhcloudhongqi.wengegroup.com:9116"
-const zhiApi = "http://192.168.4.37:9117"
+const zhiApi = "http://192.168.18.12:9117"
 import { getHttp, postHttp } from "./httpService"
 import { store } from '@/store'
 // 获取稿件id
@@ -47,6 +47,11 @@ export const getTempleteSourceList = data => postHttp(caiApi+'/sprint/rest/story
 //稿库
 export const listObjects = data => postHttp(caiApi+'/sprint/view/libraries/'+libId+'/zhiZuo/listObjects', data)
 
+//模板添加收藏
+export const favorTemplate = data => getHttp(caiApi+'/sprint/rest/story/favorTemplate', data)
+
+//模板取消收藏
+export const cancelFavorTemplate = data => getHttp(caiApi+'/sprint/rest/story/cancelFavorTemplate', data)
 // 获取按钮接口
 export const listBtn = data => postHttp(caiApi+'/sprint/rest/story/'+libId+'/'+newManuscriptId+'/actions/edit', data)
 
