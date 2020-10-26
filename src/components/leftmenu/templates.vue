@@ -13,13 +13,21 @@
         </div>
         <div class='first_texttemp'>内部资源 > 模板 > {{templatearr[texttemp]}} </div>
 
-          <div style='height: 755px;overflow: auto;'>
-            <div class="first_main_imgs" v-loading="loading">
-                <ul v-if="templateimgarr.length>0">
-                  <li v-for="(item,key) in templateimgarr" :key = key :title="item.label" @click="templeteSource(key,item)" v-html = item.templeteSource>
+          <div>
+            <div class="first_main_imgs infinite-list-wrapper" v-loading="loading" >
+                <ul v-if="templateimgarr.length>0" style='height: 755px;overflow: auto;' v-infinite-scroll="loadTemplates" infinite-scroll-disabled="disabledtemplate">
+                  <li v-for="(item,key) in templateimgarr" :key = key :title="item.label" @click="templeteSource(key,item)" :class="{show_list_start:item.show===true}" @mouseover="collectionIconmouseover(key,item,templateimgarr)"  @mouseout="collectionIconmouseout(key,item,templateimgarr)">
+                     <div v-html = item.templeteSource ></div>
+                     <div class='collection_icon' :connectid="item.userId"   @click.stop="collectionIconclick(key,e,templateimgarr)" :class='item.userId ? "collectionAcitve" : "nocollectionAcitve" '>
+                           <i class="el-icon-star-on"></i>
+                      </div>
                   </li>
-                </ul>
 
+                   <p v-if="loadimgtemplate" style='text-align:center'>加载中...</p>
+                    <p v-if="noMoretemplate">没有更多了</p>
+                </ul>
+              
+                
                 <div v-else>
                    <p style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;'><i class='el-icon-warning-outline'></i>暂无数据</p>
                 </div>
@@ -88,7 +96,6 @@
       </el-tab-pane>
 
       <el-tab-pane label="稿库" name="third">
-
         <div class='third_search' style='padding: 10px 20px;display:flex'>
           <el-input v-model="Manuscriptinput" placeholder="请输入关键字(名称,内容)"></el-input>
           <el-button icon="el-icon-search" @click="Manuscriptsearch()">搜索</el-button>
@@ -104,14 +111,14 @@
           </el-date-picker>
         </div>
 
-        <div class='infinite-list-wrapper' style="height: 776px;overflow-y: auto;margin-top: 20px;" v-loading="loading">
-            <div v-if="Manuscript.length>0 && loading==false" v-infinite-scroll="loadManuscript" infinite-scroll-disabled="disabled">
+        <div class='infinite-list-wrapper' v-loading="loading">
+            <div v-if="Manuscript.length>0 && loading==false"  style="height: 776px;overflow-y: auto;margin-top: 20px;" v-infinite-scroll="loadManuscript" infinite-scroll-disabled="disabled">
               <div class="third_libisryarr" v-for="(item,key) in Manuscript" :key = key @click='ManuscriptClick(item)'>
-                 <div v-if="item.thumbnailUrl && item.htmlContent" style='display:flex'>
-                      <div class='third_libisryarr_list'>
-                          <!-- <div class='collection_icon' @click="collectionIconclick(key)" :class='item.iscollection===true ? "collectionAcitve" : "nocollectionAcitve" '>
+                 <div v-if="item.thumbnailUrl && item.htmlContent" style='display: flex;position: relative;' :class="{show_list_start:item.show===true}" @mouseover="collectionIconmouseover(key,item,Manuscript)"  @mouseout="collectionIconmouseout(key,item,Manuscript)">
+                      <div class='third_libisryarr_list'> 
+                           <div class='collection_icon' @click.stop="collectionIconclick(key,e)" :class='item.iscollection===true ? "collectionAcitve" : "nocollectionAcitve" '>
                               <i class="el-icon-star-on"></i>
-                          </div> -->
+                          </div> 
                           <div class="third_libisryarr_img">
                               <img  :src="item.thumbnailUrl.indexOf('http')? caiApi+item.thumbnailUrl : item.thumbnailUrl">
                           </div>
@@ -122,8 +129,11 @@
                       </div>
                  </div>
 
-                 <div v-else-if="!item.thumbnailUrl && item.htmlContent">
-                     <div class="third_libisryarr_botal">
+                 <div v-else-if="!item.thumbnailUrl && item.htmlContent" :class="{show_list_start:item.show===true}" @mouseover="collectionIconmouseover(key,item,Manuscript)"  @mouseout="collectionIconmouseout(key,item,Manuscript)">
+                     <div class="third_libisryarr_botal" style='position: relative;'>
+                          <div class='collection_icon'  @click.stop="collectionIconclick(key,e)" :class='item.iscollection===true ? "collectionAcitve" : "nocollectionAcitve" '>
+                              <i class="el-icon-star-on"></i>
+                          </div> 
                         <p class='third_libisryarr_botal_title'>{{item.title}}</p>
                       </div>
                  </div>
@@ -131,7 +141,7 @@
               </div>
 
               <p v-if="loadimg" style='text-align:center'>加载中...</p>
-              <p v-if="noMore">没有更多了</p>
+              <p v-if="collectionnoMore">没有更多了</p>
             </div>
             <div v-else-if='Manuscript.length==0 && loading==false'>
                 <p style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;'><i class='el-icon-warning-outline'></i>暂无数据</p>
@@ -148,6 +158,8 @@
   import { SearchShareAssets } from '@/http/api'
   import { getTempleteSourceList } from '@/http/api'  // 获取模板
   import { listObjects } from '@/http/api'           //稿库
+  import { favorTemplate } from '@/http/api'           //模板收藏
+  import { cancelFavorTemplate } from '@/http/api'           //取消模板收藏
   import { store } from '@/store'
   export default {
     data() {
@@ -158,9 +170,9 @@
         texttemp:0,
         Shareinput:'',//媒资库检索的关键字
         Libraryarr:[],//媒资库检索结果
-        templateimgarr:[],
         options1: [],
         value1: '分类',
+        seen:false,
         options2: [{
           value: 1,
           label: '图片'
@@ -176,40 +188,65 @@
         }],
         value2: '图片',
         templateinput:'',//模板搜索的关键字
+
+        templateimgarr:[], //模板
+        loadimgtemplate:false,
+        templatepage:1,//模板的页数
+        templatepageNum:10,//模板每次加载条数
+        templatetotal:'',//模板的总条数
+
         loading:true,
-        Manuscript:[],  //稿库
         caiApi:"http://127.0.0.1:9080",
+
         Manuscriptinput:'', //稿库的检索的字
+
+        Manuscript:[],  //稿库
         Manuscriptotal:'',   //稿库的总条数
         loadimg:false, //稿件滚动加载
         Manuscrippage:0,//稿库的页数
+        ManuscrippageNum:10,//稿件每次加载条数
       };
     },
     created(){
+        let _that = this
       //获取标题模板
         let Listparam = {
             label: '',
             templeteType: 1,
             status: 0,
-            size: 10,
-            page: 1,
+            size: _that.templatepageNum,
+            page: _that.templatepage,
             sort: 'use_num,desc',
             ContentType:true
         }
         getTempleteSourceList(Listparam).then(res=>{
             if(res){
-              console.log(res)
-              this.loading = false
-              this.templateimgarr = res.content
+              _that.loading = false
+              _that.templatetotal = res.totalElements
+
+              res.content.forEach(function (item) {
+                item.show = false
+                _that.templateimgarr.push(item);
+                console.log(_that.templateimgarr)
+              });  
             }
         })
     },
     computed: {
-      noMore () {
-        return this.Manuscript.length > this.Manuscriptotal
+      //稿库=========================================================
+      collectionnoMore () {  
+        return this.Manuscript.length-1 >= this.Manuscriptotal
       },
       disabled () {
-        return this.loadimg || this.noMore
+        return this.loadimg || this.collectionnoMore
+      },
+
+      //模板=========================================================
+      noMoretemplate () {
+        return this.templateimgarr.length-1 >= this.templatetotal
+      },
+      disabledtemplate (){
+          return this.loadimgtemplate || this.noMoretemplate
       }
     },
 
@@ -267,6 +304,7 @@
                 let _that = this
                 _that.loading = false
                 res.content.forEach(function (item) {
+                   item.show=false
                   _that.Manuscript.push(item);
                 });
                 _that.Manuscriptotal = res.totalElements
@@ -290,17 +328,31 @@
          }
          getTempleteSourceList(Listparam).then(res=>{
             if(res){
-              console.log(res)
               this.loading = false
               this.templateimgarr = res.content
             }
          })
       },
-      collectionIconclick(index){
-        if(this.Libraryarr[index].iscollection===true){
-         this.Libraryarr[index].iscollection = false
+      collectionIconclick(index,e,arr){
+        let param = {
+          templateId:arr[index].autoId
+        }
+        
+       if(arr[index].userId ===null){
+         this.arr[index].userId = true
+
+         if(arr == this.templateimgarr){
+          favorTemplate(param).then(res=>{ //模板收藏
+            console.log(res)
+          })
+         }
         }else{
-          this.Libraryarr[index].iscollection = true
+          if(arr == this.templateimgarr){
+            cancelFavorTemplate(param).then(res=>{ //模板收藏
+              console.log(res)
+            })
+         }
+          this.arr[index].userId = false
         }
       },
       LibraryClick(item){
@@ -377,32 +429,87 @@
           store.ueditor.setContent(item.htmlContent)
       },
       loadManuscript () {
-         this.loadimg = true
+          let _that = this
+           _that.loadimg = true
 
-         let Objectparam = {
-              ContentType:true,
-              keywords: '',
-              library: 'workspace',
-              types: 'TEXT,COMPO,LIVE',
-              excludedIds: this.$route.query.id,
-              editorType: 'COMPO',
-              page: this.Manuscrippage+1,
-              size: 10
-          }
-          listObjects(Objectparam).then(res=>{
+          let Objectparam = {
+                ContentType:true,
+                keywords: '',
+                library: 'workspace',
+                types: 'TEXT,COMPO,LIVE',
+                excludedIds: _that.$route.query.id,
+                editorType: 'COMPO',
+                page: _that.Manuscrippage,
+                size: _that.ManuscrippageNum
+            }
+          if(_that.loadimg){
+            listObjects(Objectparam).then(res=>{
             if(res){
-              let _that = this
+               _that.loadimg = false
+               _that.Manuscrippage = _that.Manuscrippage+1
+               _that.Manuscriptotal = res.totalElements
               res.content.forEach(function (item) {
+                 item.show=false
                 _that.Manuscript.push(item);
-              });
-              _that.Manuscrippage = res.number
-
-              _that.loadimg = false
+              });          
             }
           })
+          }
+         
 
-          this.loadimg = false
+      },
+      loadTemplates(){
+        let _that = this
+        _that.loadimgtemplate = true
 
+        //获取标题模板
+        let Listparam = {
+            label: '',
+            templeteType: 1,
+            status: 0,
+            size: _that.templatepageNum,
+            page: _that.templatepage,
+            sort: 'use_num,desc',
+            ContentType:true
+        }
+
+        if(_that.loadimgtemplate){
+            getTempleteSourceList(Listparam).then(res=>{
+            if(res){
+              _that.loading = false
+              _that.templatepage = _that.templatepage+1
+              _that.templatetotal = res.totalElements
+              res.content.forEach(function (item) {
+                _that.templateimgarr.push(item);
+              });  
+            }
+          })
+        }
+        
+      }, 
+      collectionIconmouseover(key,item,arr){
+        let newList = [];
+        arr.forEach((val,ind)=>{
+          if(ind == key) {
+            if(val.show == false){
+              val.show = true
+            }
+          }
+          newList.push(val)
+        })
+        this.arr = newList;
+      },
+      collectionIconmouseout(key,item,arr){
+        let newList = [];
+        arr.forEach((val,ind)=>{
+          if(ind == key) {
+            if(val.show == true){
+              val.show = false
+            }
+          }
+          newList.push(val)
+        })
+        this.arr = newList;
       }
     }
   };
@@ -418,6 +525,9 @@
       width: 112px;
       height: 4px;
       background-color: #D72323;
+   }
+   .nav_top_temlaptes .el-tabs__item:hover{
+     color:#D72323
    }
    .nav_top_temlaptes .el-loading-mask .el-loading-spinner .path {
     stroke: #d72323;
@@ -499,6 +609,7 @@
     width: 100%;
     text-align: center;
     padding: 15px 0px;
+    position: relative;
  }
  .first_main_imgs ul li:hover{
    box-shadow: inset 0 0 10px 0px #ccc;
@@ -520,7 +631,7 @@
     text-align: center;
     border-radius: 4px;
     position: absolute;
-    right: 10px;
+    right: 0px;
     top: 5px;
     font-size: 14px;
 }
@@ -619,7 +730,6 @@
 }
 .third_libisryarr_list{
   border-radius: 3px;
-  position: relative;
 }
 
 .third_libisryarr_img{
@@ -638,5 +748,12 @@
 .sort_naver label{
     font-size: 14px;
     color: #333333;
+}
+.collection_icon{
+  display: none;
+}
+.show_list_start .collection_icon{
+   display: block;
+   cursor: pointer;
 }
 </style>
