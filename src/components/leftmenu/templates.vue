@@ -16,8 +16,7 @@
           <div style='height: 755px;overflow: auto;'>
             <div class="first_main_imgs" v-loading="loading">
                 <ul v-if="templateimgarr.length>0">
-                  <li v-for="(item,key) in templateimgarr" :key = key :title="item.label" @click="templeteSource(key,item)">
-                    <section v-html = item.templeteSource></section>
+                  <li v-for="(item,key) in templateimgarr" :key = key :title="item.label" @click="templeteSource(key,item)" v-html = item.templeteSource>
                   </li>
                 </ul>
 
@@ -29,7 +28,7 @@
 
       </el-tab-pane>
 
-      <el-tab-pane label="媒资库" name="second">     
+      <el-tab-pane label="媒资库" name="second">
        <div class="labelselect">
           <label for="">分类</label>
           <el-select v-model="value1" placeholder="请选择">
@@ -60,68 +59,85 @@
         </div>
 
 　　　　　<div v-loading="loading">
-            <div v-if="Libraryarr.length>0">
-                      <div class="libisryarr" v-for="(item,key) in Libraryarr" :key = key>
-                          <div class='libisryarr_list'>
-                              <!-- <div class='collection_icon' @click="collectionIconclick(key)" :class='item.iscollection===true ? "collectionAcitve" : "nocollectionAcitve" '>
-                                  <i class="el-icon-star-on"></i>
-                                </div> -->
-                              <div class="libisryarr_img" v-if="item.fileFormat=='mp4'">
-                                  <video :src="item.url" controls="controls" :poster="item.coverImageUrl">
-                                  </video>
-                              </div>
+              <div v-if="Libraryarr.length>0">
+                <div class="libisryarr" v-for="(item,key) in Libraryarr" :key = key>
+                    <div class='libisryarr_list' @click="LibraryClick(item)">
+                        <!-- <div class='collection_icon' @click="collectionIconclick(key)" :class='item.iscollection===true ? "collectionAcitve" : "nocollectionAcitve" '>
+                            <i class="el-icon-star-on"></i>
+                          </div> -->
+                        <div class="libisryarr_img" v-if="item.fileFormat=='mp4'">
+                            <video :src="item.url" controls="controls" :poster="item.coverImageUrl">
+                            </video>
+                        </div>
 
-                              <div class="libisryarr_img" v-else-if="item.fileFormat=='jpg'">
-                                  <img :src="item.url" alt="">
-                              </div>
-                          </div>
-                          <div class="libisryarr_botal">
-                            <p>{{item.mediaName}}</p>
-                            <p>{{item.createTime}}</p>
-                          </div>
-                      </div>
+                        <div class="libisryarr_img" v-else-if="item.fileFormat=='jpg'">
+                            <img :src="item.url" alt="">
+                        </div>
+                    </div>
+                    <div class="libisryarr_botal">
+                      <p>{{item.mediaName}}</p>
+                      <p>{{item.createTime}}</p>
+                    </div>
+                </div>
               </div>
               <div v-else>
                 <p style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;'><i class='el-icon-warning-outline'></i>暂无数据</p>
               </div>
          </div>
-        
+
       </el-tab-pane>
 
       <el-tab-pane label="稿库" name="third">
+
         <div class='third_search' style='padding: 10px 20px;display:flex'>
-          <el-input v-model="input" placeholder="请输入关键字(名称,内容)"></el-input>
-          <el-button icon="el-icon-search">搜索</el-button>
+          <el-input v-model="Manuscriptinput" placeholder="请输入关键字(名称,内容)"></el-input>
+          <el-button icon="el-icon-search" @click="Manuscriptsearch()">搜索</el-button>
         </div>
+
         <div class="third_data">
             <el-date-picker
             v-model="datavalue"
             type="date"
-            placeholder="选择日期">
+            placeholder="选择日期"
+            value-format="yyyy-MM-dd"
+            >
           </el-date-picker>
         </div>
 
-         <div style="height: 784px;overflow-y: auto;" v-loading="loading">
-            <div v-if="Manuscript.length>0">
-              <div class="libisryarr" v-for="(item,key) in Manuscript" :key = key>
-                  <div class='libisryarr_list'>
-                      <!-- <div class='collection_icon' @click="collectionIconclick(key)" :class='item.iscollection===true ? "collectionAcitve" : "nocollectionAcitve" '>
-                          <i class="el-icon-star-on"></i>
-                      </div> -->
-                      <div class="libisryarr_img">
-                          <img :src="item.img" alt="">
-                      </div>
-                  </div>
-                  <div class="libisryarr_botal">
-                    <p>{{item.title?item.title:'暂无标题'}}</p>
-                    <p>{{item.time}}</p>
-                  </div>
-              </div>
-            </div>
-            <div v-else>
-                <p style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;'><i class='el-icon-warning-outline'></i>暂无数据</p>
-            </div>
-        </div>
+        <div class='infinite-list-wrapper' style="height: 776px;overflow-y: auto;margin-top: 20px;" v-loading="loading">
+            <div v-if="Manuscript.length>0 && loading==false" v-infinite-scroll="loadManuscript" infinite-scroll-disabled="disabled">
+              <div class="third_libisryarr" v-for="(item,key) in Manuscript" :key = key @click='ManuscriptClick(item)'>
+                 <div v-if="item.thumbnailUrl && item.htmlContent" style='display:flex'>
+                      <div class='third_libisryarr_list'>
+                          <!-- <div class='collection_icon' @click="collectionIconclick(key)" :class='item.iscollection===true ? "collectionAcitve" : "nocollectionAcitve" '>
+                              <i class="el-icon-star-on"></i>
+                          </div> -->
+                          <div class="third_libisryarr_img">
+                              <img  :src="item.thumbnailUrl.indexOf('http')? caiApi+item.thumbnailUrl : item.thumbnailUrl">
+                          </div>
+                      </div>
+                      <div class="third_libisryarr_botal">
+                        <p class='third_libisryarr_botal_title'><span class='third_libisryarr_botal_biaoshi'>图文</span>{{item.title?item.title:'暂无标题'}}</p>
+                        <p>{{item.time}}</p>
+                      </div>
+                 </div>
+
+                 <div v-else-if="!item.thumbnailUrl && item.htmlContent">
+                     <div class="third_libisryarr_botal">
+                        <p class='third_libisryarr_botal_title'>{{item.title}}</p>
+                      </div>
+                 </div>
+                 
+              </div>
+
+              <p v-if="loadimg" style='text-align:center'>加载中...</p>
+              <p v-if="noMore">没有更多了</p>
+            </div>
+            <div v-else-if='Manuscript.length==0 && loading==false'>
+                <p style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;'><i class='el-icon-warning-outline'></i>暂无数据</p>
+            </div>
+        </div>
+
       </el-tab-pane>
     </el-tabs>
    </div>
@@ -132,10 +148,11 @@
   import { SearchShareAssets } from '@/http/api'
   import { getTempleteSourceList } from '@/http/api'  // 获取模板
   import { listObjects } from '@/http/api'           //稿库
+  import { store } from '@/store'
   export default {
     data() {
       return {
-        datavalue: '',
+        datavalue: '', //稿件时间检索
         activeName: 'first',
         templatearr:['标题','正文','图文','引导','分割线','二维码','其他'],
         texttemp:0,
@@ -160,27 +177,17 @@
         value2: '图片',
         templateinput:'',//模板搜索的关键字
         loading:true,
-        Manuscript:[]  //稿库
+        Manuscript:[],  //稿库
+        caiApi:"http://127.0.0.1:9080",
+        Manuscriptinput:'', //稿库的检索的字
+        Manuscriptotal:'',   //稿库的总条数
+        loadimg:false, //稿件滚动加载
+        Manuscrippage:0,//稿库的页数
       };
     },
     created(){
-        //获取分类
-         let param = {
-           tenantId: 5,
-         }
-         classifygetAll(param).then(res=>{  
-           if(res){
-             res.data.forEach((val,ind)=>{
-                 this.options1.push({
-                   value: val.classifyId,
-                   label: val.classifyName
-                 })
-             })
-           }
-         })
-
-         //获取标题模板
-         let Listparam = {
+      //获取标题模板
+        let Listparam = {
             label: '',
             templeteType: 1,
             status: 0,
@@ -188,12 +195,13 @@
             page: 1,
             sort: 'use_num,desc',
             ContentType:true
-         }
-         getTempleteSourceList(Listparam).then(res=>{
+        }
+        getTempleteSourceList(Listparam).then(res=>{
             if(res){
               this.loading = false
               this.templateimgarr = res.content
             }
+<<<<<<< HEAD
          })
 
          let Objectparam = {
@@ -213,11 +221,87 @@
            }
          })
          
+=======
+        })
     },
+    computed: {
+      noMore () {
+        return this.Manuscript.length > this.Manuscriptotal
+      },
+      disabled () {
+        return this.loadimg || this.noMore
+      }
+>>>>>>> 904f08ac91e1a0c2f12c94dba5c22b786428e9a0
+    },
+
     methods: {
       handleClick(tab, event) {
+<<<<<<< HEAD
       },
       templeteSource(index,item){
+=======
+        if(tab.label=='媒资库'){
+            this.options1 = []
+            //获取分类
+            let param = {
+              tenantId: 5,
+            }
+            classifygetAll(param).then(res=>{
+              if(res){
+                res.data.forEach((val,ind)=>{
+                    this.options1.push({
+                      value: val.classifyId,
+                      label: val.classifyName
+                    })
+                })
+              }
+            })
+
+            this.loading = true
+            if(this.value1=='分类' || this.value2=='全部'){
+              this.value1 = 1
+              this.value2 = 0
+            }
+            let value1arr = []
+            value1arr.push(this.value1.toString())
+            let Searchparam = {
+                classifyIds:value1arr, //分类的id
+                keyWords:this.Shareinput,//关键字
+                mediaType:this.value2, //类型
+                tenantId:5 //组织id
+            }
+            SearchShareAssets(Searchparam).then(res=>{  //媒资库检索
+              if(res){
+                this.loading = false
+                this.Libraryarr = res.data
+              }
+            })
+        }else if(tab.label=='稿库'){
+            let Objectparam = {
+                ContentType:true,
+                keywords: '',
+                library: 'workspace',
+                types: 'TEXT,COMPO,LIVE',
+                excludedIds: this.$route.query.id,
+                editorType: 'COMPO',
+                page: this.Manuscrippage,
+                size: 10
+            }
+            listObjects(Objectparam).then(res=>{
+              if(res){
+                let _that = this
+                _that.loading = false
+                res.content.forEach(function (item) {
+                  _that.Manuscript.push(item);
+                });
+                _that.Manuscriptotal = res.totalElements
+              }
+            })
+        }
+      },
+      templeteSource(index,item){
+        store.ueditor.setContent(item.templeteSource,true)
+>>>>>>> 904f08ac91e1a0c2f12c94dba5c22b786428e9a0
       },
       templatearrclick(index){
          this.texttemp = index
@@ -245,10 +329,19 @@
           this.Libraryarr[index].iscollection = true
         }
       },
+      LibraryClick(item){
+       let str = ''
+       if(item.fileFormat=='mp4'){
+         str=`<video src=${item.url} controls="controls" poster=${item.coverImageUrl}></video>`
+       }else if(item.fileFormat=='jpg'){
+         str=`<img src=${item.url} alt="">`
+       }
+       store.ueditor.setContent(str,true)
+      },
       searchShare(){
          this.loading = true
          if(this.value1=='分类' || this.value2=='全部'){
-           this.value1 = 1 
+           this.value1 = 1
            this.value2 = 0
          }
          let value1arr = []
@@ -284,12 +377,70 @@
             }
          })
 
+<<<<<<< HEAD
       }
+=======
+      },
+      Manuscriptsearch(){
+           this.loading = true
+           let Objectparam = {
+                ContentType:true,
+                keywords: this.Manuscriptinput,
+                library: 'manuscript',
+                types: 'TEXT,COMPO,LIVE',
+                excludedIds: this.$route.query.id,
+                editorType: 'COMPO',
+                page: 0,
+                size: 10,
+                startDate:this.datavalue,
+                endDate:this.datavalue
+            }
+            listObjects(Objectparam).then(res=>{
+              if(res){
+                this.loading = false
+                this.Manuscript = res.content
+              }
+            })
+      },
+      ManuscriptClick(item){
+          store.ueditor.setContent(item.htmlContent)
+      },
+      loadManuscript () {
+         this.loadimg = true
+>>>>>>> 904f08ac91e1a0c2f12c94dba5c22b786428e9a0
 
+         let Objectparam = {
+              ContentType:true,
+              keywords: '',
+              library: 'workspace',
+              types: 'TEXT,COMPO,LIVE',
+              excludedIds: this.$route.query.id,
+              editorType: 'COMPO',
+              page: this.Manuscrippage+1,
+              size: 10
+          }
+          listObjects(Objectparam).then(res=>{
+            if(res){
+              let _that = this
+              res.content.forEach(function (item) {
+                _that.Manuscript.push(item);
+              });
+              _that.Manuscrippage = res.number
+
+              _that.loadimg = false
+            }
+          })
+
+          this.loadimg = false
+
+      }
     }
   };
 </script>
 <style>
+   .nav_top_temlaptes .el-input__icon{
+     line-height: 36px;
+   }
    .nav_top_temlaptes .is-active {
       color: #D72323;
    }
@@ -304,7 +455,7 @@
    .nav_top_temlaptes .el-tabs--top .el-tabs__item.is-top{
       width: 112px;
       text-align: center;
-   } 
+   }
    .nav_top_temlaptes .el-tabs__nav{
      margin-left: 32px;
      height: 60px;
@@ -462,6 +613,53 @@
     font-family: MicrosoftYaHei;
     font-size: 14px;
     color: #333333;
+}
+
+.third_libisryarr>div{
+    width: 364px;
+    height: 125px;
+    float: left;
+    margin: 0px 18px 0px 18px;
+    border-bottom:1px solid #dcdfe6
+}
+.third_libisryarr:first-child>div{
+    border-top:1px solid #dcdfe6
+}
+.third_libisryarr>div:hover{
+   box-shadow: inset 0 0 10px 0px #ccc;
+ }
+.third_libisryarr_botal{
+    padding:10px
+}
+.third_libisryarr_botal_title{
+    font-size:15px;
+    line-height:25px;
+    display:inline-block
+}
+.third_libisryarr_botal_biaoshi{
+       display: inline-block;
+       padding: 0px 4px;
+       border: 1px solid #D72323;
+       font-size: 12px;
+       color: #D72323;
+       border-radius: 3px;
+       height: 18px;
+       line-height: 18px;
+       margin-right: 6px;
+}
+.third_libisryarr_list{
+  border-radius: 3px;
+  position: relative;
+}
+
+.third_libisryarr_img{
+      width: 120px;
+      height: 104px;
+      margin: 10px;
+}
+.third_libisryarr_img img,.third_libisryarr_img video{
+    width: 100%;
+    height: 100%;
 }
 .sort_naver{
     padding: 10px 20px;

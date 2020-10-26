@@ -32,7 +32,7 @@ export const SearchShareAssets = data => postHttp(hongApi+'/search/highLevelSear
 // 文稿纠错
 export const correction = data => postHttp(swaggerApi+'/ilgcreation/sensitiveAnalysis/analysis', data)
 
-// 敏感词分析 
+// 敏感词分析
 export const sensitivityAnalysis = data => postHttp(swaggerApi+'/ilgcreation/text/check', data)
 
 // 新建获取稿签Id

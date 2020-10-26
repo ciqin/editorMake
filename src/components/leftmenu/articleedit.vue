@@ -32,7 +32,7 @@
               </div>
           </div>
         </div>
-        <div v-else>
+        <div v-else-if="Relatedarr.length==0 && loading==false">
             <p style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;'><i class='el-icon-warning-outline'></i>暂无数据</p>
         </div>
       </div>
