@@ -10,7 +10,9 @@ import { store } from '@/store'
 // 获取稿件id
 // let id = window.location.href.split().split("?")[1].split("=")[1];
 let manuscriptId = window.location.href;
-let newManuscriptId = manuscriptId.split("?")[1].split("=")[1];
+let newManuscriptId = manuscriptId.split("?")[1].split("&")[0].split("=")[1];
+console.log(newManuscriptId)
+// let libId = manuscriptId.split("?")[1].split("&")[1].split("=")[1];
 store.objid = newManuscriptId;
 //  test
 export const getJson = data => getHttp('../../static/test/test.json', data)
@@ -51,3 +53,5 @@ export const favorTemplate = data => getHttp(caiApi+'/sprint/rest/story/favorTem
 
 //模板取消收藏
 export const cancelFavorTemplate = data => getHttp(caiApi+'/sprint/rest/story/cancelFavorTemplate', data)
+// 获取按钮接口
+export const listBtn = data => postHttp(caiApi+'/sprint/rest/story/workspace/'+newManuscriptId+'/actions/edit', data)

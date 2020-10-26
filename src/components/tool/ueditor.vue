@@ -1,10 +1,22 @@
 <template>
   <div>
     <!--下面通过传递进来的id完成初始化-->
-    <div style="position:relative;width: 500px;margin: 0 auto;">
+    <div style="position:relative;width: 400px;margin: 0 auto;">
         <div :id="randomId" ref="ueditor"></div>
         <div class="OperationButton">
-            <ul>
+            <ul> 
+               <li v-if="storyDeliver"><el-button type="text" @click="opaBtn1"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>传稿</span></el-button></li>
+               <li v-if="storySubmit"><el-button type="text" @click="opaBtn2"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>签入</span></el-button></li>
+               <li v-if="storyCheckin"><el-button type="text" @click="opaBtn3"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>提交</span></el-button></li>
+               <li v-if="storyCheckin"><el-button type="text" @click="opaBtn4"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>测试</span></el-button></li>
+               <!-- <li><el-button type="text" @click="opaBtn1"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>送审</span></el-button></li>
+               <li><el-button type="text" @click="opaBtn2"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>通过</span></el-button></li>
+               <li><el-button type="text" @click="opaBtn3"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>终审</span></el-button></li>
+               <li><el-button type="text" @click="opaBtn1"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>驳回</span></el-button></li>
+               <li><el-button type="text" @click="opaBtn2"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>选用</span></el-button></li>
+               <li><el-button type="text" @click="opaBtn3"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>改时</span></el-button></li>
+                <li><el-button type="text" @click="opaBtn2"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>关联</span></el-button></li>
+               <li><el-button type="text" @click="opaBtn3"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>撤稿</span></el-button></li> -->
                 <li><el-button type="text" @click="centerDialogVisible = true"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>预览</span></el-button></li>
                 <li><a href="javascript:" @click="save" >
                     <img src="@/assets/icon2.png" width="20" alt=""></a>保存
@@ -20,7 +32,7 @@
                         </transition> 
                     </div>
                 </li>
-                <li><a href="javascript:"><img src="@/assets/icon4.png" width="20" alt=""></a>提交审核</li>
+                <!-- <li><a href="javascript:"><img src="@/assets/icon4.png" width="20" alt=""></a>提交审核</li> -->
             </ul>
         </div>
         <el-dialog
@@ -33,6 +45,34 @@
                 <div :class="[activeIndex==1?'active preview-btn2':'preview-btn2']" @click="mobileZ">5.5寸屏</div>
                 <div :class="[activeIndex==2?'active preview-btn3':'preview-btn3']" @click="mobileX">5寸以下</div>
             </div>
+        </el-dialog>
+        <!-- 提交弹出框 -->
+        <el-dialog
+            title="提交"
+            :visible.sync="submit"
+            width="600px">
+            <Submit></Submit>
+        </el-dialog>
+        <!-- 传稿弹出框 -->
+        <el-dialog
+            title="传稿"
+            :visible.sync="adopt"
+            width="600px">
+            <Adopt></Adopt>
+        </el-dialog>
+        <!-- 签入弹出窗 -->
+        <el-dialog
+            title="签入"
+            :visible.sync="censorship"
+            width="600px">
+            <Censorship></Censorship>
+        </el-dialog>
+        <!-- 选用弹出窗 -->
+        <el-dialog
+            title="选用"
+            :visible.sync="ceshi"
+            width="600px">
+            <Selection></Selection>
         </el-dialog>
     </div>
   </div>
@@ -48,9 +88,13 @@ import '#/UEditor/lang/zh-cn/zh-cn.js'
 import html2Canvas from 'html2canvas'
 import JsPDF from 'jspdf'
 // 接口加载
-import { submitData ,newSave} from "@/http/api"
+import { submitData ,newSave,listBtn} from "@/http/api"
 import { store} from '@/store'
 import {mapActions, mapGetters} from 'vuex';
+import Submit from "../Popup/submit"
+import Adopt from "../Popup/adopt"
+import Censorship from "../Popup/censorship"
+import Selection from "../Popup/selection"
 export default {
     name: 'UE',
     props: {
@@ -64,6 +108,9 @@ export default {
     inject:['app'],
     data() {
         return {
+            submit:false,
+            adopt:false,
+            censorship:false,
             //每个编辑器生成不同的id,以防止冲突
             randomId: 'editor_' + (Math.random() * 100000000000000000),
             //编辑器实例
@@ -71,14 +118,15 @@ export default {
             centerDialogVisible: false,
             ready: false,
             enableAutoSave: false,
+            ceshi:false,
             //配置可以传递进来
             ueditorConfig: {
                 // 编辑器不自动被内容撑高
                 autoHeightEnabled: false,
                 // 初始容器高度
-                initialFrameHeight: 580,
+                initialFrameHeight: 680,
                 // 初始容器宽度
-                initialFrameWidth: 500,
+                initialFrameWidth: 600,
                 toolbars: [
                     [
                     // 'anchor', //锚点
@@ -94,21 +142,21 @@ export default {
                     'italic', //斜体
                     'underline', //下划线
                     'strikethrough', //删除线
-                    'subscript', //下标
-                    'fontborder', //字符边框
-                    'superscript', //上标
+                    // 'subscript', //下标
+                    // 'fontborder', //字符边框
+                    // 'superscript', //上标
                     'formatmatch', //格式刷
-                    'source', //源代码
-                    'blockquote', //引用
+                    // 'source', //源代码
+                    // 'blockquote', //引用
                     // 'pasteplain', //纯文本粘贴模式
-                    'selectall', //全选
+                    // 'selectall', //全选
                     // 'print', //打印
                     // 'preview', //预览
                     'horizontal', //分隔线
-                    'removeformat', //清除格式
+                    // 'removeformat', //清除格式
                     // 'time', //时间
                     // 'date', //日期
-                    'unlink', //取消链接
+                    // 'unlink', //取消链接
                     // 'insertrow', //前插入行
                     // 'insertcol', //前插入列
                     // 'mergeright', //右合并单元格
@@ -122,7 +170,7 @@ export default {
                     // 'inserttitle', //插入标题
                     // 'mergecells', //合并多个单元格
                     // 'deletetable', //删除表格
-                    'cleardoc', //清空文档
+                    // 'cleardoc', //清空文档
                     // 'insertparagraphbeforetable', //"表格前插入行"
                     // 'insertcode', //代码语言
                     'fontfamily', //字体
@@ -132,9 +180,9 @@ export default {
                     // 'insertimage', //多图上传
                     // 'edittable', //表格属性
                     // 'edittd', //单元格属性
-                    'link', //超链接
+                    // 'link', //超链接
                     'emotion', //表情
-                    'spechars', //特殊字符
+                    // 'spechars', //特殊字符
                     'searchreplace', //查询替换
                     // 'map', //Baidu地图
                     // 'gmap', //Google地图
@@ -142,28 +190,28 @@ export default {
                     // 'help', //帮助
                     'forecolor', //字体颜色
                     'backcolor', //背景色
-                    'insertorderedlist', //有序列表
+                    // 'insertorderedlist', //有序列表
                     'insertunorderedlist', //无序列表
-                    'fullscreen', //全屏
-                    'directionalityltr', //从左向右输入
-                    'directionalityrtl', //从右向左输入
-                    'rowspacingtop', //段前距
-                    'rowspacingbottom', //段后距
-                    'pagebreak', //分页
-                    'insertframe', //插入Iframe
-                    'imagenone', //默认
+                    // 'fullscreen', //全屏
+                    // 'directionalityltr', //从左向右输入
+                    // 'directionalityrtl', //从右向左输入
+                    // 'rowspacingtop', //段前距
+                    // 'rowspacingbottom', //段后距
+                    // 'pagebreak', //分页
+                    // 'insertframe', //插入Iframe
+                    // 'imagenone', //默认
                     'imageleft', //左浮动
                     'imageright', //右浮动
-                    'attachment', //附件
+                    // 'attachment', //附件
                     'imagecenter', //居中
                     // 'wordimage', //图片转存
                     'lineheight', //行间距
                     // 'edittip ', //编辑提示
-                    'customstyle', //自定义标题
-                    'autotypeset', //自动排版
+                    // 'customstyle', //自定义标题
+                    // 'autotypeset', //自动排版
                     // 'webapp', //百度应用
-                    'touppercase', //字母大写
-                    'tolowercase', //字母小写
+                    // 'touppercase', //字母大写
+                    // 'tolowercase', //字母小写
                     // 'background', //背景
                     // 'template', //模板
                     // 'scrawl', //涂鸦
@@ -173,8 +221,11 @@ export default {
                     // 'charts', // 图表
                 ]
             ],
-
+            
             },
+            storyDeliver:false,
+            storySubmit:false,
+            storyCheckin:false,
             styles:{
                 "width":"348px",
                 "height": "638.5px",
@@ -183,6 +234,7 @@ export default {
                 "background-size": "100% 100%",
                 "padding":"127px 38px 87px 47px"
             },
+            eventName: "click",
             show:false,
             mobileHtml:"",
             activeIndex:2,
@@ -196,12 +248,7 @@ export default {
                 this.instance.setContent(val);
             }
         },
-        reshtmlContent(newval){
-            // this.$nextTick(res=>{
-            //     console.log(this.instance,"----------")
-            // })
-            
-        }
+        reshtmlContent(newval){}
     },
     //此时--el挂载到实例上去了,可以初始化对应的编辑器了
     mounted() {
@@ -210,7 +257,22 @@ export default {
         let that  = this;
         setTimeout(() => {
             that.instance.setContent(that.$store.state.htmlContent)
-        }, 200);
+        }, 500);
+        listBtn().then(res=>{
+            res.forEach(item=>{
+                switch(item.code){
+                    case "story-deliver":
+                        this.storyDeliver = true;
+                        break;
+                    case "story-submit":
+                        this.storySubmit = true;
+                        break;
+                    case "story-checkin":
+                        this.storyCheckin = true;
+                        break;
+                }
+            })
+        })
     },
 
     beforeDestroy() {
@@ -222,7 +284,23 @@ export default {
     computed:{
         ...mapGetters(["reshtmlContent","resUeditor"])
     },
+    components:{
+        Submit,Adopt,Censorship
+    },
     methods: {
+        // 按钮操作
+        opaBtn1(){
+            this.adopt = true
+        },
+        opaBtn2(){
+            this.censorship = true
+        },
+        opaBtn3(){
+            this.submit = true
+        },
+        opaBtn4(){
+            this.ceshi = true
+        },
         initEditor() {
             const _this = this;
             //dom元素已经挂载上去了
@@ -321,7 +399,8 @@ export default {
                 coverListCount: 0,
                 sensitiveWord: false,
                 customMetas:customMetas,
-                ContentType:true
+                ContentType:true,
+                isZhiZuoEditor:1
             }
             // 封面图动态添加
             if(data.coverType == 1 && (/add\.png/.test(data.opaImg1) == false)) {
@@ -458,8 +537,8 @@ export default {
 }
 .OperationButton {
     position:absolute;
-    bottom: 10%;
-    right: -12%;
+    bottom: 0%;
+    right: -61%;
 }
 .OperationButton  li a {
     height: 30px;

@@ -13,7 +13,7 @@ export default {
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "PingFangSC-Regular, PingFang SC";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 99.8vh;
@@ -74,5 +74,8 @@ button{outline-style: none;}
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+.edui-default .edui-editor-bottomContainer {
+    display: none!important;
 }
 </style>

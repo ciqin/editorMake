@@ -82,7 +82,6 @@ export default {
                     item.partcontent = item.content
                 }
               })
-              console.log(this.Relatedarr)
             }else{
               this.loading = false
             }
@@ -112,7 +111,6 @@ export default {
                     item.partcontent = item.content
                 }
               })
-              console.log(this.Relatedarr)
             }
         })
       }
