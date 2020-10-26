@@ -463,8 +463,6 @@ export default {
         this.form.inputValue = '';
     },
     hasHtmlContent(){
-        // console.log("111133333333333333333")
-        // store.ueditor.setContent("1111")
     }
     
     },
@@ -499,5 +497,8 @@ export default {
     width: 90px;
     margin-right: 10px;
     vertical-align: bottom;
+}
+.el-radio {
+    margin-right: 24px;
 }
 </style>

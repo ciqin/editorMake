@@ -50,24 +50,32 @@ export default {
   },
   methods:{
     sensitiveWords(){
-      // console.log()
-      let data = {
-        "checkType": 1,"text": "Ikeqang 习大大中华民国腾讯今年中国人民共和国下半年上世纪将在微信账户钱包帐户的九宫格中开设快遮的笑着"
+      if(store.ueditor) {
+          let data = {
+            "checkType": 1,"text": store.ueditor.getContent()
+          }
+          // let data1 = {
+          //   "content": "Ikeqang 习大大中华民国腾讯今年中国人民共和国下半年上世纪将在微信账户钱包帐户的九宫格中开设快遮的笑着","title": "Ikeqang 习大大中华民国腾讯今年中国人民共和国下半年上世纪将在微信账户钱包帐户的九宫格中开设快遮的笑着"
+          // }
+          if(data.length) {
+            sensitivityAnalysis(data).then(res=>{
+              store.ueditor.setContent(res.data[0].content);
+              let newData=[];
+              res.data[0].hintwords.forEach((val,index)=>{
+                newData.push({
+                  date:val.hintword,
+                  name:val.suggestion
+                })
+              })
+              this.tableData = newData;
+            })
+          }else {
+             this.$message('没有敏感词');
+          }
+      }else{
+
       }
-      let data1 = {
-        "content": "Ikeqang 习大大中华民国腾讯今年中国人民共和国下半年上世纪将在微信账户钱包帐户的九宫格中开设快遮的笑着","title": "Ikeqang 习大大中华民国腾讯今年中国人民共和国下半年上世纪将在微信账户钱包帐户的九宫格中开设快遮的笑着"
-      }
-      sensitivityAnalysis(data).then(res=>{
-        store.ueditor.setContent(res.data[0].content);
-        let newData=[];
-        res.data[0].hintwords.forEach((val,index)=>{
-          newData.push({
-            date:val.hintword,
-            name:val.suggestion
-          })
-        })
-        this.tableData = newData;
-      })
+      
       //  correction(data1).then(res=>{
       //   console.log(res,"---------")
       // })

@@ -191,7 +191,6 @@
          }
          getTempleteSourceList(Listparam).then(res=>{
             if(res){
-              console.log(res)
               this.loading = false
               this.templateimgarr = res.content
             }
@@ -211,17 +210,14 @@
            if(res){
              this.loading = false
              this.Manuscript = res.content
-              console.log(this.Manuscript)
            }
          })
          
     },
     methods: {
       handleClick(tab, event) {
-        console.log(tab, event);
       },
       templeteSource(index,item){
-        console.log(index,item)
       },
       templatearrclick(index){
          this.texttemp = index
@@ -288,7 +284,6 @@
             }
          })
 
-        console.log(this.templateinput)
       }
 
     }

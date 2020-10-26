@@ -23916,7 +23916,6 @@ UE.plugin.register('autoupload', function (){
 
 // plugins/autosave.js
 UE.plugin.register('autosave', function (){
-
     var me = this,
         //无限循环保护
         lastSaveTime = new Date(),

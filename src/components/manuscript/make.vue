@@ -2,8 +2,8 @@
   <div class="maskContainer">
     <!-- <Nav></Nav> -->
     <!--下面通过传递进来的id完成初始化-->
-    <el-row :gutter="20">
-        <el-col :span="6">
+    <el-row :gutter="10">
+        <el-col :span="4">
             <div class="grid-content bg-purple">
                <div class="iconNav">
                    <ul>
@@ -17,15 +17,15 @@
                </div>
             </div>
         </el-col>
-        <el-col :span="11">
+        <el-col :span="14">
             <div class="grid-content bg-purple" style="position:relative">
                 <div class="">
-                    <el-input type="text" v-model="input" @input="inputChange" placeholder="请输入内容" maxlength="100" show-word-limit style="width:500px;position: relative;margin: 16px 0;left: 50%;transform: translateX(-50%);"></el-input>
+                    <el-input type="text" v-model="input" @input="inputChange" placeholder="请输入内容" maxlength="100" show-word-limit style="width:600px;position: relative;margin: 16px 0;left: 60%;transform: translateX(-50%);"></el-input>
                 </div>
                 <Ueditor @listenEvent = 'uedior'></Ueditor>
             </div>
         </el-col>
-        <el-col :span="7" class="Signature">
+        <el-col :span="6" class="Signature">
             <div class="grid-content bg-purple">
                 <el-row>
                     <el-col :span="3">
@@ -109,7 +109,6 @@ export default {
             deep:true;
         },
         resTitle(newVal){
-            console.log(newVal)
             this.input = newVal
         }
     },

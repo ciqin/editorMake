@@ -10,7 +10,9 @@ import { store } from '@/store'
 // 获取稿件id
 // let id = window.location.href.split().split("?")[1].split("=")[1];
 let manuscriptId = window.location.href;
-let newManuscriptId = manuscriptId.split("?")[1].split("=")[1];
+let newManuscriptId = manuscriptId.split("?")[1].split("&")[0].split("=")[1];
+console.log(newManuscriptId)
+// let libId = manuscriptId.split("?")[1].split("&")[1].split("=")[1];
 store.objid = newManuscriptId;
 //  test
 export const getJson = data => getHttp('../../static/test/test.json', data)
@@ -45,3 +47,6 @@ export const getTempleteSourceList = data => postHttp(caiApi+'/sprint/rest/story
 
 //稿库
 export const listObjects = data => postHttp(caiApi+'/sprint/view/libraries/workspace/zhiZuo/listObjects', data)
+
+// 获取按钮接口
+export const listBtn = data => postHttp(caiApi+'/sprint/rest/story/workspace/'+newManuscriptId+'/actions/edit', data)
