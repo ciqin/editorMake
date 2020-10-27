@@ -40,3 +40,23 @@ export const modifyCheckIn= (state, name) => {
     state.checkIn = name
 }
 
+export const modifyReject= (state, name) => { 
+    state.rejectData = name
+}
+
+export const modifySelectId= (state, name) => { 
+    state.selectId = name
+}
+
+
+export const modifyChangeTime = (state, name) => { 
+    state.changeTime = name
+}
+
+
+export const modifyManyContribution= (state, name) => { 
+    state.manyContribution = name
+}
+
+
+

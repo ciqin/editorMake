@@ -5,18 +5,19 @@
         <div :id="randomId" ref="ueditor"></div>
         <div class="OperationButton">
             <ul> 
-               <li v-if="storyDeliver"><el-button type="text" @click="opaBtn1"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>传稿</span></el-button></li>
-               <li v-if="storySubmit"><el-button type="text" @click="opaBtn2"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>签入</span></el-button></li>
-               <li v-if="storyCheckin"><el-button type="text" @click="opaBtn3"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>提交</span></el-button></li>
-               <li v-if="storyCheckin"><el-button type="text" @click="opaBtn4"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>测试</span></el-button></li>
-               <!-- <li><el-button type="text" @click="opaBtn1"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>送审</span></el-button></li>
-               <li><el-button type="text" @click="opaBtn2"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>通过</span></el-button></li>
-               <li><el-button type="text" @click="opaBtn3"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>终审</span></el-button></li>
-               <li><el-button type="text" @click="opaBtn1"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>驳回</span></el-button></li>
-               <li><el-button type="text" @click="opaBtn2"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>选用</span></el-button></li>
-               <li><el-button type="text" @click="opaBtn3"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>改时</span></el-button></li>
-                <li><el-button type="text" @click="opaBtn2"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>关联</span></el-button></li>
-               <li><el-button type="text" @click="opaBtn3"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>撤稿</span></el-button></li> -->
+               <li v-if="storyDeliver"><el-button type="text" @click="opaBtn1"><a href="javascript:" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>传稿</span></el-button></li>
+               <li v-if="storySubmit"><el-button type="text" @click="opaBtn2"><a href="javascript:" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>签入</span></el-button></li>
+               <li v-if="storyCheckin"><el-button type="text" @click="opaBtn3"><a href="javascript:" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>提交</span></el-button></li>
+               <!-- <li v-if="storyCheckin"><el-button type="text" @click="opaBtn4"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>测试</span></el-button></li> -->
+               <li v-if="storySubmitApprove"><el-button type="text" @click="censorshipfun"><a href="javascript:" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>送审</span></el-button></li>
+               <li v-if="storyApprovePass"><el-button type="text" @click="adoptFun"><a href="javascript:" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>通过</span></el-button></li>
+               <li v-if="storyApprovePassAll"><el-button type="text" @click="finalJudgment"><a href="javascript:"  style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>终审</span></el-button></li>
+               <li v-if="storyApproveDeny"><el-button type="text" @click="rejectFun"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>驳回</span></el-button></li>
+
+               <li><el-button type="text" @click="selectFun"  v-if="selectId"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>选用</span></el-button></li>
+               <li><el-button type="text" @click="ChangeTimeFun"  v-if="ChangeTime"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>改时</span></el-button></li>
+                <li><el-button type="text" @click="contributionFun"  v-if="contribution"><a href="javascript:" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>撤稿</span></el-button></li>
+                <li><el-button type="text" @click="manyContributionFun"  v-if="manyContribution"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>一键撤稿</span></el-button></li>
                 <li><el-button type="text" @click="centerDialogVisible = true"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>预览</span></el-button></li>
                 <li><a href="javascript:" @click="save" >
                     <img src="@/assets/icon2.png" width="20" alt=""></a>保存
@@ -67,19 +68,43 @@
             width="600px" :before-close="CloseSubmit">
             <Censorship></Censorship>
         </el-dialog>
-        <!-- 选用弹出窗 -->
-        <el-dialog
-            title="选用"
-            :visible.sync="ceshi"
-            width="600px" :before-close="CloseSubmit">
-            <Selection></Selection>
-        </el-dialog>
         <!-- 送审弹出窗 -->
         <el-dialog
             title="送审"
             :visible.sync="hasCheckIn"
             width="600px" :before-close="CloseSubmit">
             <CheckIn></CheckIn>
+        </el-dialog>
+        <!-- 驳回弹出窗 -->
+        <el-dialog
+            title="驳回"
+            :visible.sync="hasReject"
+            width="800px" :before-close="CloseSubmit">
+            <Reject></Reject>
+        </el-dialog>
+
+        <!-- 选用弹出窗 -->
+        <el-dialog
+            title="选用"
+            :visible.sync="hasSelectId"
+            width="600px" :before-close="CloseSubmit">
+            <Selection></Selection>
+        </el-dialog>
+
+        <!-- 改时弹出窗 -->
+        <el-dialog
+            title="修改发布时间"
+            :visible.sync="hasChangeTime"
+            width="400px" :before-close="CloseSubmit">
+            <ChangeTime></ChangeTime>
+        </el-dialog>
+
+        <!-- 一键撤稿弹出窗 -->
+        <el-dialog
+            title="一键撤稿"
+            :visible.sync="hasManyContribution"
+            width="600px" :before-close="CloseSubmit">
+            <FinalJudgment></FinalJudgment>
         </el-dialog>
     </div>
   </div>
@@ -95,7 +120,7 @@ import '#/UEditor/lang/zh-cn/zh-cn.js'
 import html2Canvas from 'html2canvas'
 import JsPDF from 'jspdf'
 // 接口加载
-import { submitData ,newSave,listBtn} from "@/http/api"
+import { submitData ,newSave,listBtn,releaseManuscript,deleteManuscript,subAdopt,subFinalJudgment,revision,withdraw} from "@/http/api"
 import { store} from '@/store'
 import {mapActions, mapGetters} from 'vuex';
 import Submit from "../Popup/submit"
@@ -103,6 +128,9 @@ import Adopt from "../Popup/adopt"
 import Censorship from "../Popup/censorship"
 import Selection from "../Popup/selection"
 import CheckIn from "../Popup/checkIn"
+import Reject from "../Popup/reject"
+import ChangeTime from "../Popup/changeTime"
+import FinalJudgment from "../Popup/finalJudgment"
 export default {
     name: 'UE',
     props: {
@@ -116,9 +144,9 @@ export default {
     inject:['app'],
     data() {
         return {
-            submit:false,
-            adopt:false,
-            censorship:false,
+            // submit:false,
+            // adopt:false,
+            // censorship:false,
             //每个编辑器生成不同的id,以防止冲突
             randomId: 'editor_' + (Math.random() * 100000000000000000),
             //编辑器实例
@@ -234,6 +262,14 @@ export default {
             storyDeliver:false,
             storySubmit:false,
             storyCheckin:false,
+            storySubmitApprove:false,
+            storyApprovePass:false,
+            storyApprovePassAll:false,
+            storyApproveDeny:false,
+            selectId:false,
+            ChangeTime:false,
+            contribution:false,
+            manyContribution:false,
             styles:{
                 "width":"348px",
                 "height": "638.5px",
@@ -279,9 +315,40 @@ export default {
                     case "story-checkin":
                         this.storyCheckin = true;
                         break;
+                    case "story-submit-approve":
+                        this.storySubmitApprove = true;
+                        break;
+                    case "story-approve-pass":
+                        this.storyApprovePass = true;
+                        break;
+                    case "story-approve-passAll":
+                        this.storyApprovePassAll = true;
+                        break;
+                    case "story-approve-deny":
+                        this.storyApproveDeny = true;
+                        break;
+                    case "story-fetch":
+                        this.selectId = true;
+                        break;
+                    case "publish-time":
+                        this.ChangeTime = true;
+                        break;
+                    case "story-retract":
+                        this.contribution = true;
+                        break;
+                    case "story-deep-retract":
+                        this.manyContribution = true;
+                        break;
                 }
             })
         })
+        window.addEventListener('beforeunload', e => {
+            if(this.$store.state.title==""){
+                deleteManuscript().then(res=>{})
+            }else {
+                releaseManuscript().then(res=>{})
+            } 
+        });
     },
 
     beforeDestroy() {
@@ -291,10 +358,10 @@ export default {
         }
     },
     computed:{
-        ...mapGetters(["reshtmlContent","resUeditor","hasSubmit","hasCensorship","hasAdopt","hasCheckIn"])
+        ...mapGetters(["reshtmlContent","resUeditor","hasSubmit","hasCensorship","hasAdopt","hasCheckIn","hasReject","hasSelectId","hasChangeTime","hasManyContribution"])
     },
     components:{
-        Submit,Adopt,Censorship
+        Submit,Adopt,Censorship,CheckIn,Reject,Selection,ChangeTime,FinalJudgment
     },
     methods: {
         // 按钮操作
@@ -311,10 +378,61 @@ export default {
             this.$store.dispatch('modifySubmit',false);
             this.$store.dispatch('modifyCensorship',false);
             this.$store.dispatch('modifyAdopt',false);
+            this.$store.dispatch('modifyCheckIn',false);
+            this.$store.dispatch('modifyReject',false);
+            this.$store.dispatch('modifySelectId',false);
+            this.$store.dispatch('modifyChangeTime',false);
+            this.$store.dispatch('modifyManyContribution',false);
         },
         opaBtn4(){
             this.ceshi = true
         },
+        censorshipfun (){
+            this.$store.dispatch('modifyReject',true);
+        },
+        // 驳回
+        rejectFun(){
+            this.$store.dispatch('modifyReject',true);
+        },
+        // 选用
+        selectFun(){
+            this.$store.dispatch('modifySelectId',true);
+        },
+        // 改时
+        ChangeTimeFun(){
+            this.$store.dispatch('modifyChangeTime',true);
+        },
+        // 一键撤稿
+        manyContributionFun(){
+            this.$store.dispatch('modifyManyContribution',true);
+        },
+        // 撤稿
+        contributionFun(){
+            withdraw().then(res=>{
+                
+            })
+        },
+        // 通过
+        adoptFun(){
+            let data = this.saveParme()
+            subAdopt(data).then(res=>{
+                if(res){
+                    setTimeout(()=>{
+                        window.close()
+                    },5000)
+                }
+            })
+        },
+        // 终审
+        finalJudgment(){
+            let data = this.saveParme()
+            subFinalJudgment(data).then(res=>{
+                setTimeout(()=>{
+                    window.close()
+                },5000)
+            })
+        },
+        
         initEditor() {
             const _this = this;
             //dom元素已经挂载上去了
@@ -374,7 +492,7 @@ export default {
         hasUe(){
             this.mobileHtml = this.instance.getContent();
         },
-        save(){
+        saveParme(){
             let data = this.app.form;
             let customMetas = {
                 // leadinLineUrl:data.properties.leadinLineUrl,
@@ -383,10 +501,13 @@ export default {
                 watermark: data.properties.watermark?1:0,
                 ad: data.properties.ad?1:0
             };
+            if(this.$store.state.title =="") {
+                return  this.$message.error('标题不能为空！');
+            }
             let newData = {
-                libid: "workspace",
+                libid: data.libid,
                 objid:store.objid,
-                folder:"561a41a40aaa748fb64ca229",
+                folder:data.folder,
                 title: this.$store.state.title,
                 keywords: data.dynamicTags.join(","),
                 content: "编辑器内容",
@@ -414,7 +535,7 @@ export default {
                 sensitiveWord: false,
                 customMetas:customMetas,
                 ContentType:true,
-                isZhiZuoEditor:1
+                isSmartWriteEditor:1
             }
             // 封面图动态添加
             if(data.coverType == 1 && (/add\.png/.test(data.opaImg1) == false)) {
@@ -441,14 +562,29 @@ export default {
             }
             // 分享封面参数
             /add\.png/.test(data.addImg)?newData.shareCover= "":newData.shareCover= data.addImg;
-            newSave(newData).then(res=>{
-                if(res) {
-                    this.$message({
-                        message: '保存成功！',
-                        type: 'success'
-                    });
-                }
-            })
+            return newData
+        },
+        save(){
+            let newData = this.saveParme();
+            if(newData.libid =="product") {
+                revision(newData).then(res=>{
+                    if(res) {
+                        this.$message({
+                            message: '保存成功！',
+                            type: 'success'
+                        });
+                    }
+                })
+            }else {
+                newSave(newData).then(res=>{
+                    if(res) {
+                        this.$message({
+                            message: '保存成功！',
+                            type: 'success'
+                        });
+                    }
+                })
+            }
         },
         onMouseOver(){
             this.show  = true
@@ -518,7 +654,6 @@ export default {
             this.styles.background = "url(http://127.0.0.1:9080/sprint/assets/img/iPhoneX.png) 0% 0% / 100% 100% no-repeat"
             
             this.styles.padding = "89px 23px 22px 16px;"
-            console.log(this.styles.padding )
         },
         mobileZ(){
             this.activeIndex = 1;

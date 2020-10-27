@@ -78,4 +78,8 @@ button{outline-style: none;}
 .edui-default .edui-editor-bottomContainer {
     display: none!important;
 }
+
+.ssContainer th{
+  padding-top: 0;
+}
 </style>

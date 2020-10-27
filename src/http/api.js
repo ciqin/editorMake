@@ -2,7 +2,7 @@
  * 此文件为接口统一管理文件
  */
 const swaggerApi = "http://192.168.18.12:9117";
-const caiApi = "http://127.0.0.1:9080";
+const caiApi = "http://192.168.4.116:9080";
 const hongApi = "http://qhcloudhongqi.wengegroup.com:9116"
 const zhiApi = "http://192.168.18.12:9117"
 import { getHttp, postHttp } from "./httpService"
@@ -15,6 +15,12 @@ let libId = manuscriptId.split("?")[1].split("&")[1].split("=")[1];
 // store.objid = newManuscriptId;
 //  test
 export const getJson = data => getHttp('../../static/test/test.json', data)
+
+// 新建稿件删除接口
+export const deleteManuscript= data => postHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/create/cancel', data)
+
+// 新建稿件释放接口
+export const releaseManuscript= data => postHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/hold/release', data)
 
 //  采编文件保存提交数据接口
 export const submitData = data => postHttp('../../static/test/test.json', data)
@@ -82,3 +88,41 @@ export const manuscriptSubmit = data => postHttp(caiApi+'/sprint/rest/workflow/s
 
 // 获取用户部门接口
 export const hasDepartment = data => getHttp(caiApi+'/sprint/security/groups/leaf/list', data)
+
+// 送审获取数据接口
+export const hasCensorship = data => getHttp(caiApi+'/sprint/rest/story/'+libId+'/'+newManuscriptId+'/submit/approve', data)
+
+// 送审接口
+export const submitCensorship = data => postHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/submit/approve/process', data)
+
+// 通过接口
+export const subAdopt = data => postHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/approve/pass/process', data)
+
+// 终审接口
+export const subFinalJudgment = data => postHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/approve/pass/process/all', data)
+
+// 驳回数据请求
+export const hasReject = data => postHttp(caiApi+'/sprint/rest/story/'+libId+'/'+newManuscriptId+'/list/records/deny', data)
+
+// 驳回提交接口
+export const subReject = data => postHttp(caiApi+'/sprint/rest/story/'+libId+'/'+newManuscriptId+'/list/records/deny', data)
+
+// 改稿保存接口
+export const revision = data => postHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/product/edit/process', data)
+
+// 稿件选用
+export const subSelect = data => postHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/product/fetch/process', data)
+
+// 稿件改时数据获取
+export const hasChangeTime = data => getHttp(caiApi+'/sprint/rest/story/'+libId+'/'+newManuscriptId+'/publish/time', data)
+
+// 稿件改时接口提交
+export const subChangeTime = data => postHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/publish/time/process', data)
+
+// 撤稿
+export const withdraw = data => getHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/retract/process', data)
+// 一键撤稿获取数据接口
+export const hasFinalJudgment = data => getHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/deepRetract', data)
+
+
+

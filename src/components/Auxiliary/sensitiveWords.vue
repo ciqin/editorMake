@@ -31,6 +31,7 @@
 </template>
 <script>
 import {correction,newG} from '@/http/api'
+import {mapActions, mapGetters} from 'vuex';
 import { store } from '@/store'
 export default {
   data(){
@@ -49,7 +50,7 @@ export default {
       sensitiveWords(){
         if(store.ueditor) { 
             let data = {
-              title:"Ikeqang 习大大中华民国腾讯今年中国人民共和国下半年上世纪将在微信账户钱包帐户的九宫格中开设快遮的笑着",
+              title:this.$store.state.title,
               content:store.ueditor.getContent()
             }
             // newG().then(res=>{
@@ -57,6 +58,9 @@ export default {
             // })
             correction(data).then(res=>{
               var listWord= [];
+              if(!res.data[0]) {
+                return
+              }
               res.data[0].content.keyWords.forEach(val=>{
                 let  key =eval("/" + val+ "/gi")
                 let count = data.content.match(key).length

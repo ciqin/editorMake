@@ -18,7 +18,11 @@ const state = {
     submit:false,
     censorship:false,
     adopt:false,
-    checkIn:false
+    checkIn:false,
+    rejectData:false,
+    selectId:false,
+    changeTime:false,
+    manyContribution:false
 }
  
 // 注册上面引入的各大模块

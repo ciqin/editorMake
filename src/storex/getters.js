@@ -19,4 +19,13 @@ export const hasCensorship= state => state.censorship
 
 export const hasAdopt= state => state.adopt
 
-export const hasCheckIn= state => state.adopt
+export const hasCheckIn= state => state.checkIn
+
+export const hasReject= state => state.rejectData
+
+export const hasSelectId= state => state.selectId
+
+export const hasChangeTime= state => state.changeTime
+
+export const hasManyContribution= state => state.manyContribution
+

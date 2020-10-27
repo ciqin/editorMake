@@ -27,6 +27,14 @@ export const modifyAdopt = ({commit},name) => commit('modifyAdopt', name)
 
 export const modifyCheckIn = ({commit},name) => commit('modifyCheckIn', name)
 
+export const modifyReject = ({commit},name) => commit('modifyReject', name)
+
+export const modifySelectId = ({commit},name) => commit('modifySelectId', name)
+
+export const modifyChangeTime = ({commit},name) => commit('modifyChangeTime', name)
+
+export const modifyManyContribution = ({commit},name) => commit('modifyManyContribution', name)
+
 // export const modifySubmit = ({commit},name) => commit('modifySubmit', name)
 
 
