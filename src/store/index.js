@@ -9,7 +9,8 @@ export const store = Vue.observable({
     ueditor:null,
     savedata:{},
     objid:"",
-    Title:""
+    Title:"",
+    submit:false,
 })
 
 export const mutations = {
@@ -36,5 +37,8 @@ export const mutations = {
     },
     setTitle (Title) {
       store.Title = Title
+    },
+    setSubmit (Title) {
+      store.submit = submit
     }
 }

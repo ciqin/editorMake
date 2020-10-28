@@ -23,3 +23,40 @@ export const modifydataTitle = (state, name) => {
 export const modifydatahtmlContent = (state, name) => { 
     state.htmlContent = name
 }
+
+export const modifySubmit = (state, name) => { 
+    state.submit = name
+}
+
+export const modifyCensorship = (state, name) => { 
+    state.censorship = name
+}
+
+export const modifyAdopt= (state, name) => { 
+    state.adopt = name
+}
+
+export const modifyCheckIn= (state, name) => { 
+    state.checkIn = name
+}
+
+export const modifyReject= (state, name) => { 
+    state.rejectData = name
+}
+
+export const modifySelectId= (state, name) => { 
+    state.selectId = name
+}
+
+
+export const modifyChangeTime = (state, name) => { 
+    state.changeTime = name
+}
+
+
+export const modifyManyContribution= (state, name) => { 
+    state.manyContribution = name
+}
+
+
+

@@ -54,11 +54,8 @@ export default {
           let data = {
             "checkType": 1,"text": store.ueditor.getContent()
           }
-          // let data1 = {
-          //   "content": "Ikeqang 习大大中华民国腾讯今年中国人民共和国下半年上世纪将在微信账户钱包帐户的九宫格中开设快遮的笑着","title": "Ikeqang 习大大中华民国腾讯今年中国人民共和国下半年上世纪将在微信账户钱包帐户的九宫格中开设快遮的笑着"
-          // }
-          if(data.length) {
-            sensitivityAnalysis(data).then(res=>{
+          sensitivityAnalysis(data).then(res=>{
+            if(res.data.length>0) {
               store.ueditor.setContent(res.data[0].content);
               let newData=[];
               res.data[0].hintwords.forEach((val,index)=>{
@@ -68,10 +65,10 @@ export default {
                 })
               })
               this.tableData = newData;
-            })
-          }else {
-             this.$message('没有敏感词');
-          }
+            }else {
+              this.$message('没有敏感词');
+            }
+          })
       }else{
 
       }

@@ -19,6 +19,25 @@ export const modifyDataTitle = ({commit},name) => commit('modifydataTitle', name
 
 export const modifyDatahtmlContent = ({commit},name) => commit('modifydatahtmlContent', name)
 
+export const modifySubmit = ({commit},name) => commit('modifySubmit', name)
+
+export const modifyCensorship = ({commit},name) => commit('modifyCensorship', name)
+
+export const modifyAdopt = ({commit},name) => commit('modifyAdopt', name)
+
+export const modifyCheckIn = ({commit},name) => commit('modifyCheckIn', name)
+
+export const modifyReject = ({commit},name) => commit('modifyReject', name)
+
+export const modifySelectId = ({commit},name) => commit('modifySelectId', name)
+
+export const modifyChangeTime = ({commit},name) => commit('modifyChangeTime', name)
+
+export const modifyManyContribution = ({commit},name) => commit('modifyManyContribution', name)
+
+// export const modifySubmit = ({commit},name) => commit('modifySubmit', name)
+
+
 
 // ES6精简写法
 // export const modifyAName = ({commit},name) => commit('modifyAName', name)

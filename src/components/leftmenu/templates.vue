@@ -414,6 +414,7 @@
                 })
             }
         }
+        
       },
       LibraryClick(item){
        let str = ''
@@ -493,6 +494,11 @@
       },
       ManuscriptClick(item){
           store.ueditor.setContent(item.htmlContent)
+      },
+      collectionIconmouseover(){
+      
+      },
+      collectionIconmouseout(){
       },
       loadManuscript () {
           let _that = this
