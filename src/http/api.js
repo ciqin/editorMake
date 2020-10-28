@@ -5,6 +5,8 @@ const swaggerApi = "http://192.168.18.12:9117";
 const caiApi = "http://127.0.0.1:9080";
 const hongApi = "http://qhcloudhongqi.wengegroup.com:9116"
 const zhiApi = "http://192.168.18.12:9117"
+const mediaApi = 'http://192.168.18.160:9117'
+
 import { getHttp, postHttp } from "./httpService"
 import { store } from '@/store'
 // 获取稿件id
@@ -21,13 +23,13 @@ export const getJson = data => getHttp('../../static/test/test.json', data)
 export const submitData = data => postHttp('../../static/test/test.json', data)
 
 //  关联文章列表的接口
-export const getRelatedArticles = data => postHttp(zhiApi+'/ilgcreation/article/getRelatedArticles', data)
+export const getRelatedArticles = data => postHttp(caiApi+'/ilgcreation/article/getRelatedArticles', data)
 
 //  媒资库分类的接口
 export const classifygetAll = data => postHttp(hongApi+'/classify/getAll', data)
 
 //  媒资库的检索
-export const SearchShareAssets = data => postHttp(hongApi+'/search/highLevelSearchShareAssets', data)
+export const SearchShareAssets = data => postHttp(caiApi+'/ilgcreation/article/getRelatedMedias', data)
 
 // 文稿纠错
 export const correction = data => postHttp(swaggerApi+'/ilgcreation/sensitiveAnalysis/analysis', data)
@@ -40,18 +42,44 @@ export const newSignature = data => getHttp(caiApi+'/sprint/rest/stories/workspa
 
 // 自动保存
 
-export const newSave = data => postHttp(caiApi+'/sprint/rest/workflow/stories/workspace/'+newManuscriptId+'/save/zhiZuo/process', data)
+export const newSave = data => postHttp(caiApi+'/sprint/rest/workflow/stories/workspace/'+newManuscriptId+'/save/smartWrite/process', data)
 
 // 获取模板
 export const getTempleteSourceList = data => postHttp(caiApi+'/sprint/rest/story/getTempleteSourceList', data)
 
 //稿库
-export const listObjects = data => postHttp(caiApi+'/sprint/view/libraries/workspace/zhiZuo/listObjects', data)
+export const listObjects = data => postHttp(caiApi+'/sprint/view/libraries/workspace/smartWrite/listObjects', data)
 
 //模板添加收藏
-export const favorTemplate = data => getHttp(caiApi+'/sprint/rest/story/favorTemplate', data)
+export const favorTemplate = data => postHttp(caiApi+'/sprint/rest/story/favorTemplate', data)
 
 //模板取消收藏
-export const cancelFavorTemplate = data => getHttp(caiApi+'/sprint/rest/story/cancelFavorTemplate', data)
+export const cancelFavorTemplate = data => postHttp(caiApi+'/sprint/rest/story/cancelFavorTemplate', data)
+
+//媒资库添加收藏
+export const Mediadd = data => postHttp(caiApi+'/ilgcreation/favoriteMedia/add', data)
+
+//媒资库取消收藏
+export const Mediadell = data => postHttp(caiApi+'/ilgcreation/favoriteMedia/dell', data)
+
+//稿库添加收藏
+export const favoriteadd = data => postHttp(caiApi+'/ilgcreation/favoriteMixmdedia/add', data)
+
+//稿库取消收藏
+export const favoritedell = data => postHttp(caiApi+'/ilgcreation/favoriteMixmdedia/del', data)
+
+//稿件是否收藏
+export const FavoriteMixmdedia = data => postHttp(caiApi+'/ilgcreation/favoriteMixmdedia/isFavorite', data)
+
+//关联文章添加收藏
+export const Articleadd = data => postHttp(caiApi+'/ilgcreation/favoriteArticle/add', data)
+
+//关联文章取消收藏
+export const Articledell = data => postHttp(caiApi+'/ilgcreation/favoriteArticle/dell', data)
+
+//我的收藏
+export const getFavorTemplate = data => postHttp(caiApi+'/sprint/rest/story/getFavorTemplate', data)
+
+
 // 获取按钮接口
 export const listBtn = data => postHttp(caiApi+'/sprint/rest/story/workspace/'+newManuscriptId+'/actions/edit', data)

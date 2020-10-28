@@ -1,7 +1,7 @@
 <template>
   <div>
     <!--下面通过传递进来的id完成初始化-->
-    <div style="position:relative;width: 400px;margin: 0 auto;">
+    <div style="position:relative;width: 800px;margin: 0 auto;">
         <div :id="randomId" ref="ueditor"></div>
         <div class="OperationButton">
             <ul> 
@@ -126,7 +126,7 @@ export default {
                 // 初始容器高度
                 initialFrameHeight: 680,
                 // 初始容器宽度
-                initialFrameWidth: 600,
+                initialFrameWidth: 800,
                 toolbars: [
                     [
                     // 'anchor', //锚点
@@ -538,7 +538,7 @@ export default {
 .OperationButton {
     position:absolute;
     bottom: 0%;
-    right: -61%;
+    right: -6%;
 }
 .OperationButton  li a {
     height: 30px;

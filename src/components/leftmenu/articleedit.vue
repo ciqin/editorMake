@@ -5,9 +5,9 @@
       <div v-loading="loading">
         <div v-if="Relatedarr.length>0 && loading==false"> 
           <div v-for="(item,key) in  Relatedarr" :key = key  class='acticle_list'>
-              <!-- <div class='collection_icon' @click="collectionIconclick(key)" :class='item.iscollection===true ? "collectionAcitve" : "nocollectionAcitve" '>
+              <div class='collection_icon' @click="collectionIconclick(key)" :class='item.isFavorite==true ? "collectionAcitve" : "nocollectionAcitve" '>
                 <i class="el-icon-star-on"></i>
-              </div> -->
+              </div>
 
               <div>
                 <div :class="item.iscontent===true?'arrow_up_icon arrow_down_icon':'arrow_up_icon'" @click="arrowupIconclick(key,item)">
@@ -41,6 +41,7 @@
 </template>
 <script>
 import { getRelatedArticles } from '@/http/api'
+import { Articleadd } from '@/http/api'
 export default {
     props:{
        uestrvalue:String
@@ -120,10 +121,24 @@ export default {
     handleClick(tab, event) {
     },
     collectionIconclick(index){
-      if(this.Relatedarr[index].iscollection===true){
-        this.Relatedarr[index].iscollection = false
+      let param = {
+          uuid:this.Relatedarr[index].uuid,
+          tenantId:5,
+          title:this.Relatedarr[index].title,
+          content:this.Relatedarr[index].content,
+          pubtime:this.Relatedarr[index].pubtime
+      }
+
+      if(this.Relatedarr[index].isFavorite == true){
+        this.Relatedarr[index].isFavorite = false
+        Articledell(param).then((res)=>{
+          
+        })
       }else{
-        this.Relatedarr[index].iscollection = true
+        this.Relatedarr[index].isFavorite = true
+        Articleadd(param).then((res)=>{
+          
+        })
       }
     },
     arrowupIconclick(index,item){
