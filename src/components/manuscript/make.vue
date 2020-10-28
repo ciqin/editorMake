@@ -17,7 +17,7 @@
                </div>
             </div>
         </el-col>
-        <el-col :span="14">
+        <el-col :span="12">
             <div class="grid-content bg-purple" style="position:relative">
                 <div style="margin-left: calc(50% - 265px);">
                     <el-input type="text" v-model="input" @input="inputChange" placeholder="请输入内容" maxlength="300" show-word-limit style="width:700px;margin:16px 0;"></el-input>
@@ -168,7 +168,7 @@ export default {
 }
 /* 导航展示内容 */
 .NavContainer {
-    width: 400px;
+    width: 390px;
     background: #fff;
     height: 100%;
     margin-left: 90px;
