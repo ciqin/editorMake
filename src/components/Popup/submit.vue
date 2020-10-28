@@ -84,6 +84,10 @@ export default {
             }
             SubmitGj(data).then(res=>{
                 if(res) {
+                    this.$message({
+                        message: '稿件提交成功！',
+                        type: 'success'
+                    });
                     this.$store.dispatch("modifySubmit",false)
                 }
             })

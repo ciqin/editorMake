@@ -82,4 +82,8 @@ button{outline-style: none;}
 .ssContainer th{
   padding-top: 0;
 }
+/* 单选按钮html隐藏 */
+.radiusNone .el-radio__label {
+    display: none;
+}
 </style>

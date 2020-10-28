@@ -62,10 +62,18 @@ export default {
           storyId: this.storyId,
           issueDate:this.value1
       }
-      subChangeTime(data).then(res=>{})
+      subChangeTime(data).then(res=>{
+        if(res) {
+            this.$message({
+                message: '改时成功！',
+                type: 'success'
+            });
+            this.$store.dispatch('modifyChangeTime',false);
+        }
+      })
     },
     closeModale(){
-
+      this.$store.dispatch('modifyChangeTime',false);
     },
     timestampToTime(data) {
         let date = new Date(data) //时间戳为10位需*1000，时间戳为13位的话不需乘1000

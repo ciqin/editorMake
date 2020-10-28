@@ -13,26 +13,25 @@
         </div>
         <div class='first_texttemp'>内部资源 > 模板 > {{templatearr[texttemp]}} </div>
 
-          <div>
-            <div class="first_main_imgs infinite-list-wrapper" v-loading="loading" >
-                <ul v-if="templateimgarr.length>0" style='height: 755px;overflow: auto;' v-infinite-scroll="loadTemplates" infinite-scroll-disabled="disabledtemplate">
-                  <li v-for="(item,key) in templateimgarr" :key = key :title="item.label" @click="templeteSource(key,item)" :class="{show_list_start:item.show===true}" @mouseover="collectionIconmouseover(key,item,templateimgarr)"  @mouseout="collectionIconmouseout(key,item,templateimgarr)">
-                     <div v-html = item.templeteSource ></div>
-                     <div class='collection_icon' :connectid="item.userId"   @click.stop="collectionIconclick(key,e,templateimgarr)" :class='item.userId ? "collectionAcitve" : "nocollectionAcitve" '>
+        <div>
+          <div class="first_main_imgs infinite-list-wrapper" v-loading="loading" >
+              <ul v-if="templateimgarr.length>0" style='height: 755px;overflow-y: auto;' v-infinite-scroll="loadTemplates" infinite-scroll-disabled="disabledtemplate">
+                <li v-for="(item,key) in templateimgarr" :key = key :title="item.label" @click="templeteSource(key,item)" :class="{show_list_start:item.show===true}" @mouseover="collectionIconmouseover(key,item,templateimgarr)"  @mouseout="collectionIconmouseout(key,item,templateimgarr)">
+                    <div v-html = item.templeteSource ></div>
+                    <div class='collection_icon' :connectid="item.userId"   @click.stop="collectionIconclick(key,e,templateimgarr)" :class='item.userId ? "collectionAcitve" : "nocollectionAcitve" '>
                            <i class="el-icon-star-on"></i>
-                      </div>
-                  </li>
+                    </div>
+                </li>
 
-                   <p v-if="loadimgtemplate" style='text-align:center'>加载中...</p>
-                    <p v-if="noMoretemplate">没有更多了</p>
-                </ul>
-              
-                
-                <div v-else>
-                   <p style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;'><i class='el-icon-warning-outline'></i>暂无数据</p>
-                </div>
-            </div>
+                 <p v-if="loadimgtemplate" style='text-align:center'>加载中...</p>
+                 <p v-if="templatenoMore">没有更多了</p>
+              </ul>
+            
+              <div v-else>
+                  <p style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;'><i class='el-icon-warning-outline'></i>暂无数据</p>
+              </div>
           </div>
+        </div>
 
       </el-tab-pane>
 
@@ -70,9 +69,9 @@
               <div v-if="Libraryarr.length>0">
                 <div class="libisryarr" v-for="(item,key) in Libraryarr" :key = key>
                     <div class='libisryarr_list' @click="LibraryClick(item)">
-                        <!-- <div class='collection_icon' @click="collectionIconclick(key)" :class='item.iscollection===true ? "collectionAcitve" : "nocollectionAcitve" '>
+                        <div class='collection_icon' @click.stop="collectionIconclick(key,e,Libraryarr)" :class='item.isFavorite == true ? "collectionAcitve" : "nocollectionAcitve" '>
                             <i class="el-icon-star-on"></i>
-                          </div> -->
+                        </div>
                         <div class="libisryarr_img" v-if="item.fileFormat=='mp4'">
                             <video :src="item.url" controls="controls" :poster="item.coverImageUrl">
                             </video>
@@ -116,7 +115,7 @@
               <div class="third_libisryarr" v-for="(item,key) in Manuscript" :key = key @click='ManuscriptClick(item)'>
                  <div v-if="item.thumbnailUrl && item.htmlContent" style='display: flex;position: relative;' :class="{show_list_start:item.show===true}" @mouseover="collectionIconmouseover(key,item,Manuscript)"  @mouseout="collectionIconmouseout(key,item,Manuscript)">
                       <div class='third_libisryarr_list'> 
-                           <div class='collection_icon' @click.stop="collectionIconclick(key,e)" :class='item.iscollection===true ? "collectionAcitve" : "nocollectionAcitve" '>
+                           <div class='collection_icon nocollectionAcitve' @click.stop="collectionIconclick(key,e,Manuscript)">
                               <i class="el-icon-star-on"></i>
                           </div> 
                           <div class="third_libisryarr_img">
@@ -131,13 +130,12 @@
 
                  <div v-else-if="!item.thumbnailUrl && item.htmlContent" :class="{show_list_start:item.show===true}" @mouseover="collectionIconmouseover(key,item,Manuscript)"  @mouseout="collectionIconmouseout(key,item,Manuscript)">
                      <div class="third_libisryarr_botal" style='position: relative;'>
-                          <div class='collection_icon'  @click.stop="collectionIconclick(key,e)" :class='item.iscollection===true ? "collectionAcitve" : "nocollectionAcitve" '>
+                          <div class='collection_icon nocollectionAcitve'  @click.stop="collectionIconclick(key,e,Manuscript)">
                               <i class="el-icon-star-on"></i>
                           </div> 
                         <p class='third_libisryarr_botal_title'>{{item.title}}</p>
                       </div>
                  </div>
-                 
               </div>
 
               <p v-if="loadimg" style='text-align:center'>加载中...</p>
@@ -160,6 +158,11 @@
   import { listObjects } from '@/http/api'           //稿库
   import { favorTemplate } from '@/http/api'           //模板收藏
   import { cancelFavorTemplate } from '@/http/api'           //取消模板收藏
+  import { Mediadd } from '@/http/api'      //媒资库收藏
+  import { Mediadell } from '@/http/api'    //取消媒资库收藏
+  import { FavoriteMixmdedia } from '@/http/api'    //稿件是否收藏
+  import { favoriteadd  } from '@/http/api'    //稿件添加收藏
+  import { favoritedell  } from '@/http/api'    //稿件取消收藏
   import { store } from '@/store'
   export default {
     data() {
@@ -205,6 +208,8 @@
         loadimg:false, //稿件滚动加载
         Manuscrippage:0,//稿库的页数
         ManuscrippageNum:10,//稿件每次加载条数
+        ManuscripIDarr:[],//稿件id
+        Manuscripcollect:[] //收藏的稿件
       };
     },
     created(){
@@ -242,11 +247,11 @@
       },
 
       //模板=========================================================
-      noMoretemplate () {
+      templatenoMore () {
         return this.templateimgarr.length-1 >= this.templatetotal
       },
       disabledtemplate (){
-          return this.loadimgtemplate || this.noMoretemplate
+          return this.loadimgtemplate || this.templatenoMore
       }
     },
 
@@ -277,10 +282,13 @@
             let value1arr = []
             value1arr.push(this.value1.toString())
             let Searchparam = {
+                ContentType:true,
                 classifyIds:value1arr, //分类的id
                 keyWords:this.Shareinput,//关键字
                 mediaType:this.value2, //类型
-                tenantId:5 //组织id
+                tenantId:5, //组织id
+                sortParam:'create_time',
+                sortType:'desc',
             }
             SearchShareAssets(Searchparam).then(res=>{  //媒资库检索
               if(res){
@@ -306,8 +314,19 @@
                 res.content.forEach(function (item) {
                    item.show=false
                   _that.Manuscript.push(item);
+                  _that.ManuscripIDarr.push(item.id)
                 });
                 _that.Manuscriptotal = res.totalElements
+
+                let parmas ={
+                    tenantId: 5,
+                    uuids:_that.ManuscripIDarr
+                  }
+                FavoriteMixmdedia(parmas).then((res)=>{
+                  if(res){
+                    this.Manuscripcollect=res.data
+                  }
+                })
               }
             })
         }
@@ -316,7 +335,9 @@
         store.ueditor.setContent(item.templeteSource,true)
       },
       templatearrclick(index){
-         this.texttemp = index
+         let _that = this
+         _that.templateimgarr=[]
+         _that.texttemp = index
          let Listparam = {
             label: '',
             templeteType: index+1,
@@ -328,31 +349,70 @@
          }
          getTempleteSourceList(Listparam).then(res=>{
             if(res){
-              this.loading = false
-              this.templateimgarr = res.content
+             _that.templatetotal = res.totalElements
+
+              res.content.forEach(function (item) {
+                item.show = false
+                _that.templateimgarr.push(item);
+              }); 
             }
          })
       },
       collectionIconclick(index,e,arr){
         let param = {
-          templateId:arr[index].autoId
+          templateId:arr[index].templeteId,
+          ContentType:true
+        }
+
+        let libraryparam = {
+          ContentType:true,
+          assetId:arr[index].assetId,
+          tenantId:5
+        }
+
+        let favoriteparam = {
+           ContentType:true,
+           tenantId:5,
+           uuid:arr[index].id,
+           createTime:arr[index]
         }
         
-       if(arr[index].userId ===null){
-         this.arr[index].userId = true
 
-         if(arr == this.templateimgarr){
-          favorTemplate(param).then(res=>{ //模板收藏
-            console.log(res)
-          })
-         }
-        }else{
-          if(arr == this.templateimgarr){
-            cancelFavorTemplate(param).then(res=>{ //模板收藏
-              console.log(res)
-            })
-         }
-          this.arr[index].userId = false
+        if(arr == this.templateimgarr){
+            if(arr[index].userId){
+                this.arr[index].userId = false
+                cancelFavorTemplate(param).then(res=>{ //取消模板收藏
+                  console.log(res)
+                })
+            }else{
+                this.arr[index].userId = true
+                favorTemplate(param).then(res=>{ //模板收藏
+                  console.log(res)
+                })
+            }
+        }else if(arr == this.Libraryarr){
+           if(arr[index].isFavorite){
+                this.arr[index].isFavorite = false
+                Mediadell(libraryparam).then(res=>{ //取消媒资库收藏
+                  console.log(res)
+                })
+           }else{
+                this.arr[index].isFavorite = true
+                Mediadd(libraryparam).then(res=>{ //媒资库收藏
+                  console.log(res)
+                })
+           }
+        }else if(arr == this.Manuscript){
+             if(this.Manuscripcollect.length==0){
+                favoriteadd(favoriteparam).then(res=>{ //取消稿件收藏
+                  console.log(res)
+                })
+            }else{
+                // this.arr[index].isFavorite = true
+                favoritedell(favoriteparam).then(res=>{ //稿件收藏
+                  console.log(res)
+                })
+            }
         }
         
       },
@@ -422,7 +482,13 @@
             listObjects(Objectparam).then(res=>{
               if(res){
                 this.loading = false
-                this.Manuscript = res.content
+                
+                 res.content.forEach(function (item) {
+                   item.show=false
+                  _that.Manuscript.push(item);
+                  _that.ManuscripIDarr.push(item.id)
+                });
+                _that.Manuscriptotal = res.totalElements
               }
             })
       },
@@ -457,7 +523,10 @@
               res.content.forEach(function (item) {
                  item.show=false
                 _that.Manuscript.push(item);
-              });          
+                _that.ManuscripIDarr.push(item.id)
+              }); 
+              
+              
             }
           })
           }
@@ -486,6 +555,7 @@
               _that.templatepage = _that.templatepage+1
               _that.templatetotal = res.totalElements
               res.content.forEach(function (item) {
+                 item.show = false
                 _that.templateimgarr.push(item);
               });  
             }
@@ -687,6 +757,12 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+.libisryarr_list .collection_icon{
+  display: block !important;
+  right: 8px;
+  z-index: 222;
+  cursor: pointer;
 }
 .labelselect{
     width: 50%;

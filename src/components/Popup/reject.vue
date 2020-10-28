@@ -110,11 +110,17 @@ export default {
         },
         submit(){
             subReject().then(res=>{
-                
+                if(res) {
+                    this.$message({
+                        message: '改时成功！',
+                        type: 'success'
+                    });
+                    this.$store.dispatch('modifyReject',false);
+                }
             })
         },
         closeModale(){
-
+            this.$store.dispatch('modifyReject',false);
         }
     }
 }

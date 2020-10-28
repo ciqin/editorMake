@@ -1,13 +1,13 @@
 <template>
   <div>
     <!--下面通过传递进来的id完成初始化-->
-    <div style="position:relative;width: 400px;margin: 0 auto;">
+    <div>
         <div :id="randomId" ref="ueditor"></div>
         <div class="OperationButton">
             <ul> 
                <li v-if="storyDeliver"><el-button type="text" @click="opaBtn1"><a href="javascript:" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>传稿</span></el-button></li>
-               <li v-if="storySubmit"><el-button type="text" @click="opaBtn2"><a href="javascript:" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>签入</span></el-button></li>
-               <li v-if="storyCheckin"><el-button type="text" @click="opaBtn3"><a href="javascript:" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>提交</span></el-button></li>
+               <li v-if="storyCheckin"><el-button type="text" @click="opaBtn2"><a href="javascript:" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>签入</span></el-button></li>
+               <li v-if="storySubmit"><el-button type="text" @click="opaBtn3"><a href="javascript:" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>提交</span></el-button></li>
                <!-- <li v-if="storyCheckin"><el-button type="text" @click="opaBtn4"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>测试</span></el-button></li> -->
                <li v-if="storySubmitApprove"><el-button type="text" @click="censorshipfun"><a href="javascript:" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>送审</span></el-button></li>
                <li v-if="storyApprovePass"><el-button type="text" @click="adoptFun"><a href="javascript:" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>通过</span></el-button></li>
@@ -17,7 +17,7 @@
                <li><el-button type="text" @click="selectFun"  v-if="selectId"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>选用</span></el-button></li>
                <li><el-button type="text" @click="ChangeTimeFun"  v-if="ChangeTime"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>改时</span></el-button></li>
                 <li><el-button type="text" @click="contributionFun"  v-if="contribution"><a href="javascript:" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>撤稿</span></el-button></li>
-                <li><el-button type="text" @click="manyContributionFun"  v-if="manyContribution"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>一键撤稿</span></el-button></li>
+                <!-- <li><el-button type="text" @click="manyContributionFun"  v-if="manyContribution"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>一键撤稿</span></el-button></li> -->
                 <li><el-button type="text" @click="centerDialogVisible = true"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>预览</span></el-button></li>
                 <li><a href="javascript:" @click="save" >
                     <img src="@/assets/icon2.png" width="20" alt=""></a>保存
@@ -80,7 +80,60 @@
             title="驳回"
             :visible.sync="hasReject"
             width="800px" :before-close="CloseSubmit">
-            <Reject></Reject>
+            <el-form :inline="true" class="demo-form-inline" label-width="100px">
+                <el-row>
+                    <el-col :span="24">
+                        <el-table
+                            :data="tableData"
+                            style="width: 100%;" class="ssContainer">
+                            <el-table-column
+                                prop="time"
+                            label="时间"
+                                width="170">
+                            </el-table-column>
+                            <el-table-column
+                                prop="status"
+                                label="状态"
+                                width="80">
+                            </el-table-column>
+                            <el-table-column
+                                prop="approverGroup"
+                                label="待审部门"
+                                width="80">
+                            </el-table-column>
+                            <el-table-column
+                                prop="approverRole"
+                                label="待审角色"
+                                width="80">
+                            </el-table-column>
+                            <el-table-column
+                                prop="approvers"
+                                label="指定审批人"
+                                width="180">
+                            </el-table-column>
+                            <el-table-column
+                                prop="approvedBy"
+                                label="审批人"
+                                width="120">
+                            </el-table-column>
+                            <el-table-column
+                                label="选项">
+                                <template slot-scope="scope">
+                                     <el-radio class="radiusNone" v-if="scope.row.type" v-model="radio" :label="scope.row.lable" @change="rejectSelect(scope.row)"></el-radio>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </el-col>
+                    <el-col :span="24">
+                        <div style="margin:10px;">备注</div>
+                        <el-input type="textarea" v-model="commit" size="mini" placeholder="请输入备注内容" style="width:100%;margin-left:10px;margin-bottom:16px;"></el-input>
+                    </el-col>
+                </el-row>
+            </el-form>
+            <div slot="footer" class="dialog-footer" style="text-align:right;">
+                <el-button type="primary" @click="rejectSubmit"  size="mini">确定驳回</el-button>
+                <el-button @click="closeModale"  size="mini">取消</el-button>
+            </div>
         </el-dialog>
 
         <!-- 选用弹出窗 -->
@@ -120,7 +173,7 @@ import '#/UEditor/lang/zh-cn/zh-cn.js'
 import html2Canvas from 'html2canvas'
 import JsPDF from 'jspdf'
 // 接口加载
-import { submitData ,newSave,listBtn,releaseManuscript,deleteManuscript,subAdopt,subFinalJudgment,revision,withdraw} from "@/http/api"
+import { submitData ,newSave,listBtn,releaseManuscript,deleteManuscript,subAdopt,subFinalJudgment,revision,withdraw,hasReject,subReject} from "@/http/api"
 import { store} from '@/store'
 import {mapActions, mapGetters} from 'vuex';
 import Submit from "../Popup/submit"
@@ -149,8 +202,12 @@ export default {
             // censorship:false,
             //每个编辑器生成不同的id,以防止冲突
             randomId: 'editor_' + (Math.random() * 100000000000000000),
+            tableData:[],
+            commit:'',
+            radio:"",
             //编辑器实例
             instance: null,
+            rejectUuid:"",
             centerDialogVisible: false,
             ready: false,
             enableAutoSave: false,
@@ -160,9 +217,9 @@ export default {
                 // 编辑器不自动被内容撑高
                 autoHeightEnabled: false,
                 // 初始容器高度
-                initialFrameHeight: 680,
+                initialFrameHeight: 790,
                 // 初始容器宽度
-                initialFrameWidth: 600,
+                initialFrameWidth: 700,
                 toolbars: [
                     [
                     // 'anchor', //锚点
@@ -285,6 +342,9 @@ export default {
             ueconter:''
         };
     },
+    created(){
+        
+    },
     watch: {
         value: function(val, oldVal) {
             if (val != null  && this.ready) {
@@ -349,6 +409,38 @@ export default {
                 releaseManuscript().then(res=>{})
             } 
         });
+       
+        // 驳回获取数据接口
+        hasReject().then(res=>{
+           res.records.forEach((item,index)=>{
+               let status = '';
+               switch(item.status){
+                   case 0:
+                        status = "待审批"
+                         break
+                    case 1:
+                         status = "已驳回"
+                         break
+                    case 2:
+                         status = "已通过"
+                         break
+                    case 3:
+                         status = "已通过（终审）"
+                         break
+               }
+               this.tableData.push({
+                   time:this.timestampToTime (item.updated),
+                   status:status,
+                   approverGroup:item.approverGroup.name,
+                   approverRole:item.approverRole.name,
+                   approvers:item.approvers,
+                   approvedBy:item.approvedBy?item.approvedBy.name:"",
+                   type:item.approvedBy?true:false,
+                   lable:(index+1),
+                   uuid:item.approvedBy?item.approvedBy.uuid:""
+               })
+           })
+        })
     },
 
     beforeDestroy() {
@@ -388,7 +480,7 @@ export default {
             this.ceshi = true
         },
         censorshipfun (){
-            this.$store.dispatch('modifyReject',true);
+            this.$store.dispatch('modifyCheckIn',true);
         },
         // 驳回
         rejectFun(){
@@ -409,7 +501,7 @@ export default {
         // 撤稿
         contributionFun(){
             withdraw().then(res=>{
-                
+
             })
         },
         // 通过
@@ -498,8 +590,8 @@ export default {
                 // leadinLineUrl:data.properties.leadinLineUrl,
                 // leadinLineStyle: data.leadinLineStyle,
                 // originalCategory: data.originalCategory,
-                watermark: data.properties.watermark?1:0,
-                ad: data.properties.ad?1:0
+                watermark: data.propertie&&sdata.properties.watermark?1:0,
+                ad: data.propertie&&data.properties.ad?1:0
             };
             if(this.$store.state.title =="") {
                 return  this.$message.error('标题不能为空！');
@@ -509,7 +601,7 @@ export default {
                 objid:store.objid,
                 folder:data.folder,
                 title: this.$store.state.title,
-                keywords: data.dynamicTags.join(","),
+                keywords:data.dynamicTags?data.dynamicTags.join(","):"",
                 content: "编辑器内容",
                 summary: data.summary,
                 signature: data.signature,
@@ -676,6 +768,34 @@ export default {
                 "padding":"127px 38px 87px 47px"
             }
         },
+        timestampToTime (data) {
+            let date = new Date(data) //时间戳为10位需*1000，时间戳为13位的话不需乘1000
+            let Y = date.getFullYear() + '-'
+            let M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-'
+            let D = date.getDate() + ' '
+            let h = date.getHours() + ':'
+            let m = date.getMinutes() + ':'
+            let s = date.getSeconds()
+            return Y+M+D+h+m+s
+        },
+        // 驳回提交
+        rejectSubmit(){
+            let data = this.saveParme();
+            this.rejectUuid?data.recordId = this.rejectUuid:"";
+            data.commit = this.commit;
+            subReject(data).then(res=>{
+                if(res) {
+                    this.$message({
+                        message: '稿件已驳回！',
+                        type: 'success'
+                    });
+                }
+            })
+        },
+        rejectSelect(data){
+           this.radio = data.lable;
+           this.rejectUuid = data.uuid;
+        }
     }
 };
 
@@ -687,7 +807,7 @@ export default {
 .OperationButton {
     position:absolute;
     bottom: 0%;
-    right: -61%;
+    right: 63px;
 }
 .OperationButton  li a {
     height: 30px;
@@ -780,4 +900,5 @@ export default {
 .mobileContainer {
     overflow: auto;
 }
+
 </style>

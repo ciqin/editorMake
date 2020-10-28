@@ -2,8 +2,8 @@
   <div> 
     <el-form ref="form"  label-width="130px">
       <div class="p30">
-          <h6 class="wordTitle">关联配图</h6>
-          <span class="tip">根据文字内容，可自动配图</span> 
+          <h6 class="wordTitle">敏感词分析</h6>
+          <span class="tip">识别文本中涉黄、涉政或其他违禁等敏感词汇</span> 
       </div>
       <!-- <el-form-item label="敏感词分析"   class="p30">
               <el-switch
@@ -25,7 +25,6 @@
            <p style="text-align: center; color: rgb(96, 98, 102); margin-top: 50px; font-size: 18px;"><i class="el-icon-warning-outline"></i>暂无数据</p>
         </div>
       </div>
-      
     </el-form>
   </div>
 </template>

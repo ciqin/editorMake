@@ -2,7 +2,7 @@
  * 此文件为接口统一管理文件
  */
 const swaggerApi = "http://192.168.18.12:9117";
-const caiApi = "http://192.168.4.116:9080";
+const caiApi = "http://127.0.0.1:9080";
 const hongApi = "http://qhcloudhongqi.wengegroup.com:9116"
 const zhiApi = "http://192.168.18.12:9117"
 import { getHttp, postHttp } from "./httpService"
@@ -45,13 +45,13 @@ export const newSignature = data => getHttp(caiApi+'/sprint/rest/stories/'+libId
 
 // 自动保存
 
-export const newSave = data => postHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/save/zhiZuo/process', data)
+export const newSave = data => postHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/save/smartWrite/process', data)
 
 // 获取模板
 export const getTempleteSourceList = data => postHttp(caiApi+'/sprint/rest/story/getTempleteSourceList', data)
 
 //稿库
-export const listObjects = data => postHttp(caiApi+'/sprint/view/libraries/'+libId+'/zhiZuo/listObjects', data)
+export const listObjects = data => postHttp(caiApi+'/sprint/view/libraries/'+libId+'/smartWrite/listObjects', data)
 
 //模板添加收藏
 export const favorTemplate = data => getHttp(caiApi+'/sprint/rest/story/favorTemplate', data)
@@ -121,8 +121,6 @@ export const subChangeTime = data => postHttp(caiApi+'/sprint/rest/workflow/stor
 
 // 撤稿
 export const withdraw = data => getHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/retract/process', data)
+
 // 一键撤稿获取数据接口
-export const hasFinalJudgment = data => getHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/deepRetract', data)
-
-
-
+export const hasFinalJudgment = data => getHttp(caiApi+'/sprint/rest/story/'+libId+'/'+newManuscriptId+'/deepRetract', data)

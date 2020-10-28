@@ -96,14 +96,19 @@ export default {
             }
             submitCensorship(data).then(res=>{
                 if(res) {
+                    this.$message({
+                        message: '送审成功！',
+                        type: 'success'
+                    });
                     setTimeout(()=>{
                         window.close();
                     },500)
+                    this.$store.dispatch('modifyCheckIn',false);
                 }
             })
         },
         closeModale(){
-
+            this.$store.dispatch('modifyCheckIn',false);
         }
     }
 }
