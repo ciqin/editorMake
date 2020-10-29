@@ -2,10 +2,9 @@
  * 此文件为接口统一管理文件
  */
 const swaggerApi = "http://192.168.18.12:9117";
+// const caiApi = "http://qhcloudhongqi.wengegroup.com:9080";
 const caiApi = "http://127.0.0.1:9080";
 const hongApi = "http://qhcloudhongqi.wengegroup.com:9116"
-const zhiApi = "http://192.168.18.12:9117"
-const mediaApi = 'http://192.168.18.160:9117'
 
 import { getHttp, postHttp } from "./httpService"
 import { store } from '@/store'
@@ -14,6 +13,8 @@ import { store } from '@/store'
 let manuscriptId = window.location.href;
 let newManuscriptId = manuscriptId.split("?")[1].split("&")[0].split("=")[1];
 let libId = manuscriptId.split("?")[1].split("&")[1].split("=")[1];
+/\#\//.test(libId)?libId=libId.replace(/\#\//g,""):"";
+
 // store.objid = newManuscriptId;
 //  test
 export const getJson = data => getHttp('../../static/test/test.json', data)

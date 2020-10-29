@@ -126,9 +126,24 @@ export default {
         if(tab.label=='我的稿件'){
           getFavoriteMixmdedias().then((res)=>{
             this.loadingmusc = false
-            this.Manuscript = this.$store.state.listenManuscript
             this.Manuscriptidarr = res.data
             console.log(this.Manuscript)
+
+            let Objectparam = {
+                ContentType:true,
+                keywords: '',
+                library: 'manuscript',
+                types: 'TEXT,COMPO,LIVE',
+                excludedIds: this.$route.query.id,
+                editorType: 'COMPO',
+                page: this.Manuscrippage,
+                size: 10,
+                ids:res.data
+            }
+            listObjects().then((res)=>{
+                console.log(res)
+                this.Manuscript = res.content
+            })
           })
         }
       },

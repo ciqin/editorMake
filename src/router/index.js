@@ -4,45 +4,50 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 const router = new Router({
-  // mode: '',
+  mode: 'hash',
   base:"/make/",
   routes: [
+    // {
+    //   path: '/',
+    //   name: 'MainPage',
+    //   component: resolve => require(['@/components/MainPage'], resolve),
+    //   children:[
+    //     {
+    //       path: '/self',
+    //       name: 'self',
+    //       component: resolve => require(['@/components/listModule/self'], resolve),
+    //     },
+    //     {
+    //       path: '/add',
+    //       name: 'add',
+    //       component: resolve => require(['@/components/listModule/add'], resolve),
+    //     },
+    //     {
+    //       path: '/compiled',
+    //       name: 'compiled',
+    //       component: resolve => require(['@/components/listModule/compiled'], resolve),
+    //     },
+    //     {
+    //       path: '/manuscript',
+    //       name: 'manuscript',
+    //       component: resolve => require(['@/components/listModule/manuscript'], resolve),
+    //     },
+    //     {
+    //       path: '/release',
+    //       name: 'release',
+    //       component: resolve => require(['@/components/listModule/release'], resolve),
+    //     },
+    //     {
+    //       path: '/resources',
+    //       name: 'resources',
+    //       component: resolve => require(['@/components/listModule/resources'], resolve),
+    //     }
+    //   ]
+    // },
     {
       path: '/',
-      name: 'MainPage',
-      component: resolve => require(['@/components/MainPage'], resolve),
-      children:[
-        {
-          path: '/self',
-          name: 'self',
-          component: resolve => require(['@/components/listModule/self'], resolve),
-        },
-        {
-          path: '/add',
-          name: 'add',
-          component: resolve => require(['@/components/listModule/add'], resolve),
-        },
-        {
-          path: '/compiled',
-          name: 'compiled',
-          component: resolve => require(['@/components/listModule/compiled'], resolve),
-        },
-        {
-          path: '/manuscript',
-          name: 'manuscript',
-          component: resolve => require(['@/components/listModule/manuscript'], resolve),
-        },
-        {
-          path: '/release',
-          name: 'release',
-          component: resolve => require(['@/components/listModule/release'], resolve),
-        },
-        {
-          path: '/resources',
-          name: 'resources',
-          component: resolve => require(['@/components/listModule/resources'], resolve),
-        }
-      ]
+      name: 'make',
+      component: resolve => require(['@/components/manuscript/make'], resolve),
     },
     {
       path: '/logins',
@@ -54,11 +59,11 @@ const router = new Router({
       name: 'Compo',
       component: resolve => require(['@/components/manuscript/compo'], resolve),
     },
-    {
-      path: '/make',
-      name: 'make',
-      component: resolve => require(['@/components/manuscript/make'], resolve),
-    },
+    // {
+    //   path: '/make',
+    //   name: 'make',
+    //   component: resolve => require(['@/components/manuscript/make'], resolve),
+    // },
     {
       path: '/video',
       name: 'video',
@@ -81,12 +86,12 @@ const router = new Router({
     }
   ]
 })
-router.beforeEach(function(to, from, next) {
-  if(!document.cookie){
-    next('/login')
-  }else {
-    next()
-  }
-})
+// router.beforeEach(function(to, from, next) {
+//   if(!document.cookie){
+//     next('/login')
+//   }else {
+//     next()
+//   }
+// })
 export default router
 

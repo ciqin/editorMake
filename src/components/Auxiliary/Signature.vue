@@ -227,6 +227,7 @@ export default {
                     leadinLineUrl: "",
                     watermark: false
                 },
+                isNew:true,
                 dynamicTags: [],
                 inputVisible: false,
                 inputValue: '',
@@ -281,10 +282,10 @@ export default {
                 // ],
                 // originalCategory:0,
                 coverType:1,
-                addImg:"http://127.0.0.1:9080/sprint/assets/img/add.png",
-                opaImg1:"http://127.0.0.1:9080/sprint/assets/img/add.png",
-                opaImg2:"http://127.0.0.1:9080/sprint/assets/img/add.png",
-                opaImg3:"http://127.0.0.1:9080/sprint/assets/img/add.png",
+                addImg:"http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png",
+                opaImg1:"http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png",
+                opaImg2:"http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png",
+                opaImg3:"http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png",
             },
             options: [{
                 value: '选项1',
@@ -345,9 +346,9 @@ export default {
         this.opaBtn1 = true;
         this.opaBtn2 = false;
         this.opaBtn3 = false;
-        this.form.opaImg1 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
-        this.form.opaImg2 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
-        this.form.opaImg3 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
+        this.form.opaImg1 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
+        this.form.opaImg2 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
+        this.form.opaImg3 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
         this.form.coverType = 1;
     },
     // 大图操作函数
@@ -355,9 +356,9 @@ export default {
         this.opaBtn1 = false;
         this.opaBtn2 = true;
         this.opaBtn3 = false;
-        this.form.opaImg1 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
-        this.form.opaImg2 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
-        this.form.opaImg3 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
+        this.form.opaImg1 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
+        this.form.opaImg2 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
+        this.form.opaImg3 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
         this.form.coverType = 2;
     },
     // 三图操作函数
@@ -365,9 +366,9 @@ export default {
         this.opaBtn1 = true;
         this.opaBtn2 = true;
         this.opaBtn3 = true;
-        this.form.opaImg1 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
-        this.form.opaImg2 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
-        this.form.opaImg3 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
+        this.form.opaImg1 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
+        this.form.opaImg2 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
+        this.form.opaImg3 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
         this.form.coverType = 3;
     },
     // 无图操作函数
@@ -504,7 +505,11 @@ export default {
             this.form.properties.watermark=res.properties.watermark==1?true:false;  
             this.form.folder = res.story.folder
             this.form.libid = res.story.libid
-            
+            if(/\_blank/.test(res.story.id)) {
+                this.form.isNew = true;
+            }else {
+                this.form.isNew = false;
+            }
         })
        
      },

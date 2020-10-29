@@ -15,7 +15,7 @@
               :data="tableData"
               stripe
               border
-              style="width: 100%;margin-top:40px;">
+              style="width: 100%;margin-top:40px;" class="correction">
               <el-table-column
                 prop="date"
                 label="错误字词"

@@ -56,7 +56,7 @@ export default {
     created(){
         hasCensorship().then(resData=>{
             resData.routes.forEach((item,index)=>{
-                getHttp("http://127.0.0.1:9080/sprint/security/users/search/group/"+item.approverRole,{group:item.approverGroup,padding:Date.parse(new Date())}).then(res=>{
+                getHttp("http://qhcloudhongqi.wengegroup.com:9080/sprint/security/users/search/group/"+item.approverRole,{group:item.approverGroup,padding:Date.parse(new Date())}).then(res=>{
                    this.tableData.push({
                         approverGroup:{uuid:item.approverGroup},
                         approverRole:{uuid:item.approverRole},
