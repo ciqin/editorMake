@@ -19,8 +19,8 @@
         </el-col>
         <el-col :span="12">
             <div class="grid-content bg-purple" style="position:relative">
-                <div style="margin-left: calc(50% - 355px);" class="manuscriptContainer">
-                    <el-input type="text" v-model="input" @input="inputChange" placeholder="请输入内容" maxlength="300" show-word-limit style="width:712px;margin:16px 0;"></el-input>
+                <div style="margin-left: calc(50% - 395px);">
+                    <el-input type="text" v-model="input" @input="inputChange" placeholder="请输入内容" maxlength="300" show-word-limit style="width:800px;margin:16px 0;"></el-input>
                     <Ueditor @listenEvent = 'uedior'></Ueditor>
                 </div>
             </div>

@@ -14,6 +14,8 @@ import { store } from '@/store'
 let manuscriptId = window.location.href;
 let newManuscriptId = manuscriptId.split("?")[1].split("&")[0].split("=")[1];
 let libId = manuscriptId.split("?")[1].split("&")[1].split("=")[1];
+/\#\//.test(libId)?libId=libId.replace(/\#\//g,""):"";
+
 // store.objid = newManuscriptId;
 //  test
 export const getJson = data => getHttp('../../static/test/test.json', data)
