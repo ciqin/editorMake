@@ -7,10 +7,10 @@
               <li v-for="(item,key) in templatearr" :key = key    @click="templatearrclick(key)" :class="{templateactive:key==texttemp}">{{item}}</li>
             </ul>
           </div>
-          <div class='third_search' style='padding: 20px 21px 10px 19px;display:flex'>
+          <!-- <div class='third_search' style='padding: 20px 21px 10px 19px;display:flex'>
             <el-input v-model="templateinput" placeholder="请输入关键字(名称,内容)"></el-input>
             <el-button icon="el-icon-search">搜索</el-button>
-          </div>
+          </div> -->
            <div class='first_texttemp'>内部资源 > 模板 > {{templatearr[texttemp]}} </div>
            <div>
               <div class="first_main_imgs infinite-list-wrapper" v-loading="loading" >
@@ -94,6 +94,8 @@ export default {
       Manuscript:[],   //稿件从template的所有数据
       Manuscriptidarr:[],//收藏的id
 
+      Manuscrippage:0,//稿库的页数
+
       caiApi:"http://127.0.0.1:9080",
     }
   },
@@ -127,8 +129,7 @@ export default {
           getFavoriteMixmdedias().then((res)=>{
             this.loadingmusc = false
             this.Manuscriptidarr = res.data
-            console.log(this.Manuscript)
-
+            
             let Objectparam = {
                 ContentType:true,
                 keywords: '',
@@ -140,7 +141,7 @@ export default {
                 size: 10,
                 ids:res.data
             }
-            listObjects().then((res)=>{
+            listObjects(Objectparam).then((res)=>{
                 console.log(res)
                 this.Manuscript = res.content
             })
