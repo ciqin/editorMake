@@ -184,6 +184,8 @@ import CheckIn from "../Popup/checkIn"
 import Reject from "../Popup/reject"
 import ChangeTime from "../Popup/changeTime"
 import FinalJudgment from "../Popup/finalJudgment"
+// 加载jquery
+import $ from "jquery"
 export default {
     name: 'UE',
     props: {
@@ -217,7 +219,7 @@ export default {
                 // 编辑器不自动被内容撑高
                 autoHeightEnabled: false,
                 // 初始容器高度
-                initialFrameHeight: 820,
+                initialFrameHeight: 800,
 
                 // 初始容器宽度
                 initialFrameWidth: 712,
@@ -364,7 +366,6 @@ export default {
             that.instance.setContent(that.$store.state.htmlContent)
         }, 500);
         listBtn().then(res=>{
-
             res.forEach(item=>{
                 switch(item.code){
                     case "story-deliver":
@@ -410,38 +411,40 @@ export default {
                 releaseManuscript().then(res=>{})
             } 
         });
-       
         // 驳回获取数据接口
-        hasReject().then(res=>{
-           res.records.forEach((item,index)=>{
-               let status = '';
-               switch(item.status){
-                   case 0:
-                        status = "待审批"
-                         break
-                    case 1:
-                         status = "已驳回"
-                         break
-                    case 2:
-                         status = "已通过"
-                         break
-                    case 3:
-                         status = "已通过（终审）"
-                         break
-               }
-               this.tableData.push({
-                   time:this.timestampToTime (item.updated),
-                   status:status,
-                   approverGroup:item.approverGroup.name,
-                   approverRole:item.approverRole.name,
-                   approvers:item.approvers,
-                   approvedBy:item.approvedBy?item.approvedBy.name:"",
-                   type:item.approvedBy?true:false,
-                   lable:(index+1),
-                   uuid:item.approvedBy?item.approvedBy.uuid:""
-               })
-           })
-        })
+        if(this.storyApproveDeny) {
+             hasReject().then(res=>{
+                res.records.forEach((item,index)=>{
+                    let status = '';
+                    switch(item.status){
+                        case 0:
+                                status = "待审批"
+                                break
+                            case 1:
+                                status = "已驳回" 
+                                break
+                            case 2:
+                                status = "已通过"
+                                break
+                            case 3:
+                                status = "已通过（终审）"
+                                break
+                    }
+                    this.tableData.push({
+                        time:this.timestampToTime (item.updated),
+                        status:status,
+                        approverGroup:item.approverGroup.name,
+                        approverRole:item.approverRole.name,
+                        approvers:item.approvers,
+                        approvedBy:item.approvedBy?item.approvedBy.name:"",
+                        type:item.approvedBy?true:false,
+                        lable:(index+1),
+                        uuid:item.approvedBy?item.approvedBy.uuid:""
+                    })
+                })
+            })
+        }
+       
     },
 
     beforeDestroy() {
@@ -515,6 +518,9 @@ export default {
                     },5000)
                 }
             })
+        },
+        closeModale(){
+            
         },
         // 终审
         finalJudgment(){
@@ -597,10 +603,29 @@ export default {
             if(this.$store.state.title =="") {
                 return  this.$message.error('标题不能为空！');
             }
+            let localUrl = window.location.href;
+            let folderid = "";
+            if(!data.folder) {
+               folderid = localUrl.split("?")[1].split("&")[2].split("=")[1].replace( /\#\//g,"");
+            }else {
+                folderid = data.folder;
+            }
+            // 获取ueditor 的reference
+            let imgs = $(store.ueditor.body).find("img")
+            let reference ="";
+            if(imgs.length>0) {
+                imgs.each((index,item)=>{
+                    if(index==0) {
+                        reference+=$(item).attr("src")
+                    }else{
+                        reference+="##"+$(item).attr("src")
+                    }  
+                })
+            }
             let newData = {
-                libid: data.libid,
-                objid:store.objid,
-                folder:data.folder,
+                libid: data.libid?data.libid:localUrl.split("?")[1].split("&")[1].split("=")[1],
+                objid:store.objid?store.objid:localUrl.split("?")[1].split("&")[0].split("=")[1],
+                folder:folderid,
                 title: this.$store.state.title,
                 keywords:data.dynamicTags?data.dynamicTags.join(","):"",
                 content: "编辑器内容",
@@ -609,7 +634,7 @@ export default {
                 linkHeadline: data.linkHeadline,
                 level: data.levelId,
                 comment: data.comment,
-                reference: "",
+                reference: reference,
                 htmlContent:store.ueditor.getContent(),
                 elated:"",
                 topic:data.topicsId,
@@ -660,8 +685,6 @@ export default {
         },
         save(){
             let newData = this.saveParme();
-            let href = window.location.href;
-            newData.folderId = href.split("?")[1].split("&")[2].split("=")[1];
             if(newData.libid =="product") {
                 revision(newData).then(res=>{
                     if(res) {

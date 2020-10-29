@@ -2,8 +2,9 @@
  * 此文件为接口统一管理文件
  */
 const swaggerApi = "http://192.168.18.12:9117";
-// const caiApi = "http://qhcloudhongqi.wengegroup.com:9080";
-const caiApi = "http://127.0.0.1:9080";
+const caiApi = "http://qhcloudhongqi.wengegroup.com:9080";
+// 本地调试接口
+// const caiApi = "http://127.0.0.1:9080";
 const hongApi = "http://qhcloudhongqi.wengegroup.com:9116"
 
 import { getHttp, postHttp } from "./httpService"
@@ -36,10 +37,10 @@ export const classifygetAll = data => postHttp(hongApi+'/classify/getAll', data)
 export const SearchShareAssets = data => postHttp(caiApi+'/ilgcreation/article/getRelatedMedias', data)
 
 // 文稿纠错
-export const correction = data => postHttp(swaggerApi+'/ilgcreation/sensitiveAnalysis/analysis', data)
+export const correction = data => postHttp(caiApi+'/ilgcreation/sensitiveAnalysis/analysis', data)
 
 // 敏感词分析
-export const sensitivityAnalysis = data => postHttp(swaggerApi+'/ilgcreation/text/check', data)
+export const sensitivityAnalysis = data => postHttp(caiApi+'/ilgcreation/text/check', data)
 
 // 新建获取稿签Id
 export const newSignature = data => getHttp(caiApi+'/sprint/rest/stories/'+libId+'/'+newManuscriptId+'/tags/edit?type=COMPO', data)
@@ -74,9 +75,6 @@ export const favoritedell = data => postHttp(caiApi+'/ilgcreation/favoriteMixmde
 
 //稿件是否收藏
 export const FavoriteMixmdedia = data => postHttp(caiApi+'/ilgcreation/favoriteMixmdedia/isFavorite', data)
-
-//获取收藏的稿件 
-export const getFavoriteMixmdedias = data => getHttp(caiApi+'/ilgcreation/favoriteMixmdedia/getFavoriteMixmdedias', data)
 
 //关联文章添加收藏
 export const Articleadd = data => postHttp(caiApi+'/ilgcreation/favoriteArticle/add', data)

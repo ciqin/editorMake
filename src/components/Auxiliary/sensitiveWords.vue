@@ -14,16 +14,27 @@
               <span class="tip">识别文本中涉黄、涉政或其他违禁等敏感词汇</span>  
       </el-form-item> -->
       <div class="line"></div>
-      <div style="text-align:center;padding:0 20px;" class="impression">
-        <el-button type="primary" size="mini" @click="sensitiveWords" style="background: #303841;border:none;">开始分析</el-button>
-        <div  v-for="(tab,index) in wordList" :key="tab">
-           <el-form-item :label="tab.name">
-                  <el-progress :percentage="tab.bl" :format="format" class="mt11" style="color:red;width:230px;"></el-progress>
-          </el-form-item>
-        </div>
-        <div class="noneData" v-if="noneData" style="font-size: 30px;padding-top: 40px;">
-           <p style="text-align: center; color: rgb(96, 98, 102); margin-top: 50px; font-size: 18px;"><i class="el-icon-warning-outline"></i>暂无数据</p>
-        </div>
+       <div style="text-align:center;padding:0 20px;">
+         <el-button type="primary" size="mini" @click="sensitiveWords" style="background: #303841;border:none;">开始分析</el-button>
+         <el-button type="primary" size="mini" @click="clearWords" style="background: #303841;border:none;">一键清除样式</el-button>
+         <div>
+           <el-table
+              :data="tableData"
+              stripe
+              border
+              style="width: 100%;margin-top:40px;" class="correction">
+              <el-table-column
+                prop="name"
+                label="敏感词"
+                width="120" align="center">
+              </el-table-column>
+              <el-table-column
+                prop="date"
+                label="敏感词个数" align="center">
+              </el-table-column>
+            </el-table>
+         </div>
+         
       </div>
     </el-form>
   </div>
@@ -39,44 +50,43 @@ export default {
       value:"",
       wordList:[],
       maxData:0,
-      noneData:1
+      noneData:1,
+      tableData: [{
+        date: '无',
+        name: '无',
+      }]
     }
   },
    methods: {
-      format(percentage) {
-        return percentage === this.maxData ? '满' : `${Math.round(percentage*6/100)}个`;
-      },
       sensitiveWords(){
         if(store.ueditor) { 
             let data = {
               title:this.$store.state.title,
               content:store.ueditor.getContent()
             }
-            // newG().then(res=>{
-            //   console.log(res)
-            // })
             correction(data).then(res=>{
               var listWord= [];
-              if(!res.data[0]) {
-                return
-              }
-              res.data[0].content.keyWords.forEach(val=>{
-                let  key =eval("/" + val+ "/gi")
-                let count = data.content.match(key).length
-                listWord.push({
-                  name:val,
-                  count:count
+              if(res.data[0].content.keyWords.length>0) {
+                res.data[0].content.keyWords.forEach(val=>{
+                  let  key =eval("/" + val+ "/gi")
+                  let count = res.data[0].content.high.match(key).length;
+                  listWord.push({
+                    name:val,
+                    date:count
+                  })
                 })
-                this.maxData<count?this.maxData=count:'';
-              })
-              listWord.forEach(item=>{
-                item.bl = item.count/this.maxData*100
-              })
-              this.noneData = false;
-              this.wordList = listWord;
+                this.tableData = listWord;
+              }else {
+                this.$message('没有敏感词');
+              }
               store.ueditor.setContent(res.data[0].content.high);
             })
         }
+      },
+      clearWords(){
+        let newHtml = store.ueditor.getContent().replace(/color\:red/g,"")
+
+        store.ueditor.setContent(newHtml);
       }
     }
 }

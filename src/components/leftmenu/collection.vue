@@ -94,7 +94,7 @@ export default {
       Manuscript:[],   //稿件从template的所有数据
       Manuscriptidarr:[],//收藏的id
 
-      caiApi:"http://127.0.0.1:9080",
+      caiApi:"http://qhcloudhongqi.wengegroup.com:9080",
     }
   },
   created(){

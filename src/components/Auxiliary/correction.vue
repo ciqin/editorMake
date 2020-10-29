@@ -35,6 +35,7 @@
 <script>
 import {sensitivityAnalysis} from '@/http/api'
 import { store } from '@/store'
+import $ from 'jquery'
 export default {
   created(){
     getJson({aaa:true,id:111}).then(res => {
@@ -68,7 +69,7 @@ export default {
               })
               this.tableData = newData;
             }else {
-              this.$message('没有敏感词');
+              this.$message('没有字词错误');
             }
           })
       }else{
@@ -77,9 +78,10 @@ export default {
       
     },
     clearWords(){
-      let newHtml = store.ueditor.getContent().replace(/color\:\#333\;font\-weight\:bold\;background\-color\:\#66ffff/g,"")
-      
-      store.ueditor.setContent(newHtml);
+      let spans = $(store.ueditor.body).find(".colormark");
+      spans.each((index,item)=>{
+        $(item).attr("style","")
+      })
     }
   }
 }
