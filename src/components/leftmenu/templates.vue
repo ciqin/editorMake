@@ -18,7 +18,7 @@
               <ul v-if="templateimgarr.length>0" style='height: 705px;overflow-y: auto;' v-infinite-scroll="loadTemplates" infinite-scroll-disabled="disabledtemplate">
                 <li v-for="(item,key) in templateimgarr" :key = key :title="item.label" @click="templeteSource(key,item)" :class="{show_list_start:item.show===true}" @mouseover="collectionIconmouseover(key,item,templateimgarr)"  @mouseout="collectionIconmouseout(key,item,templateimgarr)">
                     <div v-html = item.templeteSource ></div>
-                    <div class='collection_icon' :connectid="item.userId"   @click.stop="collectionIconclick(key,e,templateimgarr)" :class='item.userId ? "collectionAcitve" : "nocollectionAcitve" '>
+                    <div class='collection_icon' :connectid="item.userId"   @click.stop="collectionIconclick(key,templateimgarr)" :class='item.userId ? "collectionAcitve" : "nocollectionAcitve" '>
                            <i class="el-icon-star-on"></i>
                     </div>
                 </li>
@@ -69,7 +69,7 @@
               <div v-if="Libraryarr.length>0">
                 <div class="libisryarr" v-for="(item,key) in Libraryarr" :key = key>
                     <div class='libisryarr_list' @click="LibraryClick(item)">
-                        <div class='collection_icon' @click.stop="collectionIconclick(key,e,Libraryarr)" :class='item.isFavorite == true ? "collectionAcitve" : "nocollectionAcitve" '>
+                        <div class='collection_icon' @click.stop="collectionIconclick(key,Libraryarr)" :class='item.isFavorite == true ? "collectionAcitve" : "nocollectionAcitve" '>
                             <i class="el-icon-star-on"></i>
                         </div>
                         <div class="libisryarr_img" v-if="item.fileFormat=='mp4'">
@@ -115,7 +115,7 @@
               <div class="third_libisryarr" v-for="(item,key) in Manuscript" :key = key @click='ManuscriptClick(item)'>
                  <div v-if="item.thumbnailUrl && item.htmlContent" style='display: flex;position: relative;' :class="{show_list_start:item.show===true}" @mouseover="collectionIconmouseover(key,item,Manuscript)"  @mouseout="collectionIconmouseout(key,item,Manuscript)">
                       <div class='third_libisryarr_list'> 
-                           <div class='collection_icon nocollectionAcitve' @click.stop="collectionIconclick(key,e,Manuscript)">
+                           <div class='collection_icon' @click.stop="collectionIconclick(key,Manuscript)" :class='Manuscripcollect.indexOf(item.id) == 0 ? "collectionAcitve" : "nocollectionAcitve" '>
                               <i class="el-icon-star-on"></i>
                           </div> 
                           <div class="third_libisryarr_img">
@@ -130,7 +130,7 @@
 
                  <div v-else-if="!item.thumbnailUrl && item.htmlContent" :class="{show_list_start:item.show===true}" @mouseover="collectionIconmouseover(key,item,Manuscript)"  @mouseout="collectionIconmouseout(key,item,Manuscript)">
                      <div class="third_libisryarr_botal" style='position: relative;'>
-                          <div class='collection_icon nocollectionAcitve'  @click.stop="collectionIconclick(key,e,Manuscript)">
+                          <div class='collection_icon'  @click.stop="collectionIconclick(key,Manuscript)" :class='Manuscripcollect.indexOf(item.id) == 0 ? "collectionAcitve" : "nocollectionAcitve" '>
                               <i class="el-icon-star-on"></i>
                           </div> 
                         <p class='third_libisryarr_botal_title'>{{item.title}}</p>
@@ -194,7 +194,7 @@
 
         templateimgarr:[], //模板
         loadimgtemplate:false,
-        templatepage:1,//模板的页数
+        templatepage:0,//模板的页数
         templatepageNum:10,//模板每次加载条数
         templatetotal:'',//模板的总条数
 
@@ -209,33 +209,13 @@
         Manuscrippage:0,//稿库的页数
         ManuscrippageNum:10,//稿件每次加载条数
         ManuscripIDarr:[],//稿件id
-        Manuscripcollect:[] //收藏的稿件
+        Manuscripcollect:[], //收藏的稿件id
+
+        loadingManuscript:true
       };
     },
     created(){
-        let _that = this
-      //获取标题模板
-        let Listparam = {
-            label: '',
-            templeteType: 1,
-            status: 0,
-            size: _that.templatepageNum,
-            page: _that.templatepage,
-            sort: 'use_num,desc',
-            ContentType:true
-        }
-        getTempleteSourceList(Listparam).then(res=>{
-            if(res){
-              _that.loading = false
-              _that.templatetotal = res.totalElements
-
-              res.content.forEach(function (item) {
-                item.show = false
-                _that.templateimgarr.push(item);
-                console.log(_that.templateimgarr)
-              });  
-            }
-        })
+       this.loadTemplates();
     },
     computed: {
       //稿库=========================================================
@@ -297,10 +277,13 @@
               }
             })
         }else if(tab.label=='稿库'){
+            let _that = this
+            _that.ManuscripIDarr=[]
+            _that.Manuscript = []
             let Objectparam = {
                 ContentType:true,
                 keywords: '',
-                library: 'workspace',
+                library: 'manuscript',
                 types: 'TEXT,COMPO,LIVE',
                 excludedIds: this.$route.query.id,
                 editorType: 'COMPO',
@@ -309,22 +292,24 @@
             }
             listObjects(Objectparam).then(res=>{
               if(res){
-                let _that = this
-                _that.loading = false
+                _that.loadingManuscript = false
                 res.content.forEach(function (item) {
                    item.show=false
                   _that.Manuscript.push(item);
                   _that.ManuscripIDarr.push(item.id)
                 });
+
                 _that.Manuscriptotal = res.totalElements
 
+                _that.$store.dispatch('modifylistenManuscript',_that.Manuscript);
+
                 let parmas ={
-                    tenantId: 5,
                     uuids:_that.ManuscripIDarr
                   }
                 FavoriteMixmdedia(parmas).then((res)=>{
                   if(res){
                     this.Manuscripcollect=res.data
+                   
                   }
                 })
               }
@@ -350,7 +335,7 @@
          getTempleteSourceList(Listparam).then(res=>{
             if(res){
              _that.templatetotal = res.totalElements
-
+            _that.templatepage = _that.templatepage+1
               res.content.forEach(function (item) {
                 item.show = false
                 _that.templateimgarr.push(item);
@@ -358,7 +343,7 @@
             }
          })
       },
-      collectionIconclick(index,e,arr){
+      collectionIconclick(index,arr){
         let param = {
           templateId:arr[index].templeteId,
           ContentType:true
@@ -371,10 +356,7 @@
         }
 
         let favoriteparam = {
-           ContentType:true,
-           tenantId:5,
            uuid:arr[index].id,
-           createTime:arr[index]
         }
         
 
@@ -403,14 +385,22 @@
                 })
            }
         }else if(arr == this.Manuscript){
-             if(this.Manuscripcollect.length==0){
-                favoriteadd(favoriteparam).then(res=>{ //取消稿件收藏
-                  console.log(res)
-                })
+           if(this.Manuscripcollect.indexOf(arr[index].id)==0 ){
+                    favoritedell(favoriteparam).then(res=>{ //取消稿件收藏
+                         this.Manuscripcollect.splice(this.Manuscripcollect.indexOf(arr[index].id),1);
+                     })
             }else{
-                // this.arr[index].isFavorite = true
-                favoritedell(favoriteparam).then(res=>{ //稿件收藏
-                  console.log(res)
+                  favoriteadd(favoriteparam).then(res=>{ //稿件收藏
+                    let parmas ={
+                      uuids:this.ManuscripIDarr
+                    }
+                    
+                    FavoriteMixmdedia(parmas).then((res)=>{
+                      if(res){
+                        this.Manuscripcollect=res.data
+                        console.log(this.Manuscripcollect)
+                      }
+                    })
                 })
             }
         }
@@ -453,7 +443,7 @@
             templeteType: 1,
             status: 0,
             size: 10,
-            page: 1,
+            page: 0,
             sort: 'use_num,desc',
             ContentType:true
          }
@@ -467,6 +457,8 @@
       },
       Manuscriptsearch(){
            this.loading = true
+            _that.Manuscript=[];
+            _that.ManuscripIDarr=[]
            let Objectparam = {
                 ContentType:true,
                 keywords: this.Manuscriptinput,
@@ -489,6 +481,7 @@
                   _that.ManuscripIDarr.push(item.id)
                 });
                 _that.Manuscriptotal = res.totalElements
+                _that.$store.dispatch('modifylistenManuscript',_that.Manuscript);
               }
             })
       },
@@ -503,11 +496,10 @@
       loadManuscript () {
           let _that = this
            _that.loadimg = true
-
           let Objectparam = {
                 ContentType:true,
                 keywords: '',
-                library: 'workspace',
+                library: 'manuscript',
                 types: 'TEXT,COMPO,LIVE',
                 excludedIds: _that.$route.query.id,
                 editorType: 'COMPO',
@@ -518,15 +510,15 @@
             listObjects(Objectparam).then(res=>{
             if(res){
                _that.loadimg = false
-               _that.Manuscrippage = _that.Manuscrippage+1
+               _that.Manuscrippage = Number(_that.Manuscrippage)+1
                _that.Manuscriptotal = res.totalElements
               res.content.forEach(function (item) {
                  item.show=false
                 _that.Manuscript.push(item);
                 _that.ManuscripIDarr.push(item.id)
               }); 
-              
-              
+
+              _that.$store.dispatch('modifylistenManuscript',_that.Manuscript);
             }
           })
           }
@@ -536,7 +528,6 @@
       loadTemplates(){
         let _that = this
         _that.loadimgtemplate = true
-
         //获取标题模板
         let Listparam = {
             label: '',
@@ -552,6 +543,7 @@
             getTempleteSourceList(Listparam).then(res=>{
             if(res){
               _that.loading = false
+              _that.loadimgtemplate = false
               _that.templatepage = _that.templatepage+1
               _that.templatetotal = res.totalElements
               res.content.forEach(function (item) {

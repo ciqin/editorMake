@@ -75,6 +75,9 @@ export const favoritedell = data => postHttp(caiApi+'/ilgcreation/favoriteMixmde
 //稿件是否收藏
 export const FavoriteMixmdedia = data => postHttp(caiApi+'/ilgcreation/favoriteMixmdedia/isFavorite', data)
 
+//获取收藏的稿件 
+export const getFavoriteMixmdedias = data => getHttp(caiApi+'/ilgcreation/favoriteMixmdedia/getFavoriteMixmdedias', data)
+
 //关联文章添加收藏
 export const Articleadd = data => postHttp(caiApi+'/ilgcreation/favoriteArticle/add', data)
 

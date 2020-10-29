@@ -58,5 +58,8 @@ export const modifyManyContribution= (state, name) => {
     state.manyContribution = name
 }
 
+export const modifylistenManuscript= (state, name) => { 
+    state.listenManuscript = name
+}
 
 

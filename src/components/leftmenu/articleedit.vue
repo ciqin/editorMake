@@ -61,7 +61,7 @@ export default {
     },
     created(){
       let param = {
-           content: this.uestrvalue
+           content: this.uestrvalue,
         }
         getRelatedArticles(param).then(res=>{
             if(res){  
@@ -91,7 +91,7 @@ export default {
     watch:{
       uestrvalue:function(uestrvalue,newuestrvalue){
        let param = {
-           content: this.uestrvalue
+           content: this.uestrvalue,
         }
         getRelatedArticles(param).then(res=>{
             if(res){  
