@@ -9,6 +9,7 @@
       <div class="line"></div>
       <div style="text-align:center;padding:0 20px;">
          <el-button type="primary" size="mini" @click="sensitiveWords" style="background: #303841;border:none;">开始分析</el-button>
+         <el-button type="primary" size="mini" @click="clearWords" style="background: #303841;border:none;">一键清除样式</el-button>
          <div>
            <el-table
               :data="tableData"
@@ -56,7 +57,8 @@ export default {
           }
           sensitivityAnalysis(data).then(res=>{
             if(res.data.length>0) {
-              store.ueditor.setContent(res.data[0].content);
+              let newHtml = res.data[0].content.replace(/hlclass/g,"class")
+              store.ueditor.setContent(newHtml);
               let newData=[];
               res.data[0].hintwords.forEach((val,index)=>{
                 newData.push({
@@ -73,9 +75,11 @@ export default {
 
       }
       
-      //  correction(data1).then(res=>{
-      //   console.log(res,"---------")
-      // })
+    },
+    clearWords(){
+      let newHtml = store.ueditor.getContent().replace(/color\:\#333\;font\-weight\:bold\;background\-color\:\#66ffff/g,"")
+      
+      store.ueditor.setContent(newHtml);
     }
   }
 }

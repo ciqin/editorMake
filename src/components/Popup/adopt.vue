@@ -120,11 +120,17 @@ export default {
                 data.targetGroupUuid = ""
             }
             manuscriptSubmit(data).then(res=>{
-                
+                if(res) {
+                    this.$message({
+                        message: '传稿成功！',
+                        type: 'success'
+                    });
+                    this.$store.dispatch("modifyAdopt",false)
+                }
             })
         },
         closeModale(){
-
+            this.$store.dispatch("modifyAdopt",false)
         },
         addDepartment(){
             this.userListId.push(this.departmentId)

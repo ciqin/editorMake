@@ -56,11 +56,17 @@ export default {
         },
         submit(){
             subSelect({targetType:this.radio,targetUuid:departmentId}).then(res=>{
-
+                if(res) {
+                    this.$message({
+                        message: '选用成功！',
+                        type: 'success'
+                    });
+                    this.$store.dispatch('modifySelectId',false);
+                }
             })
         },
         closeModale(){
-
+            this.$store.dispatch('modifySelectId',false);
         }
     }
 }

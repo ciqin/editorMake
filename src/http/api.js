@@ -152,8 +152,6 @@ export const subChangeTime = data => postHttp(caiApi+'/sprint/rest/workflow/stor
 
 // 撤稿
 export const withdraw = data => getHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/retract/process', data)
+
 // 一键撤稿获取数据接口
-export const hasFinalJudgment = data => getHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/deepRetract', data)
-
-
-
+export const hasFinalJudgment = data => getHttp(caiApi+'/sprint/rest/story/'+libId+'/'+newManuscriptId+'/deepRetract', data)

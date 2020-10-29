@@ -281,10 +281,10 @@ export default {
                 // ],
                 // originalCategory:0,
                 coverType:1,
-                addImg:"http://192.168.4.116:9080/sprint/assets/img/add.png",
-                opaImg1:"http://192.168.4.116:9080/sprint/assets/img/add.png",
-                opaImg2:"http://192.168.4.116:9080/sprint/assets/img/add.png",
-                opaImg3:"http://192.168.4.116:9080/sprint/assets/img/add.png",
+                addImg:"http://127.0.0.1:9080/sprint/assets/img/add.png",
+                opaImg1:"http://127.0.0.1:9080/sprint/assets/img/add.png",
+                opaImg2:"http://127.0.0.1:9080/sprint/assets/img/add.png",
+                opaImg3:"http://127.0.0.1:9080/sprint/assets/img/add.png",
             },
             options: [{
                 value: '选项1',
@@ -323,76 +323,6 @@ export default {
             none:"none"
         }
     },
-    created(){
-          // 初始化稿签数据
-        newSignature().then(res=>{
-            if(/系统登录认证信息输入区域/.test(res) && /智能采编平台/.test(res)) {
-                this.$router.push("/login") 
-            }
-            switch(res.coverType){
-                case 1:
-                    this.radio = 3;
-                    this.form.opaImg1 = res.coverList[0].data;
-                    this.opaBtn1 = true;
-                    this.opaBtn2 = false;
-                    this.opaBtn3 = false;
-                    break;
-                case 2:
-                    this.radio = 6;
-                    this.form.opaImg2 = res.coverList[0].data
-                    this.opaBtn1 = false;
-                    this.opaBtn2 = true;
-                    this.opaBtn3 = false;
-                    break;
-                case 3:
-                    this.radio = 9;
-                    res.coverList.forEach((item,index)=>{
-                        this.form['opaImg'+(index+1)] = res.coverList[index].data
-                    })
-                    this.opaBtn1 = true;
-                    this.opaBtn2 = true;
-                    this.opaBtn3 = true;
-                    break;
-                case 0:
-                    this.radio = 12;
-                    this.opaBtn1 = false;
-                    this.opaBtn2 = false;
-                    this.opaBtn3 = false;
-                    break;
-            }
-            this.$store.dispatch('modifyDataTitle',res.story.title);
-            this.$store.dispatch('modifyDatahtmlContent',res.story.htmlContent);
-            let originations = [];
-            res.originations.split(",").forEach((item,index)=>{
-                originations.push({
-                    label:item,
-                    value:index
-                })
-            })
-            // 组件值回传
-            this.app.form = this.form
-            this.form.originations = originations;
-            this.form.summary = res.story.summary;
-            this.form.signature = res.story.signature;
-           
-            this.form.topics = res.topics;
-            this.form.linkHeadline = res.linkHeadline;
-            this.form.properties.leadinLineUrl = res.properties.leadinLineUrl;
-            this.form.comment = res.comment;
-            res.story.keywords?res.story.keywords.split(",").forEach(item=>{
-                this.form.dynamicTags.push(item)
-            }):"";
-            this.form.origination = res.story.origination;
-            this.form.levelId = res.story.level;
-            this.form.topicsId= res.story.topic;
-            this.form.canComment=res.story.canComment;
-            this.form.properties.ad=res.properties.ad==1?true:false;
-            this.form.properties.watermark=res.properties.watermark==1?true:false;  
-            this.form.folder = res.story.folder
-            this.form.libid = res.story.libid
-            
-        })
-    },
     inject:['app'],
     computed:{
         ...mapGetters(['resTitle']),
@@ -415,9 +345,9 @@ export default {
         this.opaBtn1 = true;
         this.opaBtn2 = false;
         this.opaBtn3 = false;
-        this.form.opaImg1 = "http://192.168.4.116:9080/sprint/assets/img/add.png";
-        this.form.opaImg2 = "http://192.168.4.116:9080/sprint/assets/img/add.png";
-        this.form.opaImg3 = "http://192.168.4.116:9080/sprint/assets/img/add.png";
+        this.form.opaImg1 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
+        this.form.opaImg2 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
+        this.form.opaImg3 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
         this.form.coverType = 1;
     },
     // 大图操作函数
@@ -425,9 +355,9 @@ export default {
         this.opaBtn1 = false;
         this.opaBtn2 = true;
         this.opaBtn3 = false;
-        this.form.opaImg1 = "http://192.168.4.116:9080/sprint/assets/img/add.png";
-        this.form.opaImg2 = "http://192.168.4.116:9080/sprint/assets/img/add.png";
-        this.form.opaImg3 = "http://192.168.4.116:9080/sprint/assets/img/add.png";
+        this.form.opaImg1 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
+        this.form.opaImg2 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
+        this.form.opaImg3 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
         this.form.coverType = 2;
     },
     // 三图操作函数
@@ -435,9 +365,9 @@ export default {
         this.opaBtn1 = true;
         this.opaBtn2 = true;
         this.opaBtn3 = true;
-        this.form.opaImg1 = "http://192.168.4.116:9080/sprint/assets/img/add.png";
-        this.form.opaImg2 = "http://192.168.4.116:9080/sprint/assets/img/add.png";
-        this.form.opaImg3 = "http://192.168.4.116:9080/sprint/assets/img/add.png";
+        this.form.opaImg1 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
+        this.form.opaImg2 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
+        this.form.opaImg3 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
         this.form.coverType = 3;
     },
     // 无图操作函数
@@ -506,7 +436,76 @@ export default {
     
     },
      mounted(){
-        
+          // 初始化稿签数据
+        newSignature().then(res=>{
+            if(/系统登录认证信息输入区域/.test(res) && /智能采编平台/.test(res)) {
+                this.$router.push("/login") 
+            }
+            if(res.coverList) {
+                switch(res.coverType){
+                    case 1:
+                        this.radio = 3;
+                        this.form.opaImg1 = res.coverList[0].data;
+                        this.opaBtn1 = true;
+                        this.opaBtn2 = false;
+                        this.opaBtn3 = false;
+                        break;
+                    case 2:
+                        this.radio = 6;
+                        this.form.opaImg2 = res.coverList[0].data
+                        this.opaBtn1 = false;
+                        this.opaBtn2 = true;
+                        this.opaBtn3 = false;
+                        break;
+                    case 3:
+                        this.radio = 9;
+                        res.coverList.forEach((item,index)=>{
+                            this.form['opaImg'+(index+1)] = res.coverList[index].data
+                        })
+                        this.opaBtn1 = true;
+                        this.opaBtn2 = true;
+                        this.opaBtn3 = true;
+                        break;
+                    case 0:
+                        this.radio = 12;
+                        this.opaBtn1 = false;
+                        this.opaBtn2 = false;
+                        this.opaBtn3 = false;
+                        break;
+                }
+            }
+            this.$store.dispatch('modifyDataTitle',res.story.title);
+            this.$store.dispatch('modifyDatahtmlContent',res.story.htmlContent);
+            let originations = [];
+            res.originations.split(",").forEach((item,index)=>{
+                originations.push({
+                    label:item,
+                    value:index
+                })
+            })
+            // 组件值回传
+            this.app.form = this.form
+            this.form.originations = originations;
+            this.form.summary = res.story.summary;
+            this.form.signature = res.story.signature;
+           
+            this.form.topics = res.topics;
+            this.form.linkHeadline = res.linkHeadline;
+            this.form.properties.leadinLineUrl = res.properties.leadinLineUrl;
+            this.form.comment = res.comment;
+            res.story.keywords?res.story.keywords.split(",").forEach(item=>{
+                this.form.dynamicTags.push(item)
+            }):"";
+            this.form.origination = res.story.origination;
+            this.form.levelId = res.story.level;
+            this.form.topicsId= res.story.topic;
+            this.form.canComment=res.story.canComment;
+            this.form.properties.ad=res.properties.ad==1?true:false;
+            this.form.properties.watermark=res.properties.watermark==1?true:false;  
+            this.form.folder = res.story.folder
+            this.form.libid = res.story.libid
+            
+        })
        
      },
      components:{
