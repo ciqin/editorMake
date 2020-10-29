@@ -17,7 +17,7 @@
                   <ul v-if="templateimgarr.length>0" style='height: 755px;overflow: auto;'>
                     <li v-for="(item,key) in templateimgarr" :key = key :title="item.label" @click="templeteSource(key,item)" :class="{show_list_start:item.show===true}">
                       <div v-html = item.templeteSource ></div>
-                      <div class='collection_icon' :connectid="item.userId"   @click.stop="collectionIconclick(key,e,templateimgarr)" :class='item.userId ? "collectionAcitve" : "nocollectionAcitve" '>
+                      <div class='collection_icon' :connectid="item.userId"   @click.stop="collectionIconclick(key,templateimgarr)" :class='item.userId ? "collectionAcitve" : "nocollectionAcitve" '>
                              <i class="el-icon-star-on"></i>
                         </div>
                     </li>
@@ -31,13 +31,28 @@
         </el-tab-pane>
         <el-tab-pane label="我的素材" name="second">我的素材</el-tab-pane>
         <el-tab-pane label="我的稿件" name="third">
+          <div class='third_search' style='padding: 10px 20px;display:flex'>
+            <el-input v-model="Manuscriptinput" placeholder="请输入关键字(名称,内容)"></el-input>
+            <el-button icon="el-icon-search" @click="Manuscriptsearch()">搜索</el-button>
+          </div>
+
+          <div class="third_data">
+              <el-date-picker
+              v-model="datavalue"
+              type="date"
+              placeholder="选择日期"
+              value-format="yyyy-MM-dd"
+              >
+            </el-date-picker>
+          </div>
+
            <div v-loading="loadingmusc">
               <div class='infinite-list-wrapper'>
                   <div v-if="Manuscriptidarr.length>0 && loading==false"  style="height: 872px;overflow-y: auto;margin-top: 20px;" >
                         <div class="third_libisryarr" v-for="(item,key) in Manuscript" :key = key @click='ManuscriptClick(item)'>
                                  <div v-if="item.thumbnailUrl && item.htmlContent" style='display: flex;position: relative;' :class="{show_list_start:item.show===true}">
                                       <div class='third_libisryarr_list'> 
-                                           <div class='collection_icon collectionAcitve'>
+                                           <div class='collection_icon collectionAcitve' @click.stop="collectionIconclick(key,Manuscript)" >
                                               <i class="el-icon-star-on"></i>
                                           </div> 
                                           <div class="third_libisryarr_img">
@@ -52,7 +67,7 @@
 
                                  <div v-else :class="{show_list_start:item.show===true}">
                                      <div class="third_libisryarr_botal" style='position: relative;'>
-                                         <div class='collection_icon collectionAcitve'>
+                                         <div class='collection_icon collectionAcitve' @click.stop="collectionIconclick(key,Manuscript)" >
                                               <i class="el-icon-star-on"></i>
                                           </div> 
                                         <p class='third_libisryarr_botal_title'>{{item.title}}</p>
@@ -73,6 +88,8 @@
 import { getFavorTemplate } from '@/http/api'
 import { listObjects } from '@/http/api'           //稿库
 import { getFavoriteMixmdedias } from '@/http/api'    //查看收藏的文稿
+import { cancelFavorTemplate } from '@/http/api'           //取消模板收藏
+import { favoritedell  } from '@/http/api'    //稿件取消收藏
 import { store } from '@/store'
 export default {
   data(){
@@ -91,6 +108,8 @@ export default {
 
       Manuscript:[],   //稿件从template的所有数据
       Manuscriptidarr:[],//收藏的id
+      Manuscriptinput:'', //稿库的检索的字
+      datavalue: '', //稿件时间检索
 
       Manuscrippage:0,//稿库的页数
 
@@ -190,7 +209,54 @@ export default {
                 });  
               }
           })
-      }
+      },
+      Manuscriptsearch(){
+        this.loadingmusc = true
+        getFavoriteMixmdedias().then((res)=>{
+            this.loadingmusc = false
+            this.Manuscriptidarr = res.data
+
+            let Objectparam = {
+                ContentType:true,
+                keywords: this.Manuscriptinput,
+                library: 'manuscript',
+                types: 'TEXT,COMPO,LIVE',
+                excludedIds: this.$route.query.id,
+                editorType: 'COMPO',
+                page: this.Manuscrippage,
+                size: 10,
+                ids:res.data,
+                startDate:this.datavalue,
+                endDate:this.datavalue
+            }
+            listObjects(Objectparam).then((res)=>{
+                this.loadingmusc = false
+                this.Manuscript = res.content
+            })
+          })
+      },
+       collectionIconclick(index,arr){
+        let param = {
+          templateId:arr[index].templeteId,
+          ContentType:true
+        }
+
+        let favoriteparam = {
+           uuid:arr[index].id,
+        }
+        
+        if(arr == this.templateimgarr){
+          this.templateimgarr[index].userId = false
+          cancelFavorTemplate(param).then(res=>{ //取消模板收藏
+             this.templateimgarr.splice(index,1)
+          })
+        }else if(arr == this.Manuscript){
+            favoritedell(favoriteparam).then((res)=>{
+               this.Manuscript.splice(index,1)
+            })
+        }
+
+       }
   }
 }
 </script>

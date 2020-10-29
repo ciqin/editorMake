@@ -367,24 +367,24 @@
 
         if(arr == this.templateimgarr){
             if(arr[index].userId){
-                this.arr[index].userId = false
+                this.templateimgarr[index].userId = false
                 cancelFavorTemplate(param).then(res=>{ //取消模板收藏
                   console.log(res)
                 })
             }else{
-                this.arr[index].userId = true
+                this.templateimgarr[index].userId = true
                 favorTemplate(param).then(res=>{ //模板收藏
                   console.log(res)
                 })
             }
         }else if(arr == this.Libraryarr){
-           if(arr[index].isFavorite){
-                this.arr[index].isFavorite = false
+           if(this.Libraryarr[index].isFavorite){
+                this.Libraryarr[index].isFavorite = false
                 Mediadell(libraryparam).then(res=>{ //取消媒资库收藏
                   console.log(res)
                 })
            }else{
-                this.arr[index].isFavorite = true
+                this.Libraryarr[index].isFavorite = true
                 Mediadd(libraryparam).then(res=>{ //媒资库收藏
                   console.log(res)
                 })
@@ -717,6 +717,7 @@
     right: 0px;
     top: 5px;
     font-size: 14px;
+    cursor: pointer;
 }
 
  .collectionAcitve{
