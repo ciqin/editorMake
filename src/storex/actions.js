@@ -35,6 +35,8 @@ export const modifyChangeTime = ({commit},name) => commit('modifyChangeTime', na
 
 export const modifyManyContribution = ({commit},name) => commit('modifyManyContribution', name)
 
+export const modifylistenManuscript = ({commit},name) => commit('modifylistenManuscript', name)
+
 // export const modifySubmit = ({commit},name) => commit('modifySubmit', name)
 
 

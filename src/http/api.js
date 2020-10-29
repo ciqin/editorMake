@@ -2,7 +2,7 @@
  * 此文件为接口统一管理文件
  */
 const swaggerApi = "http://192.168.18.12:9117";
-const caiApi = "http://192.168.4.116:9080";
+const caiApi = "http://127.0.0.1:9080";
 const hongApi = "http://qhcloudhongqi.wengegroup.com:9116"
 const zhiApi = "http://192.168.18.12:9117"
 const mediaApi = 'http://192.168.18.160:9117'
@@ -47,13 +47,13 @@ export const newSignature = data => getHttp(caiApi+'/sprint/rest/stories/'+libId
 
 // 自动保存
 
-export const newSave = data => postHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/save/zhiZuo/process', data)
+export const newSave = data => postHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/save/smartWrite/process', data)
 
 // 获取模板
 export const getTempleteSourceList = data => postHttp(caiApi+'/sprint/rest/story/getTempleteSourceList', data)
 
 //稿库
-export const listObjects = data => postHttp(caiApi+'/sprint/view/libraries/'+libId+'/zhiZuo/listObjects', data)
+export const listObjects = data => postHttp(caiApi+'/sprint/view/libraries/'+libId+'/smartWrite/listObjects', data)
 
 //模板添加收藏
 export const favorTemplate = data => postHttp(caiApi+'/sprint/rest/story/favorTemplate', data)
@@ -75,6 +75,9 @@ export const favoritedell = data => postHttp(caiApi+'/ilgcreation/favoriteMixmde
 
 //稿件是否收藏
 export const FavoriteMixmdedia = data => postHttp(caiApi+'/ilgcreation/favoriteMixmdedia/isFavorite', data)
+
+//获取收藏的稿件 
+export const getFavoriteMixmdedias = data => getHttp(caiApi+'/ilgcreation/favoriteMixmdedia/getFavoriteMixmdedias', data)
 
 //关联文章添加收藏
 export const Articleadd = data => postHttp(caiApi+'/ilgcreation/favoriteArticle/add', data)

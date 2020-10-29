@@ -101,7 +101,7 @@ export default {
                 //     type:'tab2',
                 //     view:'综合 分析'
                 // }
-            ]
+            ],
         };
     },
     watch:{

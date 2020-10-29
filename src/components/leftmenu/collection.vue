@@ -14,19 +14,15 @@
            <div class='first_texttemp'>内部资源 > 模板 > {{templatearr[texttemp]}} </div>
            <div>
               <div class="first_main_imgs infinite-list-wrapper" v-loading="loading" >
-                  <ul v-if="templateimgarr.length>0" style='height: 755px;overflow: auto;' v-infinite-scroll="loadTemplates" infinite-scroll-disabled="disabledtemplate">
+                  <ul v-if="templateimgarr.length>0" style='height: 755px;overflow: auto;'>
                     <li v-for="(item,key) in templateimgarr" :key = key :title="item.label" @click="templeteSource(key,item)" :class="{show_list_start:item.show===true}">
                       <div v-html = item.templeteSource ></div>
                       <div class='collection_icon' :connectid="item.userId"   @click.stop="collectionIconclick(key,e,templateimgarr)" :class='item.userId ? "collectionAcitve" : "nocollectionAcitve" '>
                              <i class="el-icon-star-on"></i>
                         </div>
                     </li>
-
-                     <p v-if="loadimgtemplate" style='text-align:center'>加载中...</p>
-                      <p v-if="noMoretemplate">没有更多了</p>
                   </ul>
                 
-                  
                   <div v-else>
                     <p style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;'><i class='el-icon-warning-outline'></i>暂无数据</p>
                   </div>
@@ -34,24 +30,71 @@
           </div>
         </el-tab-pane>
         <el-tab-pane label="我的素材" name="second">我的素材</el-tab-pane>
-        <el-tab-pane label="我的稿件" name="third">我的稿件</el-tab-pane>
+        <el-tab-pane label="我的稿件" name="third">
+           <div v-loading="loadingmusc">
+              <div class='infinite-list-wrapper'>
+                  <div v-if="Manuscriptidarr.length>0 && loading==false"  style="height: 872px;overflow-y: auto;margin-top: 20px;" >
+                        <div class="third_libisryarr" v-for="(item,key) in Manuscript" :key = key @click='ManuscriptClick(item)'>
+                              <div v-if='Manuscriptidarr.indexOf(item.id)==0'>
+                                 <div v-if="item.thumbnailUrl && item.htmlContent" style='display: flex;position: relative;' :class="{show_list_start:item.show===true}">
+                                      <div class='third_libisryarr_list'> 
+                                           <div class='collection_icon collectionAcitve'>
+                                              <i class="el-icon-star-on"></i>
+                                          </div> 
+                                          <div class="third_libisryarr_img">
+                                              <img  :src="item.thumbnailUrl.indexOf('http') ? caiApi+item.thumbnailUrl : item.thumbnailUrl">
+                                          </div>
+                                      </div>
+                                      <div class="third_libisryarr_botal">
+                                        <p class='third_libisryarr_botal_title'><span class='third_libisryarr_botal_biaoshi'>图文</span>{{item.title?item.title:'暂无标题'}}</p>
+                                        <p>{{item.time}}</p>
+                                      </div>
+                                 </div>
+
+                                 <div v-else :class="{show_list_start:item.show===true}">
+                                     <div class="third_libisryarr_botal" style='position: relative;'>
+                                         <div class='collection_icon collectionAcitve'>
+                                              <i class="el-icon-star-on"></i>
+                                          </div> 
+                                        <p class='third_libisryarr_botal_title'>{{item.title}}</p>
+                                      </div>
+                                 </div>
+                              </div>
+                        </div>
+                  </div>
+                  <div v-else-if='Manuscriptidarr.length==0 && loading==false'>
+                      <p style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;'><i class='el-icon-warning-outline'></i>暂无数据</p>
+                  </div>
+              </div>
+           </div>
+        </el-tab-pane>
       </el-tabs> 
   </div>
 </template>
 <script>
 import { getFavorTemplate } from '@/http/api'
+import { listObjects } from '@/http/api'           //稿库
+import { getFavoriteMixmdedias } from '@/http/api'    //查看收藏的文稿
+import { store } from '@/store'
 export default {
   data(){
     return{
+      loading:true,
+      loadingmusc:true,
       activeName: 'first',
       templatearr:['标题','正文','图文','引导','分割线','二维码','其他'],
       texttemp:0,
       templateinput:'',//模板搜索的关键字
       templateimgarr:[], //模板
       loadimgtemplate:false,
-      templatepage:1,//模板的页数
+      templatepage:0,//模板的页数
       templatepageNum:10,//模板每次加载条数
       templatetotal:'',//模板的总条数
+
+      Manuscript:[],   //稿件从template的所有数据
+      Manuscriptidarr:[],//收藏的id
+
+      caiApi:"http://127.0.0.1:9080",
     }
   },
   created(){
@@ -77,10 +120,18 @@ export default {
           });  
         }
     })
-
   },
   methods: {
-      handleClick(tab, event) {},
+      handleClick(tab, event) {
+        if(tab.label=='我的稿件'){
+          getFavoriteMixmdedias().then((res)=>{
+            this.loadingmusc = false
+            this.Manuscript = this.$store.state.listenManuscript
+            this.Manuscriptidarr = res.data
+            console.log(this.Manuscript)
+          })
+        }
+      },
       templatearrclick(index){
          this.texttemp = index
          let Listparam = {
@@ -88,7 +139,7 @@ export default {
             templeteType: index+1,
             status: 0,
             size: 10,
-            page: 0,
+            page: this.templatepage,
             sort: 'use_num,desc',
             ContentType:true
          }
@@ -98,6 +149,9 @@ export default {
               this.templateimgarr = res.content
             }
          })
+      },
+      templeteSource(index,item){
+        store.ueditor.setContent(item.templeteSource,true)
       },
   }
 }
@@ -326,6 +380,13 @@ export default {
 .sort_naver label{
     font-size: 14px;
     color: #333333;
+}
+.first_main_imgs{
+    width: 343px;
+    border: 1px solid #E7ECF2;
+    margin-left: 25px;
+    margin-top: 10px;
+    min-height: 745px;
 }
 
 </style>
