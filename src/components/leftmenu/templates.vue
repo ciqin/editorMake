@@ -15,7 +15,7 @@
 
         <div>
           <div class="first_main_imgs infinite-list-wrapper" v-loading="loading" >
-              <ul v-if="templateimgarr.length>0" style='height: 755px;overflow-y: auto;' v-infinite-scroll="loadTemplates" infinite-scroll-disabled="disabledtemplate">
+              <ul v-if="templateimgarr.length>0" style='height: 705px;overflow-y: auto;' v-infinite-scroll="loadTemplates" infinite-scroll-disabled="disabledtemplate">
                 <li v-for="(item,key) in templateimgarr" :key = key :title="item.label" @click="templeteSource(key,item)" :class="{show_list_start:item.show===true}" @mouseover="collectionIconmouseover(key,item,templateimgarr)"  @mouseout="collectionIconmouseout(key,item,templateimgarr)">
                     <div v-html = item.templeteSource ></div>
                     <div class='collection_icon' :connectid="item.userId"   @click.stop="collectionIconclick(key,e,templateimgarr)" :class='item.userId ? "collectionAcitve" : "nocollectionAcitve" '>
@@ -111,7 +111,7 @@
         </div>
 
         <div class='infinite-list-wrapper' v-loading="loading">
-            <div v-if="Manuscript.length>0 && loading==false"  style="height: 776px;overflow-y: auto;margin-top: 20px;" v-infinite-scroll="loadManuscript" infinite-scroll-disabled="disabled">
+            <div v-if="Manuscript.length>0 && loading==false"  style="height: 746px;overflow-y: auto;margin-top: 20px;" v-infinite-scroll="loadManuscript" infinite-scroll-disabled="disabled">
               <div class="third_libisryarr" v-for="(item,key) in Manuscript" :key = key @click='ManuscriptClick(item)'>
                  <div v-if="item.thumbnailUrl && item.htmlContent" style='display: flex;position: relative;' :class="{show_list_start:item.show===true}" @mouseover="collectionIconmouseover(key,item,Manuscript)"  @mouseout="collectionIconmouseout(key,item,Manuscript)">
                       <div class='third_libisryarr_list'> 
@@ -199,7 +199,7 @@
         templatetotal:'',//模板的总条数
 
         loading:true,
-        caiApi:"http://127.0.0.1:9080",
+        caiApi:"http://qhcloudhongqi.wengegroup.com:9080",
 
         Manuscriptinput:'', //稿库的检索的字
 
@@ -664,7 +664,7 @@
     border: 1px solid #E7ECF2;
     margin-left: 25px;
     margin-top: 10px;
-    min-height: 745px;
+    min-height: 705px;
  }
 
  .first_texttemp{
@@ -678,7 +678,7 @@
 
  .first_main_imgs ul{
    padding-bottom: 10px;
-   min-height: 735px;
+   /* min-height: 735px; */
  }
 
  .first_main_imgs ul li{

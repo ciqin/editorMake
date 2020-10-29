@@ -1,22 +1,22 @@
 <template>
   <div>
     <!--下面通过传递进来的id完成初始化-->
-    <div>
+    <div style="position:relative;">
         <div :id="randomId" ref="ueditor"></div>
         <div class="OperationButton">
             <ul> 
-               <li v-if="storyDeliver"><el-button type="text" @click="opaBtn1"><a href="javascript:" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>传稿</span></el-button></li>
-               <li v-if="storyCheckin"><el-button type="text" @click="opaBtn2"><a href="javascript:" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>签入</span></el-button></li>
-               <li v-if="storySubmit"><el-button type="text" @click="opaBtn3"><a href="javascript:" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>提交</span></el-button></li>
+               <li v-if="storyDeliver"><el-button type="text" @click="opaBtn1"><a href="javascript:" style="color:#fff;"><i class="el-icon-position" style="color: #d72323;font-size: 18px;"></i></a><span>传稿</span></el-button></li>
+               <li v-if="storyCheckin"><el-button type="text" @click="opaBtn2"><a href="javascript:" style="color:#fff;"><i class="el-icon-link" style="color: #d72323;font-size: 18px;"></i></a><span>签入</span></el-button></li>
+               <li v-if="storySubmit"><el-button type="text" @click="opaBtn3"><a href="javascript:" style="color:#fff;"><i class="el-icon-finished" style="color: #d72323;font-size: 18px;"></i></a><span>提交</span></el-button></li>
                <!-- <li v-if="storyCheckin"><el-button type="text" @click="opaBtn4"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>测试</span></el-button></li> -->
-               <li v-if="storySubmitApprove"><el-button type="text" @click="censorshipfun"><a href="javascript:" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>送审</span></el-button></li>
-               <li v-if="storyApprovePass"><el-button type="text" @click="adoptFun"><a href="javascript:" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>通过</span></el-button></li>
-               <li v-if="storyApprovePassAll"><el-button type="text" @click="finalJudgment"><a href="javascript:"  style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>终审</span></el-button></li>
-               <li v-if="storyApproveDeny"><el-button type="text" @click="rejectFun"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>驳回</span></el-button></li>
+                <li v-if="storySubmitApprove"><el-button type="text" @click="censorshipfun"><a href="javascript:" style="color:#fff;"><i class="el-icon-top" style="color: #d72323;font-size: 18px;"></i></a><span>送审</span></el-button></li>
+               <li v-if="storyApprovePass"><el-button type="text" @click="adoptFun"><a href="javascript:" style="color:#fff;"><i class="el-icon-s-operation" style="color: #d72323;font-size: 18px;"></i></a><span>通过</span></el-button></li>
+               <li v-if="storyApprovePassAll"><el-button type="text" @click="finalJudgment"><a href="javascript:"  style="color:#fff;"><i class="el-icon-upload2" style="color: #d72323;font-size: 18px;"></i></a><span>终审</span></el-button></li>
+               <li v-if="storyApproveDeny"><el-button type="text" @click="rejectFun"><a href="javascript:" @click="hasUe" style="color:#fff;"><i class="el-icon-sort-down" style="color: #d72323;font-size: 18px;"></i></a><span>驳回</span></el-button></li>
 
-               <li><el-button type="text" @click="selectFun"  v-if="selectId"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>选用</span></el-button></li>
-               <li><el-button type="text" @click="ChangeTimeFun"  v-if="ChangeTime"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>改时</span></el-button></li>
-                <li><el-button type="text" @click="contributionFun"  v-if="contribution"><a href="javascript:" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>撤稿</span></el-button></li>
+               <li><el-button type="text" @click="selectFun"  v-if="selectId"><a href="javascript:" @click="hasUe" style="color:#fff;"><i class="el-icon-date" style="color: #d72323;font-size: 18px;"></i></a><span>选用</span></el-button></li>
+               <li><el-button type="text" @click="ChangeTimeFun"  v-if="ChangeTime"><a href="javascript:" @click="hasUe" style="color:#fff;"><i class="el-icon-c-scale-to-original" style="color: #d72323;font-size: 18px;"></i></a><span>改时</span></el-button></li>
+                <li><el-button type="text" @click="contributionFun"  v-if="contribution"><a href="javascript:" style="color:#fff;"><i class="el-icon-smoking" style="color: #d72323;font-size: 18px;"></i></a><span>撤稿</span></el-button></li>
                 <!-- <li><el-button type="text" @click="manyContributionFun"  v-if="manyContribution"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>一键撤稿</span></el-button></li> -->
                 <li><el-button type="text" @click="centerDialogVisible = true"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>预览</span></el-button></li>
                 <li><a href="javascript:" @click="save" >
@@ -219,7 +219,7 @@ export default {
                 // 初始容器高度
                 initialFrameHeight: 790,
                 // 初始容器宽度
-                initialFrameWidth: 700,
+                initialFrameWidth: 712,
                 toolbars: [
                     [
                     // 'anchor', //锚点
@@ -330,7 +330,7 @@ export default {
             styles:{
                 "width":"348px",
                 "height": "638.5px",
-                "background":"url(http://127.0.0.1:9080/sprint/assets/img/iPhone.png) no-repeat",
+                "background":"url(http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/iPhone.png) no-repeat",
                 "box-sizing":"border-box",
                 "background-size": "100% 100%",
                 "padding":"127px 38px 87px 47px"
@@ -627,7 +627,8 @@ export default {
                 sensitiveWord: false,
                 customMetas:customMetas,
                 ContentType:true,
-                isSmartWriteEditor:1
+                isSmartWriteEditor:1,
+                newStory:data.isNew
             }
             // 封面图动态添加
             if(data.coverType == 1 && (/add\.png/.test(data.opaImg1) == false)) {
@@ -658,6 +659,8 @@ export default {
         },
         save(){
             let newData = this.saveParme();
+            let href = window.location.href;
+            newData.folderId = href.split("?")[1].split("&")[2].split("=")[1];
             if(newData.libid =="product") {
                 revision(newData).then(res=>{
                     if(res) {
@@ -743,7 +746,7 @@ export default {
             this.activeIndex = 0;
             this.styles.width = "389px",
             this.styles.height = "725px"
-            this.styles.background = "url(http://127.0.0.1:9080/sprint/assets/img/iPhoneX.png) 0% 0% / 100% 100% no-repeat"
+            this.styles.background = "url(http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/iPhoneX.png) 0% 0% / 100% 100% no-repeat"
             
             this.styles.padding = "89px 23px 22px 16px;"
         },
@@ -752,7 +755,7 @@ export default {
             this.styles = {
                 "width":"389px",
                 "height": "713px",
-                "background":"url(http://127.0.0.1:9080/sprint/assets/img/iPhone.png) 0% 0% / 100% 100% no-repeat",
+                "background":"url(http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/iPhone.png) 0% 0% / 100% 100% no-repeat",
                 "box-sizing":"border-box",
                 "padding":"127px 38px 87px 47px"
             }
@@ -762,7 +765,7 @@ export default {
             this.styles = {
                 "width":"348px",
                 "height": "638.5px",
-                "background":"url(http://127.0.0.1:9080/sprint/assets/img/iPhone.png) 0% 0% / 100% 100% no-repeat",
+                "background":"url(http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/iPhone.png) 0% 0% / 100% 100% no-repeat",
                 "box-sizing":"border-box",
                 "background-size": "100% 100%",
                 "padding":"127px 38px 87px 47px"
@@ -807,7 +810,7 @@ export default {
 .OperationButton {
     position:absolute;
     bottom: 0%;
-    right: 63px;
+    left: 730px;
 }
 .OperationButton  li a {
     height: 30px;

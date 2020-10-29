@@ -14,7 +14,7 @@
            <div class='first_texttemp'>内部资源 > 模板 > {{templatearr[texttemp]}} </div>
            <div>
               <div class="first_main_imgs infinite-list-wrapper" v-loading="loading" >
-                  <ul v-if="templateimgarr.length>0" style='height: 755px;overflow: auto;' v-infinite-scroll="loadTemplates" infinite-scroll-disabled="disabledtemplate">
+                  <ul v-if="templateimgarr.length>0" style='height: 745px;overflow: auto;' v-infinite-scroll="loadTemplates" infinite-scroll-disabled="disabledtemplate">
                     <li v-for="(item,key) in templateimgarr" :key = key :title="item.label" @click="templeteSource(key,item)" :class="{show_list_start:item.show===true}">
                       <div v-html = item.templeteSource ></div>
                       <div class='collection_icon' :connectid="item.userId"   @click.stop="collectionIconclick(key,e,templateimgarr)" :class='item.userId ? "collectionAcitve" : "nocollectionAcitve" '>

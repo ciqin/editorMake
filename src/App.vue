@@ -86,4 +86,17 @@ button{outline-style: none;}
 .radiusNone .el-radio__label {
     display: none;
 }
+.el-tabs__nav-wrap::after {
+  background: #f3f3f3;
+  height: 1px;
+}
+.manuscriptContainer .el-input__inner{
+  border: 1px solid transparent;
+}
+.edui-default .edui-editor {
+  border: 0;
+}
+.correction tbody .el-table_1_column_1 .cell{
+  color: #EA5E5E;
+}
 </style>
