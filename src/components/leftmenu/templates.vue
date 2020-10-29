@@ -115,7 +115,7 @@
               <div class="third_libisryarr" v-for="(item,key) in Manuscript" :key = key @click='ManuscriptClick(item)'>
                  <div v-if="item.thumbnailUrl && item.htmlContent" style='display: flex;position: relative;' :class="{show_list_start:item.show===true}" @mouseover="collectionIconmouseover(key,item,Manuscript)"  @mouseout="collectionIconmouseout(key,item,Manuscript)">
                       <div class='third_libisryarr_list'> 
-                           <div class='collection_icon' @click.stop="collectionIconclick(key,Manuscript)" :class='Manuscripcollect.indexOf(item.id) == 0 ? "collectionAcitve" : "nocollectionAcitve" '>
+                           <div class='collection_icon' @click.stop="collectionIconclick(key,Manuscript)" :class='item.isFavorite==true ? "collectionAcitve" : "nocollectionAcitve" '>
                               <i class="el-icon-star-on"></i>
                           </div> 
                           <div class="third_libisryarr_img">
@@ -130,7 +130,7 @@
 
                  <div v-else-if="!item.thumbnailUrl && item.htmlContent" :class="{show_list_start:item.show===true}" @mouseover="collectionIconmouseover(key,item,Manuscript)"  @mouseout="collectionIconmouseout(key,item,Manuscript)">
                      <div class="third_libisryarr_botal" style='position: relative;'>
-                          <div class='collection_icon'  @click.stop="collectionIconclick(key,Manuscript)" :class='Manuscripcollect.indexOf(item.id) == 0 ? "collectionAcitve" : "nocollectionAcitve" '>
+                          <div class='collection_icon'  @click.stop="collectionIconclick(key,Manuscript)" :class='item.isFavorite==true ? "collectionAcitve" : "nocollectionAcitve" '>
                               <i class="el-icon-star-on"></i>
                           </div> 
                         <p class='third_libisryarr_botal_title'>{{item.title}}</p>
@@ -141,7 +141,7 @@
               <p v-if="loadimg" style='text-align:center'>加载中...</p>
               <p v-if="collectionnoMore">没有更多了</p>
             </div>
-            <div v-else-if='Manuscript.length==0 && loading==false'>
+            <div v-else-if='Manuscript.length ==0 && loading==false'>
                 <p style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;'><i class='el-icon-warning-outline'></i>暂无数据</p>
             </div>
         </div>
@@ -199,7 +199,7 @@
         templatetotal:'',//模板的总条数
 
         loading:true,
-        caiApi:"http://qhcloudhongqi.wengegroup.com:9080",
+        caiApi:"http://127.0.0.1:9080",
 
         Manuscriptinput:'', //稿库的检索的字
 
@@ -209,7 +209,6 @@
         Manuscrippage:0,//稿库的页数
         ManuscrippageNum:10,//稿件每次加载条数
         ManuscripIDarr:[],//稿件id
-        Manuscripcollect:[], //收藏的稿件id
 
         loadingManuscript:true
       };
@@ -292,24 +291,30 @@
             }
             listObjects(Objectparam).then(res=>{
               if(res){
+                let rescontent = res.content
                 _that.loadingManuscript = false
-                res.content.forEach(function (item) {
-                   item.show=false
-                  _that.Manuscript.push(item);
-                  _that.ManuscripIDarr.push(item.id)
-                });
-
                 _that.Manuscriptotal = res.totalElements
 
-                _that.$store.dispatch('modifylistenManuscript',_that.Manuscript);
+                rescontent.forEach(function (item) {
+                   _that.ManuscripIDarr.push(item.id)
+                })
 
                 let parmas ={
                     uuids:_that.ManuscripIDarr
                   }
                 FavoriteMixmdedia(parmas).then((res)=>{
                   if(res){
-                    this.Manuscripcollect=res.data
-                   
+                     rescontent.forEach(function (item) {
+                        item.show=false
+                        if(res.data.indexOf(item.id)>=0){
+                           item.isFavorite = true
+                        }else{
+                           item.isFavorite = false
+                        }
+                        _that.Manuscript.push(item);
+                      });
+
+                      console.log(_that.Manuscript)
                   }
                 })
               }
@@ -385,24 +390,17 @@
                 })
            }
         }else if(arr == this.Manuscript){
-           if(this.Manuscripcollect.indexOf(arr[index].id)==0 ){
-                    favoritedell(favoriteparam).then(res=>{ //取消稿件收藏
-                         this.Manuscripcollect.splice(this.Manuscripcollect.indexOf(arr[index].id),1);
-                     })
-            }else{
-                  favoriteadd(favoriteparam).then(res=>{ //稿件收藏
-                    let parmas ={
-                      uuids:this.ManuscripIDarr
-                    }
-                    
-                    FavoriteMixmdedia(parmas).then((res)=>{
-                      if(res){
-                        this.Manuscripcollect=res.data
-                        console.log(this.Manuscripcollect)
-                      }
-                    })
-                })
-            }
+          if(this.Manuscript[index].isFavorite == true){
+            this.Manuscript[index].isFavorite = false
+            favoritedell(favoriteparam).then((res)=>{
+               
+            })
+          }else{
+            this.Manuscript[index].isFavorite = true
+            favoriteadd(favoriteparam).then((res)=>{
+
+            })
+          }
         }
         
       },
@@ -456,32 +454,50 @@
 
       },
       Manuscriptsearch(){
-           this.loading = true
-            _that.Manuscript=[];
-            _that.ManuscripIDarr=[]
+           let _that = this
+           _that.loading = true
+           _that.Manuscript=[];
+           _that.ManuscripIDarr=[]
            let Objectparam = {
                 ContentType:true,
-                keywords: this.Manuscriptinput,
+                keywords: _that.Manuscriptinput,
                 library: 'manuscript',
                 types: 'TEXT,COMPO,LIVE',
-                excludedIds: this.$route.query.id,
+                excludedIds: _that.$route.query.id,
                 editorType: 'COMPO',
                 page: 0,
                 size: 10,
-                startDate:this.datavalue,
-                endDate:this.datavalue
+                startDate:_that.datavalue,
+                endDate:_that.datavalue
             }
             listObjects(Objectparam).then(res=>{
               if(res){
-                this.loading = false
-                
-                 res.content.forEach(function (item) {
-                   item.show=false
-                  _that.Manuscript.push(item);
-                  _that.ManuscripIDarr.push(item.id)
-                });
+                _that.loading = false
+                let rescontent = res.content
+                _that.loadingManuscript = false
                 _that.Manuscriptotal = res.totalElements
-                _that.$store.dispatch('modifylistenManuscript',_that.Manuscript);
+
+                rescontent.forEach(function (item) {
+                   _that.ManuscripIDarr.push(item.id)
+                })
+
+                let parmas ={
+                    uuids:_that.ManuscripIDarr
+                  }
+                FavoriteMixmdedia(parmas).then((res)=>{
+                  if(res){
+                     rescontent.forEach(function (item) {
+                        item.show=false
+                        if(res.data.indexOf(item.id)>=0){
+                           item.isFavorite = true
+                        }else{
+                           item.isFavorite = false
+                        }
+                        _that.Manuscript.push(item);
+                      });
+
+                  }
+                })
               }
             })
       },
@@ -518,7 +534,6 @@
                 _that.ManuscripIDarr.push(item.id)
               }); 
 
-              _that.$store.dispatch('modifylistenManuscript',_that.Manuscript);
             }
           })
           }

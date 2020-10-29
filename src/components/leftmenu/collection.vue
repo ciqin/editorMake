@@ -7,10 +7,10 @@
               <li v-for="(item,key) in templatearr" :key = key    @click="templatearrclick(key)" :class="{templateactive:key==texttemp}">{{item}}</li>
             </ul>
           </div>
-          <!-- <div class='third_search' style='padding: 20px 21px 10px 19px;display:flex'>
+          <div class='third_search' style='padding: 20px 21px 10px 19px;display:flex'>
             <el-input v-model="templateinput" placeholder="请输入关键字(名称,内容)"></el-input>
-            <el-button icon="el-icon-search">搜索</el-button>
-          </div> -->
+            <el-button icon="el-icon-search" @click="searchtemplate()">搜索</el-button>
+          </div>
            <div class='first_texttemp'>内部资源 > 模板 > {{templatearr[texttemp]}} </div>
            <div>
               <div class="first_main_imgs infinite-list-wrapper" v-loading="loading" >
@@ -35,7 +35,6 @@
               <div class='infinite-list-wrapper'>
                   <div v-if="Manuscriptidarr.length>0 && loading==false"  style="height: 872px;overflow-y: auto;margin-top: 20px;" >
                         <div class="third_libisryarr" v-for="(item,key) in Manuscript" :key = key @click='ManuscriptClick(item)'>
-                              <div v-if='Manuscriptidarr.indexOf(item.id)==0'>
                                  <div v-if="item.thumbnailUrl && item.htmlContent" style='display: flex;position: relative;' :class="{show_list_start:item.show===true}">
                                       <div class='third_libisryarr_list'> 
                                            <div class='collection_icon collectionAcitve'>
@@ -60,7 +59,6 @@
                                       </div>
                                  </div>
                               </div>
-                        </div>
                   </div>
                   <div v-else-if='Manuscriptidarr.length==0 && loading==false'>
                       <p style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;'><i class='el-icon-warning-outline'></i>暂无数据</p>
@@ -129,7 +127,7 @@ export default {
           getFavoriteMixmdedias().then((res)=>{
             this.loadingmusc = false
             this.Manuscriptidarr = res.data
-            
+
             let Objectparam = {
                 ContentType:true,
                 keywords: '',
@@ -169,6 +167,30 @@ export default {
       templeteSource(index,item){
         store.ueditor.setContent(item.templeteSource,true)
       },
+      searchtemplate(){
+         let _that = this
+         //获取标题模板
+          let Listparam = {
+              label: _that.templateinput,
+              templeteType: 1,
+              status: 0,
+              size: _that.templatepageNum,
+              page: _that.templatepage,
+              sort: 'use_num,desc',
+              ContentType:true
+          }
+          getFavorTemplate(Listparam).then(res=>{
+              if(res){
+                _that.loading = false
+                _that.templatetotal = res.totalElements
+
+                res.content.forEach(function (item) {
+                  item.show = false
+                  _that.templateimgarr.push(item);
+                });  
+              }
+          })
+      }
   }
 }
 </script>
