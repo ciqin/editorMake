@@ -3,7 +3,7 @@
     <!-- <Nav></Nav> -->
     <!--下面通过传递进来的id完成初始化-->
     <el-row :gutter="10" style="background:#eef1f1;">
-        <el-col :span="4">
+        <el-col :span="6">
             <div class="grid-content bg-purple">
                <div class="iconNav">
                    <ul>
@@ -19,8 +19,8 @@
         </el-col>
         <el-col :span="12">
             <div class="grid-content bg-purple" style="position:relative">
-                <div style="margin-left: calc(50% - 265px);">
-                    <el-input type="text" v-model="input" @input="inputChange" placeholder="请输入内容" maxlength="300" show-word-limit style="width:700px;margin:16px 0;"></el-input>
+                <div style="margin-left: calc(50% - 395px);">
+                    <el-input type="text" v-model="input" @input="inputChange" placeholder="请输入内容" maxlength="300" show-word-limit style="width:800px;margin:16px 0;"></el-input>
                     <Ueditor @listenEvent = 'uedior'></Ueditor>
                 </div>
             </div>

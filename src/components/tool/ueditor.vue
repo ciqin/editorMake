@@ -220,7 +220,7 @@ export default {
                 initialFrameHeight: 820,
 
                 // 初始容器宽度
-                initialFrameWidth: 700,
+                initialFrameWidth: 800,
                 toolbars: [
                     [
                     // 'anchor', //锚点
@@ -808,7 +808,7 @@ export default {
 .OperationButton {
     position:absolute;
     bottom: 0%;
-    right: 63px;
+    right: 20px;
 }
 .OperationButton  li a {
     height: 30px;
