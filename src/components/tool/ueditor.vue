@@ -217,11 +217,8 @@ export default {
                 // 编辑器不自动被内容撑高
                 autoHeightEnabled: false,
                 // 初始容器高度
-<<<<<<< HEAD
                 initialFrameHeight: 820,
-=======
-                initialFrameHeight: 790,
->>>>>>> 09dc1bf401083c66050da73d2bf046c72205f170
+
                 // 初始容器宽度
                 initialFrameWidth: 700,
                 toolbars: [
