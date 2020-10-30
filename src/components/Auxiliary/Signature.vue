@@ -507,12 +507,6 @@ export default {
             this.form.properties.watermark=res.properties.watermark==1?true:false;  
             this.form.folder = res.story.folder
             this.form.libid = res.story.libid
-            let hrefUrl = window.location.href
-            if(/\_blank/.test(hrefUrl.split("?")[1].split("&")[0].split("=")[1])) {
-                this.form.isNew = true;
-            }else {
-                this.form.isNew = false;
-            }
         })
        
      },

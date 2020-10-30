@@ -37,6 +37,7 @@ export const modifyManyContribution = ({commit},name) => commit('modifyManyContr
 
 export const modifylistenManuscript = ({commit},name) => commit('modifylistenManuscript', name)
 
+export const modifyIsNew = ({commit},name) => commit('modifyIsNew', name)
 // export const modifySubmit = ({commit},name) => commit('modifySubmit', name)
 
 

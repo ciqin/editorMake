@@ -23,7 +23,8 @@ const state = {
     selectId:false,
     changeTime:false,
     manyContribution:false,
-    listenManuscript:[]
+    listenManuscript:[],
+    isNew:true
 }
  
 // 注册上面引入的各大模块

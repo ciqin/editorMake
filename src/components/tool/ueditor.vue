@@ -3,7 +3,7 @@
     <!--下面通过传递进来的id完成初始化-->
     <div style="position:relative;">
         <div :id="randomId" ref="ueditor"></div>
-        <div class="OperationButton">
+        <div class="OperationButton" :style="{'left':btnLeft, 'position':'absolute', 'bottom': '0%'}">    
             <ul> 
                <li v-if="storyDeliver"><el-button type="text" @click="opaBtn1"><a href="javascript:" style="color:#fff;"><i class="el-icon-position" style="color: #d72323;font-size: 18px;"></i></a><span>传稿</span></el-button></li>
                <li v-if="storyCheckin"><el-button type="text" @click="opaBtn2"><a href="javascript:" style="color:#fff;"><i class="el-icon-link" style="color: #d72323;font-size: 18px;"></i></a><span>签入</span></el-button></li>
@@ -174,7 +174,7 @@ import html2Canvas from 'html2canvas'
 import JsPDF from 'jspdf'
 // 接口加载
 import { submitData ,newSave,listBtn,releaseManuscript,deleteManuscript,subAdopt,subFinalJudgment,revision,withdraw,hasReject,subReject} from "@/http/api"
-import { store} from '@/store'
+import { store ,mutations} from '@/store'
 import {mapActions, mapGetters} from 'vuex';
 import Submit from "../Popup/submit"
 import Adopt from "../Popup/adopt"
@@ -207,6 +207,7 @@ export default {
             tableData:[],
             commit:'',
             radio:"",
+            btnLeft:store.ueditorWidth+16+"px",
             //编辑器实例
             instance: null,
             rejectUuid:"",
@@ -222,7 +223,7 @@ export default {
                 initialFrameHeight: 800,
 
                 // 初始容器宽度
-                initialFrameWidth: 800,
+                initialFrameWidth: store.ueditorWidth,
                 toolbars: [
                     [
                     // 'anchor', //锚点
@@ -611,16 +612,26 @@ export default {
                 folderid = data.folder;
             }
             // 获取ueditor 的reference
-            let imgs = $(store.ueditor.body).find("img")
+            let imgs = $(store.ueditor.body).find("img");
+            let related = "";
             let reference ="";
             if(imgs.length>0) {
                 imgs.each((index,item)=>{
                     if(index==0) {
-                        reference+=$(item).attr("src")
+                        reference+=$(item).attr("src");
+                        related+="related"+index;
                     }else{
-                        reference+="##"+$(item).attr("src")
+                        reference+="##"+$(item).attr("src");
+                        related+="##related"+index;
                     }  
                 })
+            }
+            let isnew = true;
+            let hrefUrl = window.location.href;
+            if(/\_blank/.test(hrefUrl.split("?")[1].split("&")[0].split("=")[1]) && this.$store.state.isNew) {
+                isnew= true;
+            }else {
+                isnew = false;
             }
             let newData = {
                 libid: data.libid?data.libid:localUrl.split("?")[1].split("&")[1].split("=")[1],
@@ -638,6 +649,7 @@ export default {
                 htmlContent:store.ueditor.getContent(),
                 elated:"",
                 topic:data.topicsId,
+                related:related,
                 newStory: false,
                 origination:data.origination,
                 sourceType: "用户创建",
@@ -654,7 +666,7 @@ export default {
                 customMetas:customMetas,
                 ContentType:true,
                 isSmartWriteEditor:1,
-                newStory:data.isNew
+                newStory:isnew
             }
             // 封面图动态添加
             if(data.coverType == 1 && (/add\.png/.test(data.opaImg1) == false)) {
@@ -693,6 +705,8 @@ export default {
                             type: 'success'
                         });
                     }
+                    mutations.setobjid(res.id);
+                    /\_blank/.test(res.id)?"":this.$store.dispatch("modifyIsNew",false);
                 })
             }else {
                 newSave(newData).then(res=>{
@@ -702,6 +716,8 @@ export default {
                             type: 'success'
                         });
                     }
+                    mutations.setobjid(res.id);
+                    /\_blank/.test(res.id)?"":this.$store.dispatch("modifyIsNew",false);
                 })
             }
         },
@@ -830,11 +846,6 @@ export default {
 <style scoped>
 .edui-editort {
     margin: 0 auto;
-}
-.OperationButton {
-    position:absolute;
-    bottom: 0%;
-    right: 20px;
 }
 .OperationButton  li a {
     height: 30px;

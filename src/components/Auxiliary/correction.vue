@@ -3,7 +3,7 @@
       <el-form ref="form"  label-width="80px">
       <div class="p30">
           <h6 class="wordTitle">文稿纠错</h6>
-          <span class="tip">识别文稿中的字词、标点、语法等方面的错误</span> 
+          <span class="tip">识别文稿中的字词、语法等方面的错误</span> 
       </div>
       
       <div class="line"></div>

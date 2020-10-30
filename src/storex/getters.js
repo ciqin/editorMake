@@ -29,3 +29,6 @@ export const hasChangeTime= state => state.changeTime
 
 export const hasManyContribution= state => state.manyContribution
 
+export const hasIsNew= state => state.isNew
+
+

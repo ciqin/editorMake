@@ -78,6 +78,9 @@ export const favoritedell = data => postHttp(caiApi+'/ilgcreation/favoriteMixmde
 //稿件是否收藏
 export const FavoriteMixmdedia = data => postHttp(caiApi+'/ilgcreation/favoriteMixmdedia/isFavorite', data)
 
+//获取收藏的稿件 
+export const getFavoriteMixmdedias = data => getHttp(caiApi+'/ilgcreation/favoriteMixmdedia/getFavoriteMixmdedias', data)
+
 //关联文章添加收藏
 export const Articleadd = data => postHttp(caiApi+'/ilgcreation/favoriteArticle/add', data)
 
@@ -98,7 +101,7 @@ export const hasSubmitId = data => postHttp(caiApi+'/sprint/rest/story/'+libId+'
 export const hasSubmitUser = data => getHttp(caiApi+'/sprint/security/users/search', data)
 
 // 稿件提交接口
-export const SubmitGj = data => getHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/submit/process', data)
+export const SubmitGj = data => postHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/submit/process', data)
 
 // 获取稿件签入接口
 export const checkIn = data => postHttp(caiApi+'/sprint/rest/story/'+libId+'/'+newManuscriptId+'/checkin', data)

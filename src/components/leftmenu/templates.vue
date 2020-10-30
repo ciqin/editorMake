@@ -199,7 +199,7 @@
         templatetotal:'',//模板的总条数
 
         loading:true,
-        caiApi:"http://127.0.0.1:9080",
+        caiApi:"http://qhcloudhongqi.wengegroup.com:9080",
 
         Manuscriptinput:'', //稿库的检索的字
 

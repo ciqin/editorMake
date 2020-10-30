@@ -19,8 +19,8 @@
         </el-col>
         <el-col :span="12">
             <div class="grid-content bg-purple" style="position:relative">
-                <div style="margin-left: calc(50% - 395px);">
-                    <el-input type="text" v-model="input" @input="inputChange" placeholder="请输入内容" maxlength="300" show-word-limit style="width:800px;margin:16px 0;"></el-input>
+                <div :style="{'margin-left': inputLeft}">
+                    <el-input type="text" v-model="input" @input="inputChange" placeholder="请输入内容" maxlength="300" show-word-limit :style="{'width':inputWidth,'margin':'16px 0'}"></el-input>
                     <Ueditor @listenEvent = 'uedior'></Ueditor>
                 </div>
             </div>
@@ -72,6 +72,8 @@ export default {
             currentView:'Tab1',
             Navcurrent:'letfTab1',
             uedstr:'' ,//获取ueditor根据符号检索的值
+            inputLeft:"calc(50% - "+store.ueditorWidth/2+"px)",
+            inputWidth:store.ueditorWidth+"px",
             tabs:[
                 {
                     type:'Tab1',

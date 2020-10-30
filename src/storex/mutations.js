@@ -62,4 +62,8 @@ export const modifylistenManuscript= (state, name) => {
     state.listenManuscript = name
 }
 
+export const modifyIsNew= (state, name) => { 
+    state.isNew = name
+}
+
 

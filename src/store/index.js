@@ -11,8 +11,8 @@ export const store = Vue.observable({
     objid:"",
     Title:"",
     submit:false,
+    ueditorWidth:window.innerWidth- 1120
 })
-
 export const mutations = {
     setUserInfo(userInfo) {
       store.userInfo = userInfo
@@ -40,5 +40,8 @@ export const mutations = {
     },
     setSubmit (Title) {
       store.submit = submit
+    },
+    setobjid(objid){
+      store.objid = objid
     }
 }
