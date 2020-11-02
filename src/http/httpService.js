@@ -48,14 +48,14 @@ Axios.interceptors.request.use(config => {
 
 // get请求
 export const getHttp = (url, data) => {
-  return new Promise((resolve, reject) => {
-    Axios.get(url, { params : data }).then(res => {
-      resolve(res.data)
-    }).catch(error => {
-      reject(error)
-      vue.$message('获取数据失败，请刷新')
+ return new Promise((resolve, reject) => {
+      Axios.get(url, { params : data }).then(res => {
+        resolve(res.data)
+      }).catch(error => {
+        reject(error)
+        vue.$message('获取数据失败，请刷新')
+      })
     })
-  })
 }
 
 // post请求

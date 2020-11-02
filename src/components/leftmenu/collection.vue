@@ -157,33 +157,13 @@ export default {
 
       text:'',//滑过获取关联文章
       Tooltipstyle:'display:none',//滑过获取关联文章样式
+      templeteType:1,
 
       caiApi:"http://qhcloudhongqi.wengegroup.com:9080",
     }
   },
   created(){
-    let _that = this
-  //获取标题模板
-    let Listparam = {
-        label: '',
-        templeteType: 1,
-        status: 0,
-        size: _that.templatepageNum,
-        page: _that.templatepage,
-        sort: 'createTime,desc',
-        ContentType:true
-    }
-    getFavorTemplate(Listparam).then(res=>{
-        if(res){
-          _that.loading = false
-          _that.templatetotal = res.totalElements
-
-          res.content.forEach(function (item) {
-            item.show = false
-            _that.templateimgarr.push(item);
-          });  
-        }
-    })
+     this.loadTemplates()
   },
   methods: {
       handleClick(tab, event) {
@@ -240,22 +220,11 @@ export default {
         }
       },
       templatearrclick(index){
-         this.texttemp = index
-         let Listparam = {
-            label: '',
-            templeteType: index+1,
-            status: 0,
-            size: 10,
-            page: this.templatepage,
-            sort: 'use_num,desc',
-            ContentType:true
-         }
-         getFavorTemplate(Listparam).then(res=>{
-            if(res){
-              this.loading = false
-              this.templateimgarr = res.content
-            }
-         })
+         let _that = this
+         _that.templateimgarr=[]
+         _that.texttemp = index
+         _that.templeteType = index+1
+        this.loadTemplates()
       },
       templeteSource(index,item){
         store.ueditor.setContent(item.templeteSource,true)
@@ -310,33 +279,30 @@ export default {
           })
       },
       collectionIconclick(index,arr){
-        let param = {
-          templateId:arr[index].templeteId,
-          ContentType:true
-        }
-
-        let favoriteparam = {
-           uuid:arr[index].id,
-        }
-        
-        let Relateparam = { 
-            uuid:this.Relatedarr[index].uuid,
-            tenantId:5,
-            title:this.Relatedarr[index].title,
-            content:this.Relatedarr[index].content,
-            pubtime:this.Relatedarr[index].pubtime
-        }
-
         if(arr == this.templateimgarr){
-          this.templateimgarr[index].userId = false
+          let param = {
+          templateId:arr[index].templeteId,
+          }
+          this.templateimgarr[index].isFavorite = false
           cancelFavorTemplate(param).then(res=>{ //取消模板收藏
              this.templateimgarr.splice(index,1)
           })
         }else if(arr == this.Manuscript){
+            let favoriteparam = {
+            uuid:arr[index].id,
+            }
+        
             favoritedell(favoriteparam).then((res)=>{
                this.Manuscript.splice(index,1)
             })
         }else if(arr == this.Relatedarr){
+            let Relateparam = { 
+                uuid:this.Relatedarr[index].uuid,
+                tenantId:5,
+                title:this.Relatedarr[index].title,
+                content:this.Relatedarr[index].content,
+                pubtime:this.Relatedarr[index].pubtime
+            }
             Articledell(Relateparam).then((res)=>{
               this.Relatedarr.splice(index,1)
             })
@@ -357,20 +323,49 @@ export default {
         })
         this.Relatedarr = newList;
     },
-    listcontentup(e){
-       let texts = window.getSelection().toString();
-        if(texts!=''){
-          this.text = texts;
-          this.Tooltipstyle = `position: fixed;top:${e.pageY - e.offsetY - 10}px;left:${e.pageX}px;z-index: 999;width: 80px;height: 40px;border:1px solid #ccc;background: #fff;line-height: 40px;display: inline-block;border-radius: 5px;vertical-align: top;`
-        }else{
-          this.text = '';
-          this.Tooltipstyle = 'display:none'
+      listcontentup(e){
+        let texts = window.getSelection().toString();
+          if(texts!=''){
+            this.text = texts;
+            this.Tooltipstyle = `position: fixed;top:${e.pageY - e.offsetY - 10}px;left:${e.pageX}px;z-index: 999;width: 80px;height: 40px;border:1px solid #ccc;background: #fff;line-height: 40px;display: inline-block;border-radius: 5px;vertical-align: top;`
+          }else{
+            this.text = '';
+            this.Tooltipstyle = 'display:none'
+          }
+      },
+      Tooltipbtn(){
+        store.ueditor.setContent(this.text,true)
+        this.Tooltipstyle = 'display:none'
+      },
+      loadTemplates(){
+        let _that = this
+        _that.loadimgtemplate = true
+        //获取标题模板
+        let Listparam = {
+            label: '',
+            templeteType:_that.templeteType,
+            status: 0,
+            pageSize: _that.templatepageNum,
+            pageNum: _that.templatepage,
+            sort: 'use_num,desc',
         }
-    },
-    Tooltipbtn(){
-      store.ueditor.setContent(this.text,true)
-      this.Tooltipstyle = 'display:none'
-    }
+
+        if(_that.loadimgtemplate){
+            getFavorTemplate(Listparam).then(res=>{
+            if(res){
+              _that.loading = false
+              _that.loadimgtemplate = false
+              _that.templatepage = _that.templatepage+1
+              _that.templatetotal = res.total
+              res.list.forEach(function (item) {
+                 item.show = false
+                _that.templateimgarr.push(item);
+              });  
+            }
+          })
+        }
+        
+      }, 
 
   }
 }

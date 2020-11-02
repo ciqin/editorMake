@@ -47,7 +47,7 @@
 <script>
 import { getRelatedArticles } from '@/http/api'
 import { Articleadd } from '@/http/api'
-import { Articledell } from '@/http/api'
+import { Articledell,ilgcreations } from '@/http/api'
 export default {
     props:{
        uestrvalue:String
@@ -71,30 +71,37 @@ export default {
       let param = {
            content: this.uestrvalue,
         }
-        getRelatedArticles(param).then(res=>{
-            if(res){  
-              this.loading = false
-              this.Relatedarr = res.data 
 
-               this.Relatedarr.forEach((item,key)=>{
-                item.iscontent = false;
-                item.partcontent = item.content
-                if(item.content!==''){
-                  item.iscontent = false;
-                }else{
-                  item.iscontent  = true;
-                }
+        ilgcreations(param).then(res=>{
+          if(res){
+              getRelatedArticles(param).then(res=>{
+                  if(res){  
+                    this.loading = false
+                    this.Relatedarr = res.data 
 
-                if(item.content.length>125){
-                    item.partcontent = item.content.slice(0,125) + '...';
-                }else{
-                    item.partcontent = item.content
-                }
+                    this.Relatedarr.forEach((item,key)=>{
+                      item.iscontent = false;
+                      item.partcontent = item.content
+                      if(item.content!==''){
+                        item.iscontent = false;
+                      }else{
+                        item.iscontent  = true;
+                      }
+
+                      if(item.content.length>125){
+                          item.partcontent = item.content.slice(0,125) + '...';
+                      }else{
+                          item.partcontent = item.content
+                      }
+                    })
+                  }else{
+                    this.loading = false
+                  }
               })
-            }else{
-              this.loading = false
-            }
+          }
         })
+
+        
     },
     watch:{
       uestrvalue:function(uestrvalue,newuestrvalue){

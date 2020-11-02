@@ -18,7 +18,7 @@
               <ul v-if="templateimgarr.length>0" style='height: 705px;overflow-y: auto;' v-infinite-scroll="loadTemplates" infinite-scroll-disabled="disabledtemplate">
                 <li v-for="(item,key) in templateimgarr" :key = key :title="item.label" @click="templeteSource(key,item)" :class="{show_list_start:item.show===true}" @mouseover="collectionIconmouseover(key,item,templateimgarr)"  @mouseout="collectionIconmouseout(key,item,templateimgarr)">
                     <div v-html = item.templeteSource ></div>
-                    <div class='collection_icon' :connectid="item.userId"   @click.stop="collectionIconclick(key,templateimgarr)" :class='item.userId ? "collectionAcitve" : "nocollectionAcitve" '>
+                    <div class='collection_icon' :connectid="item.userId"   @click.stop="collectionIconclick(key,templateimgarr)" :class='item.isFavorite==1 ? "collectionAcitve" : "nocollectionAcitve" '>
                            <i class="el-icon-star-on"></i>
                     </div>
                 </li>
@@ -212,7 +212,8 @@
         ManuscrippageNum:10,//稿件每次加载条数
         ManuscripIDarr:[],//稿件id
 
-        loadingManuscript:true
+        loadingManuscript:true,
+        templeteType:1,
       };
     },
     created(){
@@ -330,30 +331,13 @@
          let _that = this
          _that.templateimgarr=[]
          _that.texttemp = index
-         let Listparam = {
-            label: '',
-            templeteType: index+1,
-            status: 0,
-            size: 10,
-            page: 0,
-            sort: 'use_num,desc',
-            ContentType:true
-         }
-         getTempleteSourceList(Listparam).then(res=>{
-            if(res){
-             _that.templatetotal = res.totalElements
-            _that.templatepage = _that.templatepage+1
-              res.content.forEach(function (item) {
-                item.show = false
-                _that.templateimgarr.push(item);
-              }); 
-            }
-         })
+         _that.templeteType = index+1
+         this.loadTemplates()
       },
       collectionIconclick(index,arr){
         let param = {
           templateId:arr[index].templeteId,
-          ContentType:true
+          ContentType:true,
         }
 
         let libraryparam = {
@@ -368,13 +352,13 @@
         
 
         if(arr == this.templateimgarr){
-            if(arr[index].userId){
-                this.templateimgarr[index].userId = false
+            if(this.templateimgarr[index].isFavorite==1){
+                this.templateimgarr[index].isFavorite = false
                 cancelFavorTemplate(param).then(res=>{ //取消模板收藏
                   console.log(res)
                 })
             }else{
-                this.templateimgarr[index].userId = true
+                this.templateimgarr[index].isFavorite = true
                 favorTemplate(param).then(res=>{ //模板收藏
                   console.log(res)
                 })
@@ -556,12 +540,11 @@
         //获取标题模板
         let Listparam = {
             label: '',
-            templeteType: 1,
+            templeteType:_that.templeteType,
             status: 0,
-            size: _that.templatepageNum,
-            page: _that.templatepage,
+            pageSize: _that.templatepageNum,
+            pageNum: _that.templatepage,
             sort: 'use_num,desc',
-            ContentType:true
         }
 
         if(_that.loadimgtemplate){
@@ -570,8 +553,8 @@
               _that.loading = false
               _that.loadimgtemplate = false
               _that.templatepage = _that.templatepage+1
-              _that.templatetotal = res.totalElements
-              res.content.forEach(function (item) {
+              _that.templatetotal = res.total
+              res.list.forEach(function (item) {
                  item.show = false
                 _that.templateimgarr.push(item);
               });  

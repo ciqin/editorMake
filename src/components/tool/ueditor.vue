@@ -559,12 +559,12 @@ export default {
                          _that.ueconter = str
                         }else if(nKeyCode==188){
                             let newstr = str.substring(0,selection.endOffset+1);
-                            let uearr = newstr.split(",")
+                            let uearr = newstr.split("，")
                             let i = uearr.length-2<0?0:uearr.length-2
                             _that.ueconter = uearr[i]
                         }else if(nKeyCode==190){
                             let newstr = str.substring(0,selection.endOffset+1);
-                            let uearr = newstr.split(",")
+                            let uearr = newstr.split("。")
                             let i = uearr.length-2<0?0:uearr.length-2
                             _that.ueconter = uearr[i]
                         }
