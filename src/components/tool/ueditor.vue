@@ -553,7 +553,6 @@ export default {
 
                         let selection = _that.instance.selection._bakRange
                         let str = _that.instance.getContentTxt()
-                        console.log(str)
                         //do something
                         if(nKeyCode==13){
                          _that.ueconter = str
