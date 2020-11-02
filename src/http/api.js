@@ -2,8 +2,9 @@
  * 此文件为接口统一管理文件
  */
 const swaggerApi = "http://192.168.18.12:9117";
-// const caiApi = "http://qhcloudhongqi.wengegroup.com:9080";
-const caiApi = "http://127.0.0.1:9080";
+const caiApi = "http://qhcloudhongqi.wengegroup.com:9080";
+// 本地调试接口
+// const caiApi = "http://127.0.0.1:9080";
 const hongApi = "http://qhcloudhongqi.wengegroup.com:9116"
 
 import { getHttp, postHttp } from "./httpService"
@@ -38,10 +39,10 @@ export const classifygetAll = data => postHttp(hongApi+'/classify/getAll', data)
 export const SearchShareAssets = data => postHttp(caiApi+'/ilgcreation/article/getRelatedMedias', data)
 
 // 文稿纠错
-export const correction = data => postHttp(swaggerApi+'/ilgcreation/sensitiveAnalysis/analysis', data)
+export const correction = data => postHttp(caiApi+'/ilgcreation/sensitiveAnalysis/analysis', data)
 
 // 敏感词分析
-export const sensitivityAnalysis = data => postHttp(swaggerApi+'/ilgcreation/text/check', data)
+export const sensitivityAnalysis = data => postHttp(caiApi+'/ilgcreation/text/check', data)
 
 // 新建获取稿签Id
 export const newSignature = data => getHttp(caiApi+'/sprint/rest/stories/'+libId+'/'+newManuscriptId+'/tags/edit?type=COMPO', data)
@@ -100,7 +101,7 @@ export const hasSubmitId = data => postHttp(caiApi+'/sprint/rest/story/'+libId+'
 export const hasSubmitUser = data => getHttp(caiApi+'/sprint/security/users/search', data)
 
 // 稿件提交接口
-export const SubmitGj = data => getHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/submit/process', data)
+export const SubmitGj = data => postHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/submit/process', data)
 
 // 获取稿件签入接口
 export const checkIn = data => postHttp(caiApi+'/sprint/rest/story/'+libId+'/'+newManuscriptId+'/checkin', data)

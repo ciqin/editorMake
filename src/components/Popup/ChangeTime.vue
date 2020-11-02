@@ -17,7 +17,7 @@
                 </div>
         </el-form>
         <div slot="footer" class="dialog-footer" style="text-align:right;">
-            <el-button type="primary" @click="submit"  size="mini">确定选用</el-button>
+            <el-button type="primary" @click="submit"  size="mini">确定改时</el-button>
             <el-button @click="closeModale"  size="mini">取消</el-button>
         </div>
   </div>
@@ -60,7 +60,8 @@ export default {
           type: this.type,
           libraryId: this.libraryId,
           storyId: this.storyId,
-          issueDate:this.value1
+          issueDate:this.value1,
+          ContentType:true
       }
       subChangeTime(data).then(res=>{
         if(res) {

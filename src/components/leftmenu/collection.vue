@@ -113,7 +113,7 @@ export default {
 
       Manuscrippage:0,//稿库的页数
 
-      caiApi:"http://127.0.0.1:9080",
+      caiApi:"http://qhcloudhongqi.wengegroup.com:9080",
     }
   },
   created(){

@@ -20,7 +20,6 @@
             <ul>
               <li v-for="(tab,index) in tabs"><img src="@/assets/container.jpg" alt="" width="160"><el-checkbox v-model="checked" style="position:absolute;right:24px;top:-2px;"></el-checkbox></li>
             </ul>
-            
           </div>
       </div>
     </el-form>

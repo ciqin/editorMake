@@ -3,7 +3,7 @@
     <!--下面通过传递进来的id完成初始化-->
     <div style="position:relative;">
         <div :id="randomId" ref="ueditor"></div>
-        <div class="OperationButton">
+        <div class="OperationButton" :style="{'left':btnLeft, 'position':'absolute', 'bottom': '0%'}">    
             <ul> 
                <li v-if="storyDeliver"><el-button type="text" @click="opaBtn1"><a href="javascript:" style="color:#fff;"><i class="el-icon-position" style="color: #d72323;font-size: 18px;"></i></a><span>传稿</span></el-button></li>
                <li v-if="storyCheckin"><el-button type="text" @click="opaBtn2"><a href="javascript:" style="color:#fff;"><i class="el-icon-link" style="color: #d72323;font-size: 18px;"></i></a><span>签入</span></el-button></li>
@@ -174,7 +174,7 @@ import html2Canvas from 'html2canvas'
 import JsPDF from 'jspdf'
 // 接口加载
 import { submitData ,newSave,listBtn,releaseManuscript,deleteManuscript,subAdopt,subFinalJudgment,revision,withdraw,hasReject,subReject} from "@/http/api"
-import { store} from '@/store'
+import { store ,mutations} from '@/store'
 import {mapActions, mapGetters} from 'vuex';
 import Submit from "../Popup/submit"
 import Adopt from "../Popup/adopt"
@@ -184,6 +184,8 @@ import CheckIn from "../Popup/checkIn"
 import Reject from "../Popup/reject"
 import ChangeTime from "../Popup/changeTime"
 import FinalJudgment from "../Popup/finalJudgment"
+// 加载jquery
+import $ from "jquery"
 export default {
     name: 'UE',
     props: {
@@ -205,6 +207,7 @@ export default {
             tableData:[],
             commit:'',
             radio:"",
+            btnLeft:store.ueditorWidth+16+"px",
             //编辑器实例
             instance: null,
             rejectUuid:"",
@@ -217,10 +220,10 @@ export default {
                 // 编辑器不自动被内容撑高
                 autoHeightEnabled: false,
                 // 初始容器高度
-                initialFrameHeight: 820,
+                initialFrameHeight: 800,
 
                 // 初始容器宽度
-                initialFrameWidth: 800,
+                initialFrameWidth: store.ueditorWidth,
                 toolbars: [
                     [
                     // 'anchor', //锚点
@@ -364,7 +367,6 @@ export default {
             that.instance.setContent(that.$store.state.htmlContent)
         }, 500);
         listBtn().then(res=>{
-
             res.forEach(item=>{
                 switch(item.code){
                     case "story-deliver":
@@ -410,38 +412,40 @@ export default {
                 releaseManuscript().then(res=>{})
             } 
         });
-       
         // 驳回获取数据接口
-        hasReject().then(res=>{
-           res.records.forEach((item,index)=>{
-               let status = '';
-               switch(item.status){
-                   case 0:
-                        status = "待审批"
-                         break
-                    case 1:
-                         status = "已驳回"
-                         break
-                    case 2:
-                         status = "已通过"
-                         break
-                    case 3:
-                         status = "已通过（终审）"
-                         break
-               }
-               this.tableData.push({
-                   time:this.timestampToTime (item.updated),
-                   status:status,
-                   approverGroup:item.approverGroup.name,
-                   approverRole:item.approverRole.name,
-                   approvers:item.approvers,
-                   approvedBy:item.approvedBy?item.approvedBy.name:"",
-                   type:item.approvedBy?true:false,
-                   lable:(index+1),
-                   uuid:item.approvedBy?item.approvedBy.uuid:""
-               })
-           })
-        })
+        if(this.storyApproveDeny) {
+             hasReject().then(res=>{
+                res.records.forEach((item,index)=>{
+                    let status = '';
+                    switch(item.status){
+                        case 0:
+                                status = "待审批"
+                                break
+                            case 1:
+                                status = "已驳回" 
+                                break
+                            case 2:
+                                status = "已通过"
+                                break
+                            case 3:
+                                status = "已通过（终审）"
+                                break
+                    }
+                    this.tableData.push({
+                        time:this.timestampToTime (item.updated),
+                        status:status,
+                        approverGroup:item.approverGroup.name,
+                        approverRole:item.approverRole.name,
+                        approvers:item.approvers,
+                        approvedBy:item.approvedBy?item.approvedBy.name:"",
+                        type:item.approvedBy?true:false,
+                        lable:(index+1),
+                        uuid:item.approvedBy?item.approvedBy.uuid:""
+                    })
+                })
+            })
+        }
+       
     },
 
     beforeDestroy() {
@@ -516,6 +520,9 @@ export default {
                 }
             })
         },
+        closeModale(){
+            
+        },
         // 终审
         finalJudgment(){
             let data = this.saveParme()
@@ -587,10 +594,39 @@ export default {
             if(this.$store.state.title =="") {
                 return  this.$message.error('标题不能为空！');
             }
+            let localUrl = window.location.href;
+            let folderid = "";
+            if(!data.folder) {
+               folderid = localUrl.split("?")[1].split("&")[2].split("=")[1].replace( /\#\//g,"");
+            }else {
+                folderid = data.folder;
+            }
+            // 获取ueditor 的reference
+            let imgs = $(store.ueditor.body).find("img");
+            let related = "";
+            let reference ="";
+            if(imgs.length>0) {
+                imgs.each((index,item)=>{
+                    if(index==0) {
+                        reference+=$(item).attr("src");
+                        related+="related"+index;
+                    }else{
+                        reference+="##"+$(item).attr("src");
+                        related+="##related"+index;
+                    }  
+                })
+            }
+            let isnew = true;
+            let hrefUrl = window.location.href;
+            if(/\_blank/.test(hrefUrl.split("?")[1].split("&")[0].split("=")[1]) && this.$store.state.isNew) {
+                isnew= true;
+            }else {
+                isnew = false;
+            }
             let newData = {
-                libid: data.libid,
-                objid:store.objid,
-                folder:data.folder,
+                libid: data.libid?data.libid:localUrl.split("?")[1].split("&")[1].split("=")[1],
+                objid:store.objid?store.objid:localUrl.split("?")[1].split("&")[0].split("=")[1],
+                folder:folderid,
                 title: this.$store.state.title,
                 keywords:data.dynamicTags?data.dynamicTags.join(","):"",
                 content: "编辑器内容",
@@ -599,10 +635,11 @@ export default {
                 linkHeadline: data.linkHeadline,
                 level: data.levelId,
                 comment: data.comment,
-                reference: "",
+                reference: reference,
                 htmlContent:store.ueditor.getContent(),
                 elated:"",
                 topic:data.topicsId,
+                related:related,
                 newStory: false,
                 origination:data.origination,
                 sourceType: "用户创建",
@@ -619,7 +656,7 @@ export default {
                 customMetas:customMetas,
                 ContentType:true,
                 isSmartWriteEditor:1,
-                newStory:data.isNew
+                newStory:isnew
             }
             // 封面图动态添加
             if(data.coverType == 1 && (/add\.png/.test(data.opaImg1) == false)) {
@@ -650,8 +687,6 @@ export default {
         },
         save(){
             let newData = this.saveParme();
-            let href = window.location.href;
-            newData.folderId = href.split("?")[1].split("&")[2].split("=")[1];
             if(newData.libid =="product") {
                 revision(newData).then(res=>{
                     if(res) {
@@ -660,6 +695,8 @@ export default {
                             type: 'success'
                         });
                     }
+                    mutations.setobjid(res.id);
+                    /\_blank/.test(res.id)?"":this.$store.dispatch("modifyIsNew",false);
                 })
             }else {
                 newSave(newData).then(res=>{
@@ -669,6 +706,8 @@ export default {
                             type: 'success'
                         });
                     }
+                    mutations.setobjid(res.id);
+                    /\_blank/.test(res.id)?"":this.$store.dispatch("modifyIsNew",false);
                 })
             }
         },
@@ -797,11 +836,6 @@ export default {
 <style scoped>
 .edui-editort {
     margin: 0 auto;
-}
-.OperationButton {
-    position:absolute;
-    bottom: 0%;
-    right: 20px;
 }
 .OperationButton  li a {
     height: 30px;

@@ -80,7 +80,8 @@ export default {
                 targetGroup:this.uuid,
                 targetUuid:this.value,
                 mode:this.checked?"copy":"move",
-                comment:this.commit
+                comment:this.commit,
+                ContentType:true
             }
             SubmitGj(data).then(res=>{
                 if(res) {

@@ -475,7 +475,9 @@ export default {
                         break;
                 }
             }
-            this.$store.dispatch('modifyDataTitle',res.story.title);
+            if(!this.$store.state.title){
+                this.$store.dispatch('modifyDataTitle',res.story.title);
+            }
             this.$store.dispatch('modifyDatahtmlContent',res.story.htmlContent);
             let originations = [];
             res.originations.split(",").forEach((item,index)=>{
@@ -505,11 +507,6 @@ export default {
             this.form.properties.watermark=res.properties.watermark==1?true:false;  
             this.form.folder = res.story.folder
             this.form.libid = res.story.libid
-            if(/\_blank/.test(res.story.id)) {
-                this.form.isNew = true;
-            }else {
-                this.form.isNew = false;
-            }
         })
        
      },
