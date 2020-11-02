@@ -567,6 +567,7 @@ export default {
                             let i = uearr.length-2<0?0:uearr.length-2
                             _that.ueconter = uearr[i]
                         }
+                        console.log(_that.ueconter)
                         _that.$emit('listenEvent',_that.ueconter)
                     })
 
