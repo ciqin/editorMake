@@ -30,7 +30,7 @@
           </div>
         </el-tab-pane>
 
-        <el-tab-pane label="我的素材" name="second">我的素材</el-tab-pane>
+        <!-- <el-tab-pane label="我的素材" name="second">我的素材</el-tab-pane> -->
        
         <el-tab-pane label="我的稿件" name="third">
           <div class='third_search' style='padding: 10px 20px;display:flex'>
@@ -271,7 +271,8 @@ export default {
       collectionIconclick(index,arr){
         if(arr == this.templateimgarr){
           let param = {
-          templateId:arr[index].templeteId,
+           templateId:arr[index].templeteId,
+           ContentType:true,
           }
           this.templateimgarr[index].isFavorite = false
           ilgcreations().then(res=>{

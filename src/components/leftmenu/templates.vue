@@ -35,7 +35,7 @@
 
       </el-tab-pane>
 
-      <el-tab-pane label="媒资库" name="second">
+      <!-- <el-tab-pane label="媒资库" name="second">
        <div class="labelselect">
           <label for="">分类</label>
           <el-select v-model="value1" placeholder="请选择">
@@ -92,7 +92,7 @@
               </div>
          </div>
 
-      </el-tab-pane>
+      </el-tab-pane> -->
 
       <el-tab-pane label="稿库" name="third">
         <div class='third_search' style='padding: 10px 20px;display:flex'>
