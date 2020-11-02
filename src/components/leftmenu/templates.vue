@@ -110,8 +110,8 @@
           </el-date-picker>
         </div>
 
-        <div class='infinite-list-wrapper' v-loading="loading">
-            <div v-if="Manuscript.length>0 && loading==false"  style="height: 746px;overflow-y: auto;margin-top: 20px;" v-infinite-scroll="loadManuscript" infinite-scroll-disabled="disabled">
+        <div class='infinite-list-wrapper' v-loading="loadingManuscript">
+            <div v-if="Manuscript.length>0 && loadingManuscript==false"  style="height: 746px;overflow-y: auto;margin-top: 20px;" v-infinite-scroll="loadManuscript" infinite-scroll-disabled="disabled">
               <div class="third_libisryarr" v-for="(item,key) in Manuscript" :key = key @click='ManuscriptClick(item)'>
                  <div v-if="item.thumbnailUrl && item.htmlContent" style='display: flex;position: relative;' :class="{show_list_start:item.show===true}" @mouseover="collectionIconmouseover(key,item,Manuscript)"  @mouseout="collectionIconmouseout(key,item,Manuscript)">
                       <div class='third_libisryarr_list'> 
@@ -141,7 +141,7 @@
               <p v-if="loadimg" style='text-align:center'>加载中...</p>
               <p v-if="collectionnoMore">没有更多了</p>
             </div>
-            <div v-else-if='Manuscript.length ==0 && loading==false'>
+            <div v-else-if='Manuscript.length ==0 && loadingManuscript==false'>
                 <p style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;'><i class='el-icon-warning-outline'></i>暂无数据</p>
             </div>
         </div>
@@ -292,7 +292,6 @@
             listObjects(Objectparam).then(res=>{
               if(res){
                 let rescontent = res.content
-                _that.loadingManuscript = false
                 _that.Manuscriptotal = res.totalElements
 
                 rescontent.forEach(function (item) {
@@ -314,7 +313,8 @@
                         _that.Manuscript.push(item);
                       });
 
-                      console.log(_that.Manuscript)
+                     _that.loadingManuscript = false
+
                   }
                 })
               }
@@ -474,7 +474,7 @@
               if(res){
                 _that.loading = false
                 let rescontent = res.content
-                _that.loadingManuscript = false
+               
                 _that.Manuscriptotal = res.totalElements
 
                 rescontent.forEach(function (item) {
@@ -495,6 +495,8 @@
                         }
                         _that.Manuscript.push(item);
                       });
+
+                       _that.loadingManuscript = false
 
                   }
                 })
@@ -528,11 +530,11 @@
                _that.loadimg = false
                _that.Manuscrippage = Number(_that.Manuscrippage)+1
                _that.Manuscriptotal = res.totalElements
-              res.content.forEach(function (item) {
-                 item.show=false
-                _that.Manuscript.push(item);
-                _that.ManuscripIDarr.push(item.id)
-              }); 
+                res.content.forEach(function (item) {
+                  item.show=false
+                  _that.Manuscript.push(item);
+                  _that.ManuscripIDarr.push(item.id)
+                }); 
 
             }
           })

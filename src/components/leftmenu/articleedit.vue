@@ -11,7 +11,7 @@
 
               <div>
                 <div :class="item.iscontent===true?'arrow_up_icon arrow_down_icon':'arrow_up_icon'" @click="arrowupIconclick(key,item)">
-                  <i :class="item.iscontent===true?'el-icon-arrow-down':'el-icon-arrow-up'"></i>
+                  <i :class="item.iscontent===true?'el-icon-arrow-up':'el-icon-arrow-down'"></i>
                 </div>
               </div>
 
@@ -90,6 +90,7 @@ export default {
     },
     watch:{
       uestrvalue:function(uestrvalue,newuestrvalue){
+        console.log(this.uestrvalue)
        let param = {
            content: this.uestrvalue,
         }

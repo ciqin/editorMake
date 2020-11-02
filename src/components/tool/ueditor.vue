@@ -546,31 +546,21 @@ export default {
 
                         let selection = _that.instance.selection._bakRange
                         let str = _that.instance.getContentTxt()
+                        console.log(str)
                         //do something
                         if(nKeyCode==13){
                          _that.ueconter = str
-                         console.log(_that.instance,str)
-                        }else if(nKeyCode==186){
-                            let newstr = str.substring(0,selection.endOffset+1);
-                            let uearr = newstr.split(";")
-                            let i = uearr.length-2<0?0:uearr.length-2
-                            _that.ueconter = uearr[i]
-                            console.log(i,uearr[i],newstr.split(";"))
-                        }else if(nKeyCode==222){
-
                         }else if(nKeyCode==188){
                             let newstr = str.substring(0,selection.endOffset+1);
                             let uearr = newstr.split(",")
                             let i = uearr.length-2<0?0:uearr.length-2
                             _that.ueconter = uearr[i]
-                            console.log(i,uearr[i],newstr.split(","))
                         }else if(nKeyCode==190){
-
-                        }else if(nKeyCode==191){
-
+                            let newstr = str.substring(0,selection.endOffset+1);
+                            let uearr = newstr.split(",")
+                            let i = uearr.length-2<0?0:uearr.length-2
+                            _that.ueconter = uearr[i]
                         }
-                          
-           
                         _that.$emit('listenEvent',_that.ueconter)
                     })
 
