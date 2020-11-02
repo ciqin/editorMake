@@ -69,6 +69,10 @@ export default {
               })
               this.tableData = newData;
             }else {
+              this.tableData = [{
+                  date: '无',
+                  name: '无',
+              }]
               this.$message('没有字词错误');
             }
           })

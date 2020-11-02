@@ -19,12 +19,12 @@
                 <li><el-button type="text" @click="contributionFun"  v-if="contribution"><a href="javascript:" style="color:#fff;"><i class="el-icon-smoking" style="color: #d72323;font-size: 18px;"></i></a><span>撤稿</span></el-button></li>
                 <!-- <li><el-button type="text" @click="manyContributionFun"  v-if="manyContribution"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>一键撤稿</span></el-button></li> -->
                 <li><el-button type="text" @click="centerDialogVisible = true"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>预览</span></el-button></li>
-                <li><a href="javascript:" @click="save" >
+                <li><a href="javascript:" @click="save" class="autoClick">
                     <img src="@/assets/icon2.png" width="20" alt=""></a>保存
                 </li>
                 <li @mouseenter="onMouseOver" @mouseleave="onMouseOut" style="position:relative;"><a href="javascript:">
                     <img src="@/assets/icon3.png" width="20" alt=""></a>下载
-                    <div style="position:absolute;left: 50px;top: 5px;">
+                    <div style="position:absolute;left: 36px;top: 5px;">
                         <transition name="fade">
                             <ul class="download" v-if="show" >
                                 <li @click="downloadImg">下载img</li>
@@ -40,7 +40,10 @@
             title=""
             :visible.sync="centerDialogVisible"
             width="400px" class="mobileM">
-            <div class="mobileContainer" :style="styles" v-html="mobileHtml"></div>
+            <div class="mobileContainer" :style="styles">
+                <div v-html="mobileHtml" style=" overflow: auto;width: 100%;height: 100%;">
+                </div>
+            </div>
             <div class="preview-btn">
                 <div :class="[activeIndex==0?'active preview-btn1':'preview-btn1']" @click="mobileD">5.5寸以上</div>
                 <div :class="[activeIndex==1?'active preview-btn2':'preview-btn2']" @click="mobileZ">5.5寸屏</div>
@@ -334,9 +337,7 @@ export default {
             styles:{
                 "width":"348px",
                 "height": "638.5px",
-                "background":"url(http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/iPhone.png) no-repeat",
-                "box-sizing":"border-box",
-                "background-size": "100% 100%",
+                "background":"url(http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/iPhone.png) 0% 0%/100% 100% no-repeat",
                 "padding":"127px 38px 87px 47px"
             },
             eventName: "click",
@@ -363,9 +364,12 @@ export default {
         this.initEditor();
         // 定时获取百度编辑器并赋值
         let that  = this;
-        setTimeout(() => {
-            that.instance.setContent(that.$store.state.htmlContent)
-        }, 500);
+        let timer = setInterval(() => {
+            if(that.instance) {
+                that.instance.setContent(that.$store.state.htmlContent)
+                clearInterval(timer);
+            }
+        }, 200);
         listBtn().then(res=>{
             res.forEach(item=>{
                 switch(item.code){
@@ -406,11 +410,7 @@ export default {
             })
         })
         window.addEventListener('beforeunload', e => {
-            if(this.$store.state.title==""){
-                deleteManuscript().then(res=>{})
-            }else {
-                releaseManuscript().then(res=>{})
-            } 
+            releaseManuscript().then(res=>{})
         });
         // 驳回获取数据接口
         if(this.storyApproveDeny) {
@@ -590,7 +590,7 @@ export default {
             this.instance.setContent(con);
         },
         hasUe(){
-            this.mobileHtml = this.instance.getContent();
+            this.mobileHtml = "<h2 style='text-align:center;font-weight:700;'>"+this.$store.state.title +"</h2>" + this.instance.getContent();
         },
         saveParme(){
             let data = this.app.form;
@@ -601,9 +601,6 @@ export default {
                 watermark: data.propertie&&sdata.properties.watermark?1:0,
                 ad: data.propertie&&data.properties.ad?1:0
             };
-            if(this.$store.state.title =="") {
-                return  this.$message.error('标题不能为空！');
-            }
             let localUrl = window.location.href;
             let folderid = "";
             if(!data.folder) {
@@ -697,6 +694,9 @@ export default {
         },
         save(){
             let newData = this.saveParme();
+            if(this.$store.state.title =="") {
+                return  this.$message.error('标题不能为空！');
+            }
             if(newData.libid =="product") {
                 revision(newData).then(res=>{
                     if(res) {
@@ -707,6 +707,8 @@ export default {
                     }
                     mutations.setobjid(res.id);
                     /\_blank/.test(res.id)?"":this.$store.dispatch("modifyIsNew",false);
+                    // 触发主页面刷新事件
+                    self.opener.document.querySelector(".fa-refresh").click();
                 })
             }else {
                 newSave(newData).then(res=>{
@@ -718,6 +720,8 @@ export default {
                     }
                     mutations.setobjid(res.id);
                     /\_blank/.test(res.id)?"":this.$store.dispatch("modifyIsNew",false);
+                    // 触发主页面刷新事件
+                    self.opener.document.querySelector(".fa-refresh").click();
                 })
             }
         },
@@ -728,7 +732,15 @@ export default {
             this.show  = false
         },
         downloadImg(){
-           let body = this.instance.body;
+            let that = this;
+            let body = this.instance.body;
+            let oldHtml = this.instance.getContent();
+            if(this.$store.state.title) {
+                this.instance.setContent("<h2 style='text-align:center;font-weight:700;'>"+this.$store.state.title+"</h2>"+oldHtml);
+            }else {
+                return  this.$message.error('标题不能为空！');
+            }
+            // return;
             html2Canvas(body, {
                 allowTaint: true,
                 useCORS: true
@@ -749,10 +761,18 @@ export default {
                 a.click();
                 // 移除元素
                 document.body.removeChild(a);
+                that.instance.setContent(oldHtml);
             })
         },
         downloadPdf(){
+            let that = this;
             let body = this.instance.body;
+            let oldHtml = this.instance.getContent();
+            if(this.$store.state.title) {
+                this.instance.setContent("<h2 style='text-align:center;font-weight:700;'>"+this.$store.state.title+"</h2>"+oldHtml);
+            }else {
+                return  this.$message.error('标题不能为空！');
+            }
             html2Canvas(body, {
                 allowTaint: true,
                 useCORS: true
@@ -765,6 +785,7 @@ export default {
                 let imgWidth = 595.28
                 let imgHeight = 592.28 / contentWidth * contentHeight
                 let pageData = canvas.toDataURL('image/jpeg', 1.0)
+                that.instance.setContent(oldHtml);
                 // console.log(pageData)
                 let PDF = new JsPDF('', 'pt', 'a4')
                 if (leftHeight < pageHeight) {
@@ -784,19 +805,19 @@ export default {
         },
         mobileD(){
             this.activeIndex = 0;
-            this.styles.width = "389px",
-            this.styles.height = "725px"
-            this.styles.background = "url(http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/iPhoneX.png) 0% 0% / 100% 100% no-repeat"
-            
-            this.styles.padding = "89px 23px 22px 16px;"
+            this.styles = {
+                "width":"389px",
+                "height": "725px",
+                "background":"url(http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/iPhone.png) 0% 0%/100% 100% no-repeat",
+                "padding":"89px 23px 22px 16px;"
+            }
         },
         mobileZ(){
             this.activeIndex = 1;
             this.styles = {
                 "width":"389px",
                 "height": "713px",
-                "background":"url(http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/iPhone.png) 0% 0% / 100% 100% no-repeat",
-                "box-sizing":"border-box",
+                "background":"url(http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/iPhone.png) 0% 0%/100% 100%  no-repeat",
                 "padding":"127px 38px 87px 47px"
             }
         },
@@ -805,9 +826,7 @@ export default {
             this.styles = {
                 "width":"348px",
                 "height": "638.5px",
-                "background":"url(http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/iPhone.png) 0% 0% / 100% 100% no-repeat",
-                "box-sizing":"border-box",
-                "background-size": "100% 100%",
+                "background":"url(http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/iPhone.png) 0% 0%/100% 100% no-repeat",
                 "padding":"127px 38px 87px 47px"
             }
         },
@@ -938,5 +957,7 @@ export default {
 .mobileContainer {
     overflow: auto;
 }
-
+.mobileContainer img{
+    max-width: 100%;
+}
 </style>

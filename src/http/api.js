@@ -157,3 +157,6 @@ export const withdraw = data => getHttp(caiApi+'/sprint/rest/workflow/stories/'+
 
 // 一键撤稿获取数据接口
 export const hasFinalJudgment = data => getHttp(caiApi+'/sprint/rest/story/'+libId+'/'+newManuscriptId+'/deepRetract', data)
+
+// 抽取关键词
+export const extractingKeywords = data => postHttp(caiApi+'/sprint/rest/deepCogni/KeyWord', data)
