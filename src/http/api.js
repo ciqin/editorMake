@@ -2,9 +2,9 @@
  * 此文件为接口统一管理文件
  */
 const swaggerApi = "http://192.168.18.12:9117";
-const caiApi = "http://qhcloudhongqi.wengegroup.com:9080";
+// const caiApi = "http://qhcloudhongqi.wengegroup.com:9080";
 // 本地调试接口
-// const caiApi = "http://127.0.0.1:9080";
+const caiApi = "http://127.0.0.1:9080";
 const hongApi = "http://qhcloudhongqi.wengegroup.com:9116"
 
 import { getHttp, postHttp } from "./httpService"
@@ -15,6 +15,9 @@ let manuscriptId = window.location.href;
 let newManuscriptId = manuscriptId.split("?")[1].split("&")[0].split("=")[1];
 let libId = manuscriptId.split("?")[1].split("&")[1].split("=")[1];
 /\#\//.test(libId)?libId=libId.replace(/\#\//g,""):"";
+
+//刚进页面需要掉一个接口
+export const ilgcreations = data => getHttp('/ilgcreation/', data)
 
 // store.objid = newManuscriptId;
 //  test
@@ -48,20 +51,19 @@ export const sensitivityAnalysis = data => postHttp(caiApi+'/ilgcreation/text/ch
 export const newSignature = data => getHttp(caiApi+'/sprint/rest/stories/'+libId+'/'+newManuscriptId+'/tags/edit?type=COMPO', data)
 
 // 自动保存
-
 export const newSave = data => postHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/save/smartWrite/process', data)
 
 // 获取模板
-export const getTempleteSourceList = data => postHttp(caiApi+'/sprint/rest/story/getTempleteSourceList', data)
+export const getTempleteSourceList = data => postHttp(caiApi+'/ilgcreation/rmtTempleteSource/getTempleteSourceList', data)
 
 //稿库
 export const listObjects = data => postHttp(caiApi+'/sprint/view/libraries/'+libId+'/smartWrite/listObjects', data)
 
 //模板添加收藏
-export const favorTemplate = data => postHttp(caiApi+'/sprint/rest/story/favorTemplate', data)
+export const favorTemplate = data => postHttp(caiApi+'/ilgcreation/rmtTempleteSource/favorTemplate', data)
 
 //模板取消收藏
-export const cancelFavorTemplate = data => postHttp(caiApi+'/sprint/rest/story/cancelFavorTemplate', data)
+export const cancelFavorTemplate = data => postHttp(caiApi+'/ilgcreation/rmtTempleteSource/cancelFavorTemplate', data)
 
 //媒资库添加收藏
 export const Mediadd = data => postHttp(caiApi+'/ilgcreation/favoriteMedia/add', data)
@@ -85,11 +87,13 @@ export const getFavoriteMixmdedias = data => getHttp(caiApi+'/ilgcreation/favori
 export const Articleadd = data => postHttp(caiApi+'/ilgcreation/favoriteArticle/add', data)
 
 //关联文章取消收藏
-export const Articledell = data => postHttp(caiApi+'/ilgcreation/favoriteArticle/dell', data)
+export const Articledell = data => postHttp(caiApi+'/ilgcreation/favoriteArticle/del', data)
 
-//我的收藏
-export const getFavorTemplate = data => postHttp(caiApi+'/sprint/rest/story/getFavorTemplate', data)
+//我的模板收藏
+export const getFavorTemplate = data => postHttp(caiApi+'/ilgcreation/rmtTempleteSource/getFavorTemplate', data)
 
+//我的关联文章收藏
+export const getTopics = data => postHttp(caiApi+'/ilgcreation/favoriteArticle/getPage', data)
 
 // 获取按钮接口
 export const listBtn = data => postHttp(caiApi+'/sprint/rest/story/'+libId+'/'+newManuscriptId+'/actions/edit', data)

@@ -29,7 +29,9 @@
               </div>
           </div>
         </el-tab-pane>
+
         <el-tab-pane label="我的素材" name="second">我的素材</el-tab-pane>
+       
         <el-tab-pane label="我的稿件" name="third">
           <div class='third_search' style='padding: 10px 20px;display:flex'>
             <el-input v-model="Manuscriptinput" placeholder="请输入关键字(名称,内容)"></el-input>
@@ -81,6 +83,41 @@
               </div>
            </div>
         </el-tab-pane>
+
+        <el-tab-pane label="关联文章" name="four">
+          <div v-loading="loading" style='height: 894px;overflow-y: auto;'>
+              <div v-if="Relatedarr.length>0 && loading==false"> 
+                <div v-for="(item,key) in  Relatedarr" :key = key  class='acticle_list'>
+                    <div class='collection_icon collectionAcitve' @click="collectionIconclick(key,Relatedarr)">
+                      <i class="el-icon-star-on"></i>
+                    </div>
+
+                    <div>
+                      <div :class="item.iscontent===true?'arrow_up_icon arrow_down_icon':'arrow_up_icon'" @click="arrowupIconclick(key,item)">
+                        <i :class="item.iscontent===true?'el-icon-arrow-up':'el-icon-arrow-down'"></i>
+                      </div>
+                    </div>
+
+                    <div class='acticle_list_title' :title='item.title'>{{item.title}}</div>
+
+                    <div v-if='item.content!=""'>
+                      <div class="acticle_list_bottom">
+                        <div class='acticle_list_content' v-if="item.iscontent" @mouseup="listcontentup">{{item.content}}</div>
+                        <div class='acticle_list_content' v-else @mouseup="listcontentup">{{item.partcontent}}</div>
+                      </div>
+                    </div>
+                </div>
+
+                 <div class="Tooltip" :style="Tooltipstyle">
+                    <div class="arrow"></div>
+                    <p @click="Tooltipbtn">插入正文</p>
+                 </div>
+              </div>
+              <div v-else-if="Relatedarr.length==0 && loading==false">
+                  <p style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;'><i class='el-icon-warning-outline'></i>暂无数据</p>
+              </div>
+          </div>
+        </el-tab-pane>
       </el-tabs> 
   </div>
 </template>
@@ -90,6 +127,8 @@ import { listObjects } from '@/http/api'           //稿库
 import { getFavoriteMixmdedias } from '@/http/api'    //查看收藏的文稿
 import { cancelFavorTemplate } from '@/http/api'           //取消模板收藏
 import { favoritedell  } from '@/http/api'    //稿件取消收藏
+import { getTopics } from '@/http/api'    //文章收藏
+import { Articledell } from '@/http/api'
 import { store } from '@/store'
 export default {
   data(){
@@ -113,32 +152,18 @@ export default {
 
       Manuscrippage:0,//稿库的页数
 
+      actpageNum:0,//关联文章的页数
+      Relatedarr:[],//关联文章
+
+      text:'',//滑过获取关联文章
+      Tooltipstyle:'display:none',//滑过获取关联文章样式
+      templeteType:1,
+
       caiApi:"http://qhcloudhongqi.wengegroup.com:9080",
     }
   },
   created(){
-    let _that = this
-  //获取标题模板
-    let Listparam = {
-        label: '',
-        templeteType: 1,
-        status: 0,
-        size: _that.templatepageNum,
-        page: _that.templatepage,
-        sort: 'use_num,desc',
-        ContentType:true
-    }
-    getFavorTemplate(Listparam).then(res=>{
-        if(res){
-          _that.loading = false
-          _that.templatetotal = res.totalElements
-
-          res.content.forEach(function (item) {
-            item.show = false
-            _that.templateimgarr.push(item);
-          });  
-        }
-    })
+     this.loadTemplates()
   },
   methods: {
       handleClick(tab, event) {
@@ -163,25 +188,43 @@ export default {
                 this.Manuscript = res.content
             })
           })
+        }else if(tab.label=='关联文章'){
+          let actparam = {
+            pageNum:this.actpageNum,
+            pageSize:10
+          }
+          getTopics(actparam).then((res)=>{
+            if(res){
+              this.loading = false
+              this.Relatedarr = res.data[0].list
+
+              this.Relatedarr.forEach((item,key)=>{
+                  item.iscontent = false;
+                  item.partcontent = item.content
+                  if(item.content!==''){
+                    item.iscontent = false;
+                  }else{
+                    item.iscontent  = true;
+                  }
+
+                  if(item.content.length>125){
+                      item.partcontent = item.content.slice(0,125) + '...';
+                  }else{
+                      item.partcontent = item.content
+                  }
+              })
+              console.log(res)
+              console.log(this.Relatedarr)
+            }
+          })
         }
       },
       templatearrclick(index){
-         this.texttemp = index
-         let Listparam = {
-            label: '',
-            templeteType: index+1,
-            status: 0,
-            size: 10,
-            page: this.templatepage,
-            sort: 'use_num,desc',
-            ContentType:true
-         }
-         getFavorTemplate(Listparam).then(res=>{
-            if(res){
-              this.loading = false
-              this.templateimgarr = res.content
-            }
-         })
+         let _that = this
+         _that.templateimgarr=[]
+         _that.texttemp = index
+         _that.templeteType = index+1
+        this.loadTemplates()
       },
       templeteSource(index,item){
         store.ueditor.setContent(item.templeteSource,true)
@@ -235,28 +278,95 @@ export default {
             })
           })
       },
-       collectionIconclick(index,arr){
-        let param = {
-          templateId:arr[index].templeteId,
-          ContentType:true
-        }
-
-        let favoriteparam = {
-           uuid:arr[index].id,
-        }
-        
+      collectionIconclick(index,arr){
         if(arr == this.templateimgarr){
-          this.templateimgarr[index].userId = false
+          let param = {
+          templateId:arr[index].templeteId,
+          }
+          this.templateimgarr[index].isFavorite = false
           cancelFavorTemplate(param).then(res=>{ //取消模板收藏
              this.templateimgarr.splice(index,1)
           })
         }else if(arr == this.Manuscript){
+            let favoriteparam = {
+            uuid:arr[index].id,
+            }
+        
             favoritedell(favoriteparam).then((res)=>{
                this.Manuscript.splice(index,1)
             })
+        }else if(arr == this.Relatedarr){
+            let Relateparam = { 
+                uuid:this.Relatedarr[index].uuid,
+                tenantId:5,
+                title:this.Relatedarr[index].title,
+                content:this.Relatedarr[index].content,
+                pubtime:this.Relatedarr[index].pubtime
+            }
+            Articledell(Relateparam).then((res)=>{
+              this.Relatedarr.splice(index,1)
+            })
         }
 
-       }
+      },
+      arrowupIconclick(index,item){
+        let newList = [];
+        this.Relatedarr.forEach((val,ind)=>{
+          if(ind == index) {
+            if(val.iscontent == true){
+              val.iscontent = false
+            }else{
+              val.iscontent = true
+            }
+          }
+          newList.push(val)
+        })
+        this.Relatedarr = newList;
+    },
+      listcontentup(e){
+        let texts = window.getSelection().toString();
+          if(texts!=''){
+            this.text = texts;
+            this.Tooltipstyle = `position: fixed;top:${e.pageY - e.offsetY - 10}px;left:${e.pageX}px;z-index: 999;width: 80px;height: 40px;border:1px solid #ccc;background: #fff;line-height: 40px;display: inline-block;border-radius: 5px;vertical-align: top;`
+          }else{
+            this.text = '';
+            this.Tooltipstyle = 'display:none'
+          }
+      },
+      Tooltipbtn(){
+        store.ueditor.setContent(this.text,true)
+        this.Tooltipstyle = 'display:none'
+      },
+      loadTemplates(){
+        let _that = this
+        _that.loadimgtemplate = true
+        //获取标题模板
+        let Listparam = {
+            label: '',
+            templeteType:_that.templeteType,
+            status: 0,
+            pageSize: _that.templatepageNum,
+            pageNum: _that.templatepage,
+            sort: 'use_num,desc',
+        }
+
+        if(_that.loadimgtemplate){
+            getFavorTemplate(Listparam).then(res=>{
+            if(res){
+              _that.loading = false
+              _that.loadimgtemplate = false
+              _that.templatepage = _that.templatepage+1
+              _that.templatetotal = res.total
+              res.list.forEach(function (item) {
+                 item.show = false
+                _that.templateimgarr.push(item);
+              });  
+            }
+          })
+        }
+        
+      }, 
+
   }
 }
 </script>
@@ -276,11 +386,11 @@ export default {
      color:#D72323
    }
    .collect_list .el-tabs--top .el-tabs__item.is-top{
-      width: 112px;
+      width: 87px;
       text-align: center;
    }
    .collect_list .el-tabs__nav{
-     margin-left: 32px;
+     margin-left: 20px;
      height: 60px;
      line-height: 70px;
      font-size: 14px;
@@ -353,7 +463,7 @@ export default {
    height:35px;
    margin-left: 240px;
  }
- .collection_icon{
+ .first_main_imgs .collection_icon,.third_libisryarr .collection_icon{
     width: 18px;
     height: 18px;
     display: inline-block;
@@ -492,5 +602,119 @@ export default {
     margin-top: 10px;
     min-height: 745px;
 }
+.acticle_list{
+    width: 368px;
+    margin: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    position: relative;
+    color: #333333;
+    font-size: 13px;
+    background: #FFFFFF;
+    border: 1px solid #E9E9E9;
+    box-shadow: 0 9px 9px 0 rgba(0,0,0,0.02), 0 3px 3px 0 rgba(0,0,0,0.02), 0 1px 1px 0 rgba(0,0,0,0.02);
+    border-radius: 4px;
+}
+.acticle_list_content{
+  text-align: justify;
+  text-overflow: -o-ellipsis-lastline;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 336px;
+  font-family: MicrosoftYaHei;
+  font-size: 13px;
+  color: #333333;
+  letter-spacing: 0;
+  line-height: 26px;
+  padding-right: 10px;
+}
+.acticle_list_bottom{
+  background: #F6F7F9;
+  border-radius: 4px;
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 5px;
+}
+.acticle_list_title{
+    font-family: MicrosoftYaHei;
+    font-size: 14px;
+    color: #22272E;
+    letter-spacing: 0;
+    line-height: 22px;
+    padding-bottom: 6px;
+    width: 80%;
+    cursor: pointer;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.acticle_list_Similarity,.acticle_list_keyword{
+  letter-spacing: 0;
+  font-family: MicrosoftYaHei;
+  font-size: 13px;
+  color: #212B36;
+  line-height: 24px;
+}
 
+.collection_icon{
+    width: 22px;
+    height: 22px;
+    display: inline-block;
+    line-height: 20px;
+    text-align: center;
+    border-radius: 5px;
+    position: absolute;
+    right: 40px;
+    top: 8px;
+    font-size: 14px;
+}
+
+.arrow_up_icon{
+    width: 22px;
+    height: 22px;
+    display: inline-block;
+    line-height: 20px;
+    text-align: center;
+    border: 1px solid #d72323;
+    border-radius: 5px;
+    color: #ffffff;
+    background: #d72323;
+    position: absolute;
+    right: 10px;
+    top: 8px;
+    font-size: 14px;
+}
+.arrow_down_icon{
+  border: 1px solid #DCDFE6;
+  color: #DCDFE6;
+  background: #ffffff;
+}
+.collectionAcitve{
+    color: #ffffff;
+    background: #f99b47;
+    border: 1px solid #f99b47;
+}
+.nocollectionAcitve{
+    color: #999999;
+    background: #ffffff;
+    border: 1px solid #dcdfe7;
+}
+.listcontentAcitve{
+    height: auto;
+    display: block;
+}
+.htitle{
+    height: 60px;
+    border-bottom: 4px solid #D72323;
+    text-align: center;
+    line-height: 60px;
+    color: #D72323;
+}
+
+.Tooltip p{
+   text-align: center;
+   font-size: 14px;
+   cursor: pointer;
+}
 </style>

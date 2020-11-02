@@ -18,7 +18,7 @@
               <ul v-if="templateimgarr.length>0" style='height: 705px;overflow-y: auto;' v-infinite-scroll="loadTemplates" infinite-scroll-disabled="disabledtemplate">
                 <li v-for="(item,key) in templateimgarr" :key = key :title="item.label" @click="templeteSource(key,item)" :class="{show_list_start:item.show===true}" @mouseover="collectionIconmouseover(key,item,templateimgarr)"  @mouseout="collectionIconmouseout(key,item,templateimgarr)">
                     <div v-html = item.templeteSource ></div>
-                    <div class='collection_icon' :connectid="item.userId"   @click.stop="collectionIconclick(key,templateimgarr)" :class='item.userId ? "collectionAcitve" : "nocollectionAcitve" '>
+                    <div class='collection_icon' :connectid="item.userId"   @click.stop="collectionIconclick(key,templateimgarr)" :class='item.isFavorite==1 ? "collectionAcitve" : "nocollectionAcitve" '>
                            <i class="el-icon-star-on"></i>
                     </div>
                 </li>
@@ -110,9 +110,9 @@
           </el-date-picker>
         </div>
 
-        <div class='infinite-list-wrapper' v-loading="loading">
-            <div v-if="Manuscript.length>0 && loading==false"  style="height: 746px;overflow-y: auto;margin-top: 20px;" v-infinite-scroll="loadManuscript" infinite-scroll-disabled="disabled">
-              <div class="third_libisryarr" v-for="(item,key) in Manuscript" :key = key @click='ManuscriptClick(item)'>
+        <div class='infinite-list-wrapper' v-loading="loadingManuscript">
+            <div v-if="Manuscript.length>0 && loadingManuscript==false"  style="height: 746px;overflow-y: auto;margin-top: 20px;" v-infinite-scroll="loadManuscript" infinite-scroll-disabled="disabled">
+              <div class="third_libisryarr" v-for="(item,key) in Manuscript" :key = key>
                  <div v-if="item.thumbnailUrl && item.htmlContent" style='display: flex;position: relative;' :class="{show_list_start:item.show===true}" @mouseover="collectionIconmouseover(key,item,Manuscript)"  @mouseout="collectionIconmouseout(key,item,Manuscript)">
                       <div class='third_libisryarr_list'> 
                            <div class='collection_icon' @click.stop="collectionIconclick(key,Manuscript)" :class='item.isFavorite==true ? "collectionAcitve" : "nocollectionAcitve" '>
@@ -126,6 +126,7 @@
                         <p class='third_libisryarr_botal_title'><span class='third_libisryarr_botal_biaoshi'>图文</span>{{item.title?item.title:'暂无标题'}}</p>
                         <p>{{item.time}}</p>
                       </div>
+                      <div class='preview'><span @click="preview(item)"><i class='el-icon-view'></i>预览</span><span @click='ManuscriptClick(item)'><i  class='el-icon-download'></i>插入</span></div>     
                  </div>
 
                  <div v-else-if="!item.thumbnailUrl && item.htmlContent" :class="{show_list_start:item.show===true}" @mouseover="collectionIconmouseover(key,item,Manuscript)"  @mouseout="collectionIconmouseout(key,item,Manuscript)">
@@ -133,7 +134,8 @@
                           <div class='collection_icon'  @click.stop="collectionIconclick(key,Manuscript)" :class='item.isFavorite==true ? "collectionAcitve" : "nocollectionAcitve" '>
                               <i class="el-icon-star-on"></i>
                           </div> 
-                        <p class='third_libisryarr_botal_title'>{{item.title}}</p>
+                          <p class='third_title'>{{item.title}}</p>
+                          <div class='preview'><span @click="preview(item)"><i class='el-icon-view'></i>预览</span><span @click='ManuscriptClick(item)'><i  class='el-icon-download'></i>插入</span></div>     
                       </div>
                  </div>
               </div>
@@ -141,7 +143,7 @@
               <p v-if="loadimg" style='text-align:center'>加载中...</p>
               <p v-if="collectionnoMore">没有更多了</p>
             </div>
-            <div v-else-if='Manuscript.length ==0 && loading==false'>
+            <div v-else-if='Manuscript.length ==0 && loadingManuscript==false'>
                 <p style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;'><i class='el-icon-warning-outline'></i>暂无数据</p>
             </div>
         </div>
@@ -210,7 +212,8 @@
         ManuscrippageNum:10,//稿件每次加载条数
         ManuscripIDarr:[],//稿件id
 
-        loadingManuscript:true
+        loadingManuscript:true,
+        templeteType:1,
       };
     },
     created(){
@@ -292,7 +295,6 @@
             listObjects(Objectparam).then(res=>{
               if(res){
                 let rescontent = res.content
-                _that.loadingManuscript = false
                 _that.Manuscriptotal = res.totalElements
 
                 rescontent.forEach(function (item) {
@@ -314,7 +316,8 @@
                         _that.Manuscript.push(item);
                       });
 
-                      console.log(_that.Manuscript)
+                     _that.loadingManuscript = false
+
                   }
                 })
               }
@@ -328,30 +331,13 @@
          let _that = this
          _that.templateimgarr=[]
          _that.texttemp = index
-         let Listparam = {
-            label: '',
-            templeteType: index+1,
-            status: 0,
-            size: 10,
-            page: 0,
-            sort: 'use_num,desc',
-            ContentType:true
-         }
-         getTempleteSourceList(Listparam).then(res=>{
-            if(res){
-             _that.templatetotal = res.totalElements
-            _that.templatepage = _that.templatepage+1
-              res.content.forEach(function (item) {
-                item.show = false
-                _that.templateimgarr.push(item);
-              }); 
-            }
-         })
+         _that.templeteType = index+1
+         this.loadTemplates()
       },
       collectionIconclick(index,arr){
         let param = {
           templateId:arr[index].templeteId,
-          ContentType:true
+          ContentType:true,
         }
 
         let libraryparam = {
@@ -366,13 +352,13 @@
         
 
         if(arr == this.templateimgarr){
-            if(arr[index].userId){
-                this.templateimgarr[index].userId = false
+            if(this.templateimgarr[index].isFavorite==1){
+                this.templateimgarr[index].isFavorite = false
                 cancelFavorTemplate(param).then(res=>{ //取消模板收藏
                   console.log(res)
                 })
             }else{
-                this.templateimgarr[index].userId = true
+                this.templateimgarr[index].isFavorite = true
                 favorTemplate(param).then(res=>{ //模板收藏
                   console.log(res)
                 })
@@ -474,7 +460,7 @@
               if(res){
                 _that.loading = false
                 let rescontent = res.content
-                _that.loadingManuscript = false
+               
                 _that.Manuscriptotal = res.totalElements
 
                 rescontent.forEach(function (item) {
@@ -496,6 +482,8 @@
                         _that.Manuscript.push(item);
                       });
 
+                       _that.loadingManuscript = false
+
                   }
                 })
               }
@@ -503,6 +491,12 @@
       },
       ManuscriptClick(item){
           store.ueditor.setContent(item.htmlContent)
+      },
+      preview(item){
+        let str=`<div style='width: 1000px;height: 800px;overflow-y: auto;'>${item.htmlContent}</div>`
+        this.$alert(str, item.title, {
+          dangerouslyUseHTMLString: true
+        });
       },
       collectionIconmouseover(){
       
@@ -528,11 +522,11 @@
                _that.loadimg = false
                _that.Manuscrippage = Number(_that.Manuscrippage)+1
                _that.Manuscriptotal = res.totalElements
-              res.content.forEach(function (item) {
-                 item.show=false
-                _that.Manuscript.push(item);
-                _that.ManuscripIDarr.push(item.id)
-              }); 
+                res.content.forEach(function (item) {
+                  item.show=false
+                  _that.Manuscript.push(item);
+                  _that.ManuscripIDarr.push(item.id)
+                }); 
 
             }
           })
@@ -546,12 +540,11 @@
         //获取标题模板
         let Listparam = {
             label: '',
-            templeteType: 1,
+            templeteType:_that.templeteType,
             status: 0,
-            size: _that.templatepageNum,
-            page: _that.templatepage,
+            pageSize: _that.templatepageNum,
+            pageNum: _that.templatepage,
             sort: 'use_num,desc',
-            ContentType:true
         }
 
         if(_that.loadimgtemplate){
@@ -560,8 +553,8 @@
               _that.loading = false
               _that.loadimgtemplate = false
               _that.templatepage = _that.templatepage+1
-              _that.templatetotal = res.totalElements
-              res.content.forEach(function (item) {
+              _that.templatetotal = res.total
+              res.list.forEach(function (item) {
                  item.show = false
                 _that.templateimgarr.push(item);
               });  
@@ -598,6 +591,9 @@
   };
 </script>
 <style>
+   .el-message-box{
+     min-width: 420px;
+   }
    .nav_top_temlaptes .el-input__icon{
      line-height: 36px;
    }
@@ -800,12 +796,29 @@
    box-shadow: inset 0 0 10px 0px #ccc;
  }
 .third_libisryarr_botal{
-    padding:10px
+    padding:10px;
+    height: 124px;
 }
 .third_libisryarr_botal_title{
-    font-size:15px;
-    line-height:25px;
-    display:inline-block
+    font-size: 14px;
+    line-height: 22px;
+    height: 92px;
+    display:inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+}
+.third_title{
+    height: 90px;
+    font-size: 14px;
+    line-height: 22px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
 }
 .third_libisryarr_botal_biaoshi{
        display: inline-block;
@@ -845,5 +858,20 @@
 .show_list_start .collection_icon{
    display: block;
    cursor: pointer;
+}
+.preview{
+  font-size: 14px;
+  position: absolute;
+  right: 7px;
+  bottom: 9px;
+  font-weight: bold;
+}
+.preview span{
+  margin-right: 10px;
+  cursor: pointer;
+} 
+
+.preview span i{
+  margin-right: 5px;
 }
 </style>

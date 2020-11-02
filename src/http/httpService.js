@@ -49,14 +49,16 @@ Axios.interceptors.request.use(config => {
 // get请求
 export const getHttp = (url, data) => {
   return new Promise((resolve, reject) => {
-    Axios.get(url, { params : data }).then(res => {
+    Axios.get(url,data).then(res => {
       if(/请使用微信扫描下面小程序码/.test(res.data)) {
         // 返回登录页跳转
         window.location = "http://qhcloudhongqi.wengegroup.com:9080/uum/login"
       }
       resolve(res.data)
+      // if (res.data.code !== 200) vue.$message('获取数据失败，请刷新')
+      // else resolve(res.data.output)
     }).catch(error => {
-      reject(error)
+      reject(error) 
       vue.$message('获取数据失败，请刷新')
     })
   })
