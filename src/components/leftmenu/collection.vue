@@ -128,7 +128,7 @@ import { getFavoriteMixmdedias } from '@/http/api'    //查看收藏的文稿
 import { cancelFavorTemplate } from '@/http/api'           //取消模板收藏
 import { favoritedell  } from '@/http/api'    //稿件取消收藏
 import { getTopics } from '@/http/api'    //文章收藏
-import { Articledell } from '@/http/api'
+import { Articledell,ilgcreations } from '@/http/api'
 import { store } from '@/store'
 export default {
   data(){
@@ -168,55 +168,62 @@ export default {
   methods: {
       handleClick(tab, event) {
         if(tab.label=='我的稿件'){
-          getFavoriteMixmdedias().then((res)=>{
-            this.loadingmusc = false
-            this.Manuscriptidarr = res.data
+          ilgcreations().then(res=>{
+             getFavoriteMixmdedias().then((res)=>{
+              this.loadingmusc = false
+              this.Manuscriptidarr = res.data
 
-            let Objectparam = {
-                ContentType:true,
-                keywords: '',
-                library: 'manuscript',
-                types: 'TEXT,COMPO,LIVE',
-                excludedIds: this.$route.query.id,
-                editorType: 'COMPO',
-                page: this.Manuscrippage,
-                size: 10,
-                ids:res.data
-            }
-            listObjects(Objectparam).then((res)=>{
-                console.log(res)
-                this.Manuscript = res.content
+              let Objectparam = {
+                  ContentType:true,
+                  keywords: '',
+                  library: 'manuscript',
+                  types: 'TEXT,COMPO,LIVE',
+                  excludedIds: this.$route.query.id,
+                  editorType: 'COMPO',
+                  page: this.Manuscrippage,
+                  size: 10,
+                  ids:res.data
+              }
+              listObjects(Objectparam).then((res)=>{
+                  console.log(res)
+                  this.Manuscript = res.content
+              })
             })
           })
+          
         }else if(tab.label=='关联文章'){
           let actparam = {
             pageNum:this.actpageNum,
             pageSize:10
           }
-          getTopics(actparam).then((res)=>{
-            if(res){
-              this.loading = false
-              this.Relatedarr = res.data[0].list
 
-              this.Relatedarr.forEach((item,key)=>{
-                  item.iscontent = false;
-                  item.partcontent = item.content
-                  if(item.content!==''){
-                    item.iscontent = false;
-                  }else{
-                    item.iscontent  = true;
-                  }
+          ilgcreations().then(res=>{
+               getTopics(actparam).then((res)=>{
+                  if(res){
+                    this.loading = false
+                    this.Relatedarr = res.data[0].list
 
-                  if(item.content.length>125){
-                      item.partcontent = item.content.slice(0,125) + '...';
-                  }else{
-                      item.partcontent = item.content
+                    this.Relatedarr.forEach((item,key)=>{
+                        item.iscontent = false;
+                        item.partcontent = item.content
+                        if(item.content!==''){
+                          item.iscontent = false;
+                        }else{
+                          item.iscontent  = true;
+                        }
+
+                        if(item.content.length>125){
+                            item.partcontent = item.content.slice(0,125) + '...';
+                        }else{
+                            item.partcontent = item.content
+                        }
+                    })
+                    console.log(res)
+                    console.log(this.Relatedarr)
                   }
               })
-              console.log(res)
-              console.log(this.Relatedarr)
-            }
           })
+         
         }
       },
       templatearrclick(index){
@@ -235,7 +242,8 @@ export default {
       },
       Manuscriptsearch(){
         this.loadingmusc = true
-        getFavoriteMixmdedias().then((res)=>{
+        ilgcreations().then(res=>{
+           getFavoriteMixmdedias().then((res)=>{
             this.loadingmusc = false
             this.Manuscriptidarr = res.data
 
@@ -257,6 +265,8 @@ export default {
                 this.Manuscript = res.content
             })
           })
+        })
+        
       },
       collectionIconclick(index,arr){
         if(arr == this.templateimgarr){
@@ -264,17 +274,22 @@ export default {
           templateId:arr[index].templeteId,
           }
           this.templateimgarr[index].isFavorite = false
-          cancelFavorTemplate(param).then(res=>{ //取消模板收藏
+          ilgcreations().then(res=>{
+            cancelFavorTemplate(param).then(res=>{ //取消模板收藏
              this.templateimgarr.splice(index,1)
+            })
           })
         }else if(arr == this.Manuscript){
             let favoriteparam = {
             uuid:arr[index].id,
             }
         
-            favoritedell(favoriteparam).then((res)=>{
+            ilgcreations().then(res=>{
+              favoritedell(favoriteparam).then((res)=>{
                this.Manuscript.splice(index,1)
+              })
             })
+            
         }else if(arr == this.Relatedarr){
             let Relateparam = { 
                 uuid:this.Relatedarr[index].uuid,
@@ -283,9 +298,13 @@ export default {
                 content:this.Relatedarr[index].content,
                 pubtime:this.Relatedarr[index].pubtime
             }
-            Articledell(Relateparam).then((res)=>{
-              this.Relatedarr.splice(index,1)
+
+            ilgcreations().then(res=>{
+              Articledell(Relateparam).then((res)=>{
+                this.Relatedarr.splice(index,1)
+              })
             })
+            
         }
 
       },
@@ -331,17 +350,19 @@ export default {
         }
 
         if(_that.loadimgtemplate){
+          ilgcreations().then(res=>{
             getFavorTemplate(Listparam).then(res=>{
-            if(res){
-              _that.loading = false
-              _that.loadimgtemplate = false
-              _that.templatepage = _that.templatepage+1
-              _that.templatetotal = res.total
-              res.list.forEach(function (item) {
-                 item.show = false
-                _that.templateimgarr.push(item);
-              });  
-            }
+              if(res){
+                _that.loading = false
+                _that.loadimgtemplate = false
+                _that.templatepage = _that.templatepage+1
+                _that.templatetotal = res.total
+                res.list.forEach(function (item) {
+                  item.show = false
+                  _that.templateimgarr.push(item);
+                });  
+              }
+            })
           })
         }
         

@@ -72,7 +72,7 @@ export default {
            content: this.uestrvalue,
         }
 
-        ilgcreations(param).then(res=>{
+        ilgcreations().then(res=>{
           if(res){
               getRelatedArticles(param).then(res=>{
                   if(res){  
@@ -105,30 +105,31 @@ export default {
     },
     watch:{
       uestrvalue:function(uestrvalue,newuestrvalue){
-        console.log(this.uestrvalue)
-       let param = {
+        let param = {
            content: this.uestrvalue,
         }
-        getRelatedArticles(param).then(res=>{
+        ilgcreations().then(res=>{
+          getRelatedArticles(param).then(res=>{
             if(res){  
-              this.Relatedarr = res.data 
+                this.Relatedarr = res.data 
 
-               this.Relatedarr.forEach((item,key)=>{
-                item.iscontent = false;
-                item.partcontent = item.content
-                if(item.content!==''){
+                this.Relatedarr.forEach((item,key)=>{
                   item.iscontent = false;
-                }else{
-                  item.iscontent  = true;
-                }
+                  item.partcontent = item.content
+                  if(item.content!==''){
+                    item.iscontent = false;
+                  }else{
+                    item.iscontent  = true;
+                  }
 
-                if(item.content.length>125){
-                    item.partcontent = item.content.slice(0,125) + '...';
-                }else{
-                    item.partcontent = item.content
-                }
-              })
-            }
+                  if(item.content.length>125){
+                      item.partcontent = item.content.slice(0,125) + '...';
+                  }else{
+                      item.partcontent = item.content
+                  }
+                })
+              }
+           })
         })
       }
       
@@ -147,14 +148,19 @@ export default {
 
       if(this.Relatedarr[index].isFavorite == true){
         this.Relatedarr[index].isFavorite = false
-        Articledell(param).then((res)=>{
+        ilgcreations().then(res=>{
+            Articledell(param).then((res)=>{
           
+            })
         })
+        
       }else{
         this.Relatedarr[index].isFavorite = true
-        Articleadd(param).then((res)=>{
+         ilgcreations().then(res=>{
+           Articleadd(param).then((res)=>{
           
-        })
+           })
+         })
       }
     },
     arrowupIconclick(index,item){

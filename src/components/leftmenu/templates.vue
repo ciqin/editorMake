@@ -156,7 +156,7 @@
 <script>
   import { classifygetAll } from '@/http/api'
   import { SearchShareAssets } from '@/http/api'
-  import { getTempleteSourceList } from '@/http/api'  // 获取模板
+  import { getTempleteSourceList,ilgcreations } from '@/http/api'  // 获取模板
   import { listObjects } from '@/http/api'           //稿库
   import { favorTemplate } from '@/http/api'           //模板收藏
   import { cancelFavorTemplate } from '@/http/api'           //取消模板收藏
@@ -292,35 +292,37 @@
                 page: this.Manuscrippage,
                 size: 10
             }
-            listObjects(Objectparam).then(res=>{
-              if(res){
-                let rescontent = res.content
-                _that.Manuscriptotal = res.totalElements
+            ilgcreations().then(res=>{
+                listObjects(Objectparam).then(res=>{
+                    if(res){
+                      let rescontent = res.content
+                      _that.Manuscriptotal = res.totalElements
 
-                rescontent.forEach(function (item) {
-                   _that.ManuscripIDarr.push(item.id)
-                })
+                      rescontent.forEach(function (item) {
+                        _that.ManuscripIDarr.push(item.id)
+                      })
 
-                let parmas ={
-                    uuids:_that.ManuscripIDarr
-                  }
-                FavoriteMixmdedia(parmas).then((res)=>{
-                  if(res){
-                     rescontent.forEach(function (item) {
-                        item.show=false
-                        if(res.data.indexOf(item.id)>=0){
-                           item.isFavorite = true
-                        }else{
-                           item.isFavorite = false
+                      let parmas ={
+                          uuids:_that.ManuscripIDarr
                         }
-                        _that.Manuscript.push(item);
-                      });
+                      FavoriteMixmdedia(parmas).then((res)=>{
+                        if(res){
+                          rescontent.forEach(function (item) {
+                              item.show=false
+                              if(res.data.indexOf(item.id)>=0){
+                                item.isFavorite = true
+                              }else{
+                                item.isFavorite = false
+                              }
+                              _that.Manuscript.push(item);
+                            });
 
-                     _that.loadingManuscript = false
+                          _that.loadingManuscript = false
 
-                  }
-                })
-              }
+                        }
+                      })
+                    }
+               }) 
             })
         }
       },
@@ -354,38 +356,54 @@
         if(arr == this.templateimgarr){
             if(this.templateimgarr[index].isFavorite==1){
                 this.templateimgarr[index].isFavorite = false
-                cancelFavorTemplate(param).then(res=>{ //取消模板收藏
-                  console.log(res)
+                ilgcreations().then(res=>{
+                  cancelFavorTemplate(param).then(res=>{ //取消模板收藏
+                    console.log(res)
+                  })
                 })
+                
             }else{
                 this.templateimgarr[index].isFavorite = true
-                favorTemplate(param).then(res=>{ //模板收藏
-                  console.log(res)
-                })
+                ilgcreations().then(res=>{
+                  favorTemplate(param).then(res=>{ //模板收藏
+                    console.log(res)
+                  }) 
+                })         
             }
         }else if(arr == this.Libraryarr){
            if(this.Libraryarr[index].isFavorite){
                 this.Libraryarr[index].isFavorite = false
-                Mediadell(libraryparam).then(res=>{ //取消媒资库收藏
-                  console.log(res)
+                ilgcreations().then(res=>{
+                  Mediadell(libraryparam).then(res=>{ //取消媒资库收藏
+                    console.log(res)
+                  })
                 })
+                
            }else{
                 this.Libraryarr[index].isFavorite = true
-                Mediadd(libraryparam).then(res=>{ //媒资库收藏
-                  console.log(res)
+                ilgcreations().then(res=>{
+                  Mediadd(libraryparam).then(res=>{ //媒资库收藏
+                    console.log(res)
+                  })
                 })
+                
            }
         }else if(arr == this.Manuscript){
           if(this.Manuscript[index].isFavorite == true){
             this.Manuscript[index].isFavorite = false
-            favoritedell(favoriteparam).then((res)=>{
+            ilgcreations().then(res=>{
+              favoritedell(favoriteparam).then((res)=>{
                
+              })
             })
           }else{
             this.Manuscript[index].isFavorite = true
-            favoriteadd(favoriteparam).then((res)=>{
+            ilgcreations().then(res=>{
+              favoriteadd(favoriteparam).then((res)=>{
 
+              })
             })
+           
           }
         }
         
@@ -413,11 +431,13 @@
              mediaType:this.value2, //类型
              tenantId:5 //组织id
          }
-         SearchShareAssets(Searchparam).then(res=>{  //媒资库检索
-           if(res){
-             this.loading = false
-             this.Libraryarr = res.data
-           }
+         ilgcreations().then(res=>{
+            SearchShareAssets(Searchparam).then(res=>{  //媒资库检索
+              if(res){
+                this.loading = false
+                this.Libraryarr = res.data
+              }
+            })
          })
       },
       searchtemplate(){
@@ -455,22 +475,25 @@
                 let parmas ={
                     uuids:_that.ManuscripIDarr
                   }
-                FavoriteMixmdedia(parmas).then((res)=>{
-                  if(res){
-                     rescontent.forEach(function (item) {
-                        item.show=false
-                        if(res.data.indexOf(item.id)>=0){
-                           item.isFavorite = true
-                        }else{
-                           item.isFavorite = false
-                        }
-                        _that.Manuscript.push(item);
-                      });
+                ilgcreations().then(res=>{
+                  FavoriteMixmdedia(parmas).then((res)=>{
+                    if(res){
+                      rescontent.forEach(function (item) {
+                          item.show=false
+                          if(res.data.indexOf(item.id)>=0){
+                            item.isFavorite = true
+                          }else{
+                            item.isFavorite = false
+                          }
+                          _that.Manuscript.push(item);
+                        });
 
-                       _that.loadingManuscript = false
+                        _that.loadingManuscript = false
 
-                  }
+                    }
+                  })
                 })
+                
               }
             })
       },
@@ -502,19 +525,21 @@
                 size: _that.ManuscrippageNum
             }
           if(_that.loadimg){
-            listObjects(Objectparam).then(res=>{
-            if(res){
-               _that.loadimg = false
-               _that.Manuscrippage = Number(_that.Manuscrippage)+1
-               _that.Manuscriptotal = res.totalElements
-                res.content.forEach(function (item) {
-                  item.show=false
-                  _that.Manuscript.push(item);
-                  _that.ManuscripIDarr.push(item.id)
-                }); 
+            ilgcreations().then(res=>{
+               listObjects(Objectparam).then(res=>{
+                if(res){
+                  _that.loadimg = false
+                  _that.Manuscrippage = Number(_that.Manuscrippage)+1
+                  _that.Manuscriptotal = res.totalElements
+                    res.content.forEach(function (item) {
+                      item.show=false
+                      _that.Manuscript.push(item);
+                      _that.ManuscripIDarr.push(item.id)
+                    }); 
 
-            }
-          })
+                }
+              })
+            }) 
           }
          
 
@@ -534,17 +559,19 @@
         }
 
         if(_that.loadimgtemplate){
+          ilgcreations().then(res=>{
             getTempleteSourceList(Listparam).then(res=>{
-            if(res){
-              _that.loading = false
-              _that.loadimgtemplate = false
-              _that.templatepage = _that.templatepage+1
-              _that.templatetotal = res.total
-              res.list.forEach(function (item) {
-                 item.show = false
-                _that.templateimgarr.push(item);
-              });  
-            }
+                if(res){
+                  _that.loading = false
+                  _that.loadimgtemplate = false
+                  _that.templatepage = _that.templatepage+1
+                  _that.templatetotal = res.total
+                  res.list.forEach(function (item) {
+                    item.show = false
+                    _that.templateimgarr.push(item);
+                  });  
+                }
+            })
           })
         }
         
