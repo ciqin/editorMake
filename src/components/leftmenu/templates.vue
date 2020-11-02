@@ -421,23 +421,8 @@
          })
       },
       searchtemplate(){
-        //获取标题模板
-         let Listparam = {
-            label: this.templateinput,
-            templeteType: 1,
-            status: 0,
-            size: 10,
-            page: 0,
-            sort: 'use_num,desc',
-            ContentType:true
-         }
-         getTempleteSourceList(Listparam).then(res=>{
-            if(res){
-              this.loading = false
-              this.templateimgarr = res.content
-            }
-         })
-
+        this.templateimgarr=[]
+        this.loadTemplates()
       },
       Manuscriptsearch(){
            let _that = this
@@ -537,9 +522,10 @@
       loadTemplates(){
         let _that = this
         _that.loadimgtemplate = true
+
         //获取标题模板
         let Listparam = {
-            label: '',
+            label: _that.templateinput,
             templeteType:_that.templeteType,
             status: 0,
             pageSize: _that.templatepageNum,

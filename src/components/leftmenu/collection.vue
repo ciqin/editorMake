@@ -230,28 +230,8 @@ export default {
         store.ueditor.setContent(item.templeteSource,true)
       },
       searchtemplate(){
-         let _that = this
-         //获取标题模板
-          let Listparam = {
-              label: _that.templateinput,
-              templeteType: 1,
-              status: 0,
-              size: _that.templatepageNum,
-              page: _that.templatepage,
-              sort: 'use_num,desc',
-              ContentType:true
-          }
-          getFavorTemplate(Listparam).then(res=>{
-              if(res){
-                _that.loading = false
-                _that.templatetotal = res.totalElements
-
-                res.content.forEach(function (item) {
-                  item.show = false
-                  _that.templateimgarr.push(item);
-                });  
-              }
-          })
+        this.templateimgarr=[]
+        this.loadTemplates()
       },
       Manuscriptsearch(){
         this.loadingmusc = true
@@ -342,7 +322,7 @@ export default {
         _that.loadimgtemplate = true
         //获取标题模板
         let Listparam = {
-            label: '',
+            label:  _that.templateinput,
             templeteType:_that.templeteType,
             status: 0,
             pageSize: _that.templatepageNum,
