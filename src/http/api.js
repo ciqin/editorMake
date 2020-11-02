@@ -2,9 +2,9 @@
  * 此文件为接口统一管理文件
  */
 const swaggerApi = "http://192.168.18.12:9117";
-const caiApi = "http://qhcloudhongqi.wengegroup.com:9080";
+// const caiApi = "http://qhcloudhongqi.wengegroup.com:9080";
 // 本地调试接口
-// const caiApi = "http://127.0.0.1:9080";
+const caiApi = "http://127.0.0.1:9080";
 const hongApi = "http://qhcloudhongqi.wengegroup.com:9116"
 
 import { getHttp, postHttp } from "./httpService"
@@ -48,7 +48,6 @@ export const sensitivityAnalysis = data => postHttp(caiApi+'/ilgcreation/text/ch
 export const newSignature = data => getHttp(caiApi+'/sprint/rest/stories/'+libId+'/'+newManuscriptId+'/tags/edit?type=COMPO', data)
 
 // 自动保存
-
 export const newSave = data => postHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/save/smartWrite/process', data)
 
 // 获取模板
@@ -85,11 +84,13 @@ export const getFavoriteMixmdedias = data => getHttp(caiApi+'/ilgcreation/favori
 export const Articleadd = data => postHttp(caiApi+'/ilgcreation/favoriteArticle/add', data)
 
 //关联文章取消收藏
-export const Articledell = data => postHttp(caiApi+'/ilgcreation/favoriteArticle/dell', data)
+export const Articledell = data => postHttp(caiApi+'/ilgcreation/favoriteArticle/del', data)
 
-//我的收藏
+//我的模板收藏
 export const getFavorTemplate = data => postHttp(caiApi+'/sprint/rest/story/getFavorTemplate', data)
 
+//我的关联收藏
+export const getTopics = data => postHttp(caiApi+'/ilgcreation/favoriteArticle/getTopics', data)
 
 // 获取按钮接口
 export const listBtn = data => postHttp(caiApi+'/sprint/rest/story/'+libId+'/'+newManuscriptId+'/actions/edit', data)

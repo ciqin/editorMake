@@ -112,7 +112,7 @@
 
         <div class='infinite-list-wrapper' v-loading="loadingManuscript">
             <div v-if="Manuscript.length>0 && loadingManuscript==false"  style="height: 746px;overflow-y: auto;margin-top: 20px;" v-infinite-scroll="loadManuscript" infinite-scroll-disabled="disabled">
-              <div class="third_libisryarr" v-for="(item,key) in Manuscript" :key = key @click='ManuscriptClick(item)'>
+              <div class="third_libisryarr" v-for="(item,key) in Manuscript" :key = key>
                  <div v-if="item.thumbnailUrl && item.htmlContent" style='display: flex;position: relative;' :class="{show_list_start:item.show===true}" @mouseover="collectionIconmouseover(key,item,Manuscript)"  @mouseout="collectionIconmouseout(key,item,Manuscript)">
                       <div class='third_libisryarr_list'> 
                            <div class='collection_icon' @click.stop="collectionIconclick(key,Manuscript)" :class='item.isFavorite==true ? "collectionAcitve" : "nocollectionAcitve" '>
@@ -126,6 +126,7 @@
                         <p class='third_libisryarr_botal_title'><span class='third_libisryarr_botal_biaoshi'>图文</span>{{item.title?item.title:'暂无标题'}}</p>
                         <p>{{item.time}}</p>
                       </div>
+                      <div class='preview'><span @click="preview(item)"><i class='el-icon-view'></i>预览</span><span @click='ManuscriptClick(item)'><i  class='el-icon-download'></i>插入</span></div>     
                  </div>
 
                  <div v-else-if="!item.thumbnailUrl && item.htmlContent" :class="{show_list_start:item.show===true}" @mouseover="collectionIconmouseover(key,item,Manuscript)"  @mouseout="collectionIconmouseout(key,item,Manuscript)">
@@ -133,7 +134,8 @@
                           <div class='collection_icon'  @click.stop="collectionIconclick(key,Manuscript)" :class='item.isFavorite==true ? "collectionAcitve" : "nocollectionAcitve" '>
                               <i class="el-icon-star-on"></i>
                           </div> 
-                        <p class='third_libisryarr_botal_title'>{{item.title}}</p>
+                          <p class='third_title'>{{item.title}}</p>
+                          <div class='preview'><span @click="preview(item)"><i class='el-icon-view'></i>预览</span><span @click='ManuscriptClick(item)'><i  class='el-icon-download'></i>插入</span></div>     
                       </div>
                  </div>
               </div>
@@ -506,6 +508,12 @@
       ManuscriptClick(item){
           store.ueditor.setContent(item.htmlContent)
       },
+      preview(item){
+        let str=`<div style='width: 1000px;height: 800px;overflow-y: auto;'>${item.htmlContent}</div>`
+        this.$alert(str, item.title, {
+          dangerouslyUseHTMLString: true
+        });
+      },
       collectionIconmouseover(){
       
       },
@@ -600,6 +608,9 @@
   };
 </script>
 <style>
+   .el-message-box{
+     min-width: 420px;
+   }
    .nav_top_temlaptes .el-input__icon{
      line-height: 36px;
    }
@@ -802,12 +813,29 @@
    box-shadow: inset 0 0 10px 0px #ccc;
  }
 .third_libisryarr_botal{
-    padding:10px
+    padding:10px;
+    height: 124px;
 }
 .third_libisryarr_botal_title{
-    font-size:15px;
-    line-height:25px;
-    display:inline-block
+    font-size: 14px;
+    line-height: 22px;
+    height: 92px;
+    display:inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+}
+.third_title{
+    height: 90px;
+    font-size: 14px;
+    line-height: 22px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
 }
 .third_libisryarr_botal_biaoshi{
        display: inline-block;
@@ -847,5 +875,20 @@
 .show_list_start .collection_icon{
    display: block;
    cursor: pointer;
+}
+.preview{
+  font-size: 14px;
+  position: absolute;
+  right: 7px;
+  bottom: 9px;
+  font-weight: bold;
+}
+.preview span{
+  margin-right: 10px;
+  cursor: pointer;
+} 
+
+.preview span i{
+  margin-right: 5px;
 }
 </style>

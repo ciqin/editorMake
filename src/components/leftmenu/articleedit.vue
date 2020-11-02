@@ -19,8 +19,8 @@
 
               <div v-if='item.content!=""'>
                 <div class="acticle_list_bottom">
-                  <div class='acticle_list_content' v-if="item.iscontent">{{item.content}}</div>
-                  <div class='acticle_list_content' v-else>{{item.partcontent}}</div>
+                  <div class='acticle_list_content' v-if="item.iscontent" @mouseup="listcontentup">{{item.content}}</div>
+                  <div class='acticle_list_content' v-else @mouseup="listcontentup">{{item.partcontent}}</div>
                   <div class='acticle_list_keyword'>关联点：{{item.words}}</div>
                   <div class='acticle_list_Similarity'>关联度：{{item.similarity}}</div>
                 </div>
@@ -30,6 +30,11 @@
                     <div class='acticle_list_keyword'>关联点：{{item.words}}</div>
                     <div class='acticle_list_Similarity' style="padding-bottom: 10px;">关联度：{{item.similarity}}</div>
               </div>
+          </div>
+
+          <div class="Tooltip" :style="Tooltipstyle">
+              <div class="arrow"></div>
+              <p @click="Tooltipbtn">插入正文</p>
           </div>
         </div>
         <div v-else-if="Relatedarr.length==0 && loading==false">
@@ -42,6 +47,7 @@
 <script>
 import { getRelatedArticles } from '@/http/api'
 import { Articleadd } from '@/http/api'
+import { Articledell } from '@/http/api'
 export default {
     props:{
        uestrvalue:String
@@ -53,7 +59,9 @@ export default {
         collectionIndex:0,
         arrowupIndex:false,
         Relatedarr:[],
-        loading:true
+        loading:true,
+        text:'',//滑过获取关联文章
+        Tooltipstyle:'display:none',//滑过获取关联文章样式
       };
     },
     mounted(){
@@ -156,6 +164,20 @@ export default {
       })
       this.Relatedarr = newList;
 
+    },
+    listcontentup(e){
+       let texts = window.getSelection().toString();
+        if(texts!=''){
+          this.text = texts;
+          this.Tooltipstyle = `position: fixed;top:${e.pageY - e.offsetY - 10}px;left:${e.pageX}px;z-index: 999;width: 80px;height: 40px;border:1px solid #ccc;background: #fff;line-height: 40px;display: inline-block;border-radius: 5px;vertical-align: top;`
+        }else{
+          this.text = '';
+          this.Tooltipstyle = 'display:none'
+        }
+    },
+    Tooltipbtn(){
+      store.ueditor.setContent(this.text,true)
+      this.Tooltipstyle = 'display:none'
     }
     }
 }
@@ -308,5 +330,10 @@ export default {
     text-align: center;
     line-height: 60px;
     color: #D72323;
+}
+.Tooltip p{
+   text-align: center;
+   font-size: 14px;
+   cursor: pointer;
 }
 </style>
