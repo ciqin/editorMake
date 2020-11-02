@@ -77,6 +77,10 @@ export default {
                 })
                 this.tableData = listWord;
               }else {
+                this.tableData = [{
+                        date: '无',
+                        name: '无',
+                    }];
                 this.$message('没有敏感词');
               }
               store.ueditor.setContent(res.data[0].content.high);

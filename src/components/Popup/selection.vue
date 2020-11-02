@@ -55,7 +55,7 @@ export default {
             this.show = true;
         },
         submit(){
-            subSelect({targetType:this.radio,targetUuid:departmentId}).then(res=>{
+            subSelect({targetType:this.radio,targetUuid:this.departmentId,ContentType:true}).then(res=>{
                 if(res) {
                     this.$message({
                         message: '选用成功！',

@@ -48,11 +48,14 @@ export default {
       res.channel.column.forEach(item=>{
         this.column.push(item.name)
       })
-      this.value1 = this.timestampToTime (res.channel.issueDate)
+      this.value1 = this.timestampToTime(res.channel.issueDate)
     })
   },
   methods:{
     submit(){
+      if(typeof this.value1 =="object") {
+        this.value1 = this.timestampToTime(this.value1.getTime())
+      }
       let data = {
           channel:this.channel,
           uuid:this.uuid,

@@ -96,7 +96,7 @@ button{outline-style: none;}
 .edui-default .edui-editor {
   border: 0;
 }
-.correction tbody .el-table_1_column_1 .cell{
+.correction tbody .el-table__row td:nth-child(1) .cell{
   color: #EA5E5E;
 }
 </style>

@@ -4,10 +4,10 @@
             <el-form ref="form" :model="form" label-width="80px">
                 <el-form-item label="文章封面">
                     <el-radio-group v-model="radio">
+                        <el-radio :label="12" @change="coverNone">无图</el-radio>
                         <el-radio :label="3" @change="coverSmall">小图</el-radio>
                         <el-radio :label="6" @change="coverBig">大图</el-radio>
                         <el-radio :label="9" @change="coverMany">三图</el-radio>
-                        <el-radio :label="12" @change="coverNone">无图</el-radio>
                     </el-radio-group>
                 </el-form-item>
             <el-form-item label=""  class="cover">  
@@ -93,7 +93,16 @@
                     </div>
                 </el-form-item>
                 <el-form-item label="摘要">
-                    <el-input type="textarea" v-model="form.summary"  size="mini"></el-input>
+                    <!-- <el-input type="textarea" v-model="form.summary"  size="mini" resize="none" maxlength="30"></el-input> -->
+                    <el-input
+                        type="textarea"
+                        placeholder="请输入内容"
+                        v-model="form.summary"
+                        maxlength="150"
+                        resize="none"
+                        show-word-limit>
+                    </el-input>
+                    <el-button @click="automaticSummary"  size="mini" style="float:right;position:relative;top:10px">自动摘要</el-button>
                 </el-form-item>
                 <el-form-item label="来源">
                     <el-select v-model="form.origination" placeholder="请选择来源"  size="mini">
@@ -129,7 +138,9 @@
                         @blur="handleInputConfirm">
                         </el-input>
                         <el-button v-else class="button-new-tag" size="small" @click="showInput">+</el-button>
+                        <el-button  size="small" @click="hasWord">抽取关键词</el-button>
                     </div>
+                    
                 </el-form-item>
                 <el-form-item label="稿件级别">
                     <el-select v-model="form.levelId" placeholder="请选择" size="mini">
@@ -180,13 +191,18 @@
                 <el-form-item label="">
                     <!-- <el-checkbox label="引题" name="type"></el-checkbox>
                     <el-checkbox label="副题" name="type"></el-checkbox> -->
-                    <el-checkbox label="自动保存"></el-checkbox>
+                    <el-checkbox label="自动保存" @change="autoSave" v-model="form.autoSaveId"></el-checkbox>
                     <el-checkbox label="有水印" v-model="form.properties.watermark"></el-checkbox>
                     <el-checkbox label="广告" v-model="form.properties.ad"></el-checkbox>
                     <el-checkbox label="可评论" v-model="form.canComment"></el-checkbox>
                 </el-form-item>
                 <el-form-item label="备注">
-                    <el-input type="textarea" v-model="form.comment"  size="mini"></el-input>
+                    <el-input  type="textarea"
+                        placeholder="请输入内容"
+                        v-model="form.comment"
+                        maxlength="150"
+                        resize="none"
+                        show-word-limit></el-input>
                 </el-form-item>
             </el-form>
         </div>
@@ -194,9 +210,12 @@
 </template>
 <script>
 import ImgCutter from 'vue-img-cutter'
-import {newSignature} from '@/http/api'
+import {newSignature,extractingKeywords} from '@/http/api'
 import { store , mutations} from '@/store'
 import {mapActions, mapGetters} from 'vuex';
+// 加载jquery
+import $ from "jquery"
+
 export default {
     name: 'Signature',
     data(){
@@ -222,6 +241,7 @@ export default {
                 comment:"",
                 canComment: false,
                 linkHeadline:"",
+                autoSaveId:false,
                 properties:{
                     ad: false,
                     leadinLineUrl: "",
@@ -238,50 +258,15 @@ export default {
                         levelId:1,
                         name:"普通稿"
                     },{
-                        levelId:2,
+                        levelId:3,
                         name:"重要稿"
                     },{
-                        levelId:3,
+                        levelId:2,
                         name:"急稿"
                     }
                 ],
                 levelId:1,
-                // IntroductionList:[
-                //     {
-                //         index:0,
-                //         name:"默认"
-                //     },{
-                //         index:1,
-                //         name:"强调"
-                //     },{
-                //         index:2,
-                //         name:"一般"
-                //     },{
-                //         index:3,
-                //         name:"明亮"
-                //     },{
-                //         index:4,
-                //         name:"淡雅"
-                //     }
-                // ],
-                // leadinLineStyle:0,
-                // classificationList:[
-                //     {
-                //         index:0,
-                //         name:"网稿"
-                //     },{
-                //         index:1,
-                //         name:"自采"
-                //     },{
-                //         index:2,
-                //         name:"编译"
-                //     },{
-                //         index:3,
-                //         name:"改写"
-                //     }
-                // ],
-                // originalCategory:0,
-                coverType:1,
+                coverType:0,
                 addImg:"http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png",
                 opaImg1:"http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png",
                 opaImg2:"http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png",
@@ -317,8 +302,8 @@ export default {
                 opaImg:false,
                 baseUrl:""
             },
-            radio: 3,
-            opaBtn1:true,
+            radio: 12,
+            opaBtn1:false,
             opaBtn2:false,
             opaBtn3:false,
             none:"none"
@@ -329,6 +314,38 @@ export default {
         ...mapGetters(['resTitle']),
     },
     methods :{ 
+    // 自动摘要
+    automaticSummary(){
+        this.form.summary = $(store.ueditor.body).find("p").html();
+    },   
+    // 抽取关键词
+    hasWord(){
+        let data = {
+            content:store.ueditor.getContentTxt(),
+            ContentType:true
+        }
+        extractingKeywords(data).then(res=>{
+            if(res){
+                this.form.dynamicTags = res;
+            }else{
+                this.$message({
+                    message: '没有获取到关键词！',
+                    type: 'success'
+                });
+            }
+        })
+    },
+    // 自动保存
+    autoSave(){
+        let timer = null; 
+        if(this.form.autoSaveId){
+            timer = setInterval(() => {
+                document.querySelector(".autoClick").click()
+            }, 300000);
+        }else {
+            clearInterval(timer)
+        }
+    },
     xztpCutDownSmall(fileName) { 
         this.form.opaImg1 = fileName.dataURL
     },
@@ -540,5 +557,8 @@ export default {
 }
 .el-radio {
     margin-right: 24px;
+}
+.el-textarea__inner {
+    padding-right:44px;
 }
 </style>
