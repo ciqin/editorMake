@@ -578,7 +578,7 @@
 </script>
 <style>
    .el-message-box{
-     min-width: 420px;
+     width: 1100px;
    }
    .nav_top_temlaptes .el-input__icon{
      line-height: 36px;

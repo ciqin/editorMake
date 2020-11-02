@@ -553,7 +553,6 @@ export default {
 
                         let selection = _that.instance.selection._bakRange
                         let str = _that.instance.getContentTxt()
-                        console.log(str)
                         //do something
                         if(nKeyCode==13){
                          _that.ueconter = str
@@ -568,6 +567,7 @@ export default {
                             let i = uearr.length-2<0?0:uearr.length-2
                             _that.ueconter = uearr[i]
                         }
+                        console.log(_that.ueconter)
                         _that.$emit('listenEvent',_that.ueconter)
                     })
 
