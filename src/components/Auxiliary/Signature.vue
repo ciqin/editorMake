@@ -316,7 +316,15 @@ export default {
     methods :{ 
     // 自动摘要
     automaticSummary(){
-        this.form.summary = $(store.ueditor.body).find("p").html();
+        let html = $(store.ueditor.body).find("p").html();
+        if(!html || /\<br\>/.test(html)){
+            this.$message({
+                message: '内容为空！',
+                type: 'success'
+            });
+        }else {
+            this.form.summary = $(store.ueditor.body).find("p").html();
+        }
     },   
     // 抽取关键词
     hasWord(){
