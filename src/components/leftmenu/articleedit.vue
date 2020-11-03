@@ -46,8 +46,8 @@
 </template>
 <script>
 import { getRelatedArticles } from '@/http/api'
-import { Articleadd } from '@/http/api'
-import { Articledell,ilgcreations } from '@/http/api'
+import { Articleadd,Articledell,ilgcreations} from '@/http/api'
+import { store } from '@/store'
 export default {
     props:{
        uestrvalue:String
@@ -105,6 +105,7 @@ export default {
     },
     watch:{
       uestrvalue:function(uestrvalue,newuestrvalue){
+        console.log(uestrvalue)
         let param = {
            content: this.uestrvalue,
         }
