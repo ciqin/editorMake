@@ -72,7 +72,7 @@
                     </el-row>
                     
                 </el-form-item>
-                <el-form-item label="文章封面"  class="cover">
+                <el-form-item label="分享封面"  class="cover">
                     <div  style="padding-top:12px;">
                         <ImgCutter ref="imgCutterModal0"
                                     :cross-origin="true"
