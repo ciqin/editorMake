@@ -2,9 +2,9 @@
  * 此文件为接口统一管理文件
  */
 const swaggerApi = "http://192.168.18.12:9117";
-// const caiApi = "http://qhcloudhongqi.wengegroup.com:9080";
+const caiApi = "http://qhcloudhongqi.wengegroup.com:9080";
 // 本地调试接口
-const caiApi = "http://127.0.0.1:9080";
+// const caiApi = "http://127.0.0.1:9080";
 const hongApi = "http://qhcloudhongqi.wengegroup.com:9116"
 
 import { getHttp, postHttp } from "./httpService"
@@ -131,6 +131,9 @@ export const hasDepartment = data => getHttp(caiApi+'/sprint/security/groups/lea
 
 // 送审获取数据接口
 export const hasCensorship = data => getHttp(caiApi+'/sprint/rest/story/'+libId+'/'+newManuscriptId+'/submit/approve', data)
+
+// 自审提交
+export const hasCollate = data => postHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/collate/process', data)
 
 // 送审接口
 export const submitCensorship = data => postHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/submit/approve/process', data)

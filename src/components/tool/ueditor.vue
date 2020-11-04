@@ -8,8 +8,9 @@
                <li v-if="storyDeliver"><el-button type="text" @click="opaBtn1"><a href="javascript:" style="color:#fff;"><i class="el-icon-position" style="color: #d72323;font-size: 18px;"></i></a><span>传稿</span></el-button></li>
                <li v-if="storyCheckin"><el-button type="text" @click="opaBtn2"><a href="javascript:" style="color:#fff;"><i class="el-icon-link" style="color: #d72323;font-size: 18px;"></i></a><span>签入</span></el-button></li>
                <li v-if="storySubmit"><el-button type="text" @click="opaBtn3"><a href="javascript:" style="color:#fff;"><i class="el-icon-finished" style="color: #d72323;font-size: 18px;"></i></a><span>提交</span></el-button></li>
-               <!-- <li v-if="storyCheckin"><el-button type="text" @click="opaBtn4"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>测试</span></el-button></li> -->
+               <!-- <li v-if="storyCheckin"><el-button type="text" @click="opaBtn4"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>自审</span></el-button></li> -->
                 <li v-if="storySubmitApprove"><el-button type="text" @click="censorshipfun"><a href="javascript:" style="color:#fff;"><i class="el-icon-top" style="color: #d72323;font-size: 18px;"></i></a><span>送审</span></el-button></li>
+                <li v-if="collate"><el-button type="text" @click="collateFun"><a href="javascript:" style="color:#fff;"><i class="el-icon-s-operation" style="color: #d72323;font-size: 18px;"></i></a><span>自审</span></el-button></li>
                <li v-if="storyApprovePass"><el-button type="text" @click="adoptFun"><a href="javascript:" style="color:#fff;"><i class="el-icon-s-operation" style="color: #d72323;font-size: 18px;"></i></a><span>通过</span></el-button></li>
                <li v-if="storyApprovePassAll"><el-button type="text" @click="finalJudgment"><a href="javascript:"  style="color:#fff;"><i class="el-icon-upload2" style="color: #d72323;font-size: 18px;"></i></a><span>终审</span></el-button></li>
                <li v-if="storyApproveDeny"><el-button type="text" @click="rejectFun"><a href="javascript:" @click="hasUe" style="color:#fff;"><i class="el-icon-sort-down" style="color: #d72323;font-size: 18px;"></i></a><span>驳回</span></el-button></li>
@@ -24,7 +25,7 @@
                 </li>
                 <li @mouseenter="onMouseOver" @mouseleave="onMouseOut" style="position:relative;"><a href="javascript:">
                     <img src="@/assets/icon3.png" width="20" alt=""></a>下载
-                    <div style="position:absolute;left: 36px;top: 5px;">
+                    <div style="position:absolute;left: 36px;top: -26px;">
                         <transition name="fade">
                             <ul class="download" v-if="show" >
                                 <li @click="downloadImg">下载img</li>
@@ -334,6 +335,7 @@ export default {
             ChangeTime:false,
             contribution:false,
             manyContribution:false,
+            collate:false,
             styles:{
                 "width":"348px",
                 "height": "638.5px",
@@ -405,6 +407,9 @@ export default {
                         break;
                     case "story-deep-retract":
                         this.manyContribution = true;
+                        break;
+                    case "story-collate":
+                        this.collate = true;
                         break;
                 }
             })
@@ -507,6 +512,16 @@ export default {
         contributionFun(){
             withdraw().then(res=>{
 
+            })
+        },
+        collateFun(){
+            hasCollate().then(res=>{
+                if(res){
+                    this.$message({
+                        message: '自审成功！',
+                        type: 'success'
+                    });
+                }
             })
         },
         // 通过
@@ -698,7 +713,10 @@ export default {
                     mutations.setobjid(res.id);
                     /\_blank/.test(res.id)?"":this.$store.dispatch("modifyIsNew",false);
                     // 触发主页面刷新事件
-                    self.opener.document.querySelector(".fa-refresh").click();
+                    setTimeout(() => {
+                        self.opener.$LibrarySearchController.searchObjects()
+                    }, 500);
+                    
                 })
             }else {
                 newSave(newData).then(res=>{
@@ -711,7 +729,9 @@ export default {
                     mutations.setobjid(res.id);
                     /\_blank/.test(res.id)?"":this.$store.dispatch("modifyIsNew",false);
                     // 触发主页面刷新事件
-                    self.opener.document.querySelector(".fa-refresh").click();
+                    setTimeout(() => {
+                        self.opener.$LibrarySearchController.searchObjects()
+                    }, 500);
                 })
             }
         },
@@ -941,7 +961,7 @@ export default {
     border-left: 8px solid transparent;
     border-bottom: 8px solid #fff;
     transform: rotate(-90deg);
-    top: 5px;
+    top: 43px;
     left: -11px;
 }
 .mobileContainer {
