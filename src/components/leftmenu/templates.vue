@@ -23,7 +23,7 @@
                     </div>
                 </li>
 
-                 <p v-if="!loadimgtemplate" style='text-align:center'>加载中...</p>
+                 <p v-if="loadimgtemplate" style='text-align:center'>加载中...</p>
                  <p v-if="templatenoMore" style='text-align:center'>没有更多了</p>
               </ul>
             
@@ -140,7 +140,7 @@
                  </div>
               </div>
 
-              <p v-if="!loadimg" style='text-align:center'>加载中...</p>
+              <p v-if="loadimg" style='text-align:center'>加载中...</p>
               <p v-if="collectionnoMore" style='text-align:center'>没有更多了</p>
             </div>
             <div v-else-if='Manuscript.length ==0 && loadingManuscript==false'>
@@ -458,7 +458,6 @@
       Manuscriptsearch(){
            let _that = this
            _that.loadingManuscript = true
-           _that.loadimg = true
            _that.Manuscript=[];
            _that.ManuscripIDarr=[]
            let Objectparam = {
@@ -473,7 +472,7 @@
                 startDate:_that.datavalue,
                 endDate:_that.datavalue
             }
-          if(_that.loadimg){
+          if(_that.Manuscript.length!==_that.Manuscriptotal){
              ilgcreations().then(res=>{
                 templatelist(Objectparam).then(res=>{
                   if(res){
@@ -564,7 +563,7 @@
             getTempleteSourceList(Listparam).then(res=>{
                 if(res){
                   _that.loading = false
-                  _that.templatepage = _that.templatepage+1
+                  _that.templatepage = Number(_that.templatepage)+1
                   _that.templatetotal = res.total
                   res.list.forEach(function (item) {
                     item.show = false
