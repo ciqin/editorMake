@@ -57,7 +57,10 @@ export const newSave = data => postHttp(caiApi+'/sprint/rest/workflow/stories/'+
 export const getTempleteSourceList = data => postHttp(caiApi+'/ilgcreation/rmtTempleteSource/getTempleteSourceList', data)
 
 //稿库
-export const listObjects = data => postHttp(caiApi+'/sprint/view/libraries/'+libId+'/smartWrite/listObjects', data)
+export const templatelist = data => postHttp(caiApi+'/sprint/view/libraries/'+libId+'/smartWrite/listObjects', data)
+
+//稿库
+export const listObjects = data => postHttp(caiApi+'/sprint/view/libraries/'+libId+'/smartWrite/favor/listObjects', data)
 
 //模板添加收藏
 export const favorTemplate = data => postHttp(caiApi+'/ilgcreation/rmtTempleteSource/favorTemplate', data)

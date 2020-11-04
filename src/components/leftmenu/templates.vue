@@ -157,7 +157,7 @@
   import { classifygetAll } from '@/http/api'
   import { SearchShareAssets } from '@/http/api'
   import { getTempleteSourceList,ilgcreations } from '@/http/api'  // 获取模板
-  import { listObjects } from '@/http/api'           //稿库
+  import { templatelist } from '@/http/api'           //稿库
   import { favorTemplate } from '@/http/api'           //模板收藏
   import { cancelFavorTemplate } from '@/http/api'           //取消模板收藏
   import { Mediadd } from '@/http/api'      //媒资库收藏
@@ -256,7 +256,6 @@
               }
             })
 
-            this.loading = true
             if(this.value1=='分类' || this.value2=='全部'){
               this.value1 = 1
               this.value2 = 0
@@ -280,20 +279,21 @@
             })
         }else if(tab.label=='稿库'){
             let _that = this
+            _that.loadingManuscript = true
             _that.ManuscripIDarr=[]
             _that.Manuscript = []
             let Objectparam = {
-                ContentType:true,
+               ContentType:true,
                 keywords: '',
                 library: 'manuscript',
                 types: 'TEXT,COMPO,LIVE',
                 excludedIds: this.$route.query.id,
                 editorType: 'COMPO',
-                page: this.Manuscrippage,
-                size: 10
+                number: this.Manuscrippage,
+                count: 10
             }
             ilgcreations().then(res=>{
-                listObjects(Objectparam).then(res=>{
+                templatelist(Objectparam).then(res=>{
                     if(res){
                       let rescontent = res.content
                       _that.Manuscriptotal = res.totalElements
@@ -324,17 +324,24 @@
                     }
                }) 
             })
+        }else if(tab.label=='模板'){
+          this.templateimgarr=[]
+          this.templatepage=0
+          this.loading = true
+          this.loadTemplates();
         }
       },
       templeteSource(index,item){
-        store.ueditor.setContent(item.templeteSource,true)
+        store.ueditor.focus()
+        store.ueditor.execCommand('inserthtml',item.templeteSource)
       },
       templatearrclick(index){
-         let _that = this
-         _that.templateimgarr=[]
-         _that.texttemp = index
-         _that.templeteType = index+1
-         this.loadTemplates()
+          this.templateimgarr=[]
+          this.templatepage=0
+          this.loading = true
+          this.texttemp = index
+          this.templeteType = index+1
+          this.loadTemplates()
       },
       collectionIconclick(index,arr){
         let param = {
@@ -415,7 +422,9 @@
        }else if(item.fileFormat=='jpg'){
          str=`<img src=${item.url} alt="">`
        }
-       store.ueditor.setContent(str,true)
+
+       store.ueditor.focus()
+       store.ueditor.execCommand('inserthtml',str)
       },
       searchShare(){
          this.loading = true
@@ -442,11 +451,13 @@
       },
       searchtemplate(){
         this.templateimgarr=[]
+        this.templatepage=0
+        this.loading = true
         this.loadTemplates()
       },
       Manuscriptsearch(){
            let _that = this
-           _that.loading = true
+           _that.loadingManuscript = true
            _that.Manuscript=[];
            _that.ManuscripIDarr=[]
            let Objectparam = {
@@ -461,7 +472,7 @@
                 startDate:_that.datavalue,
                 endDate:_that.datavalue
             }
-            listObjects(Objectparam).then(res=>{
+            templatelist(Objectparam).then(res=>{
               if(res){
                 _that.loading = false
                 let rescontent = res.content
@@ -498,7 +509,8 @@
             })
       },
       ManuscriptClick(item){
-          store.ueditor.setContent(item.htmlContent)
+          store.ueditor.focus()
+          store.ueditor.execCommand('inserthtml',item.htmlContent)
       },
       preview(item){
         let str=`<div style='width: 1000px;height: 800px;overflow-y: auto;'>${item.htmlContent}</div>`
@@ -526,7 +538,7 @@
             }
           if(_that.loadimg){
             ilgcreations().then(res=>{
-               listObjects(Objectparam).then(res=>{
+               templatelist(Objectparam).then(res=>{
                 if(res){
                   _that.loadimg = false
                   _that.Manuscrippage = Number(_that.Manuscrippage)+1

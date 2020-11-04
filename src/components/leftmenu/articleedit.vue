@@ -105,7 +105,6 @@ export default {
     },
     watch:{
       uestrvalue:function(uestrvalue,newuestrvalue){
-        console.log(uestrvalue)
         let param = {
            content: this.uestrvalue,
         }

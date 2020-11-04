@@ -50,7 +50,7 @@
 
            <div v-loading="loadingmusc">
               <div class='infinite-list-wrapper'>
-                  <div v-if="Manuscriptidarr.length>0 && loading==false"  style="height: 872px;overflow-y: auto;margin-top: 20px;" >
+                  <div v-if="Manuscriptidarr && loading==false"  style="height: 872px;overflow-y: auto;margin-top: 20px;" >
                         <div class="third_libisryarr" v-for="(item,key) in Manuscript" :key = key @click='ManuscriptClick(item)'>
                                  <div v-if="item.thumbnailUrl && item.htmlContent" style='display: flex;position: relative;' :class="{show_list_start:item.show===true}">
                                       <div class='third_libisryarr_list'> 
@@ -75,9 +75,9 @@
                                         <p class='third_libisryarr_botal_title'>{{item.title}}</p>
                                       </div>
                                  </div>
-                              </div>
+                        </div>
                   </div>
-                  <div v-else-if='Manuscriptidarr.length==0 && loading==false'>
+                  <div v-else-if='!Manuscriptidarr && loading==false'>
                       <p style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;'><i class='el-icon-warning-outline'></i>暂无数据</p>
                   </div>
               </div>
@@ -146,7 +146,7 @@ export default {
       templatetotal:'',//模板的总条数
 
       Manuscript:[],   //稿件从template的所有数据
-      Manuscriptidarr:[],//收藏的id
+      Manuscriptidarr:{},//收藏的id
       Manuscriptinput:'', //稿库的检索的字
       datavalue: '', //稿件时间检索
 
@@ -171,21 +171,24 @@ export default {
           ilgcreations().then(res=>{
              getFavoriteMixmdedias().then((res)=>{
               this.loadingmusc = false
-              this.Manuscriptidarr = res.data
-
+              res.data.forEach((item,key)=>{
+                let uuid = item.uuid
+                this.Manuscriptidarr[`${item.uuid}`]=item.createTime
+              })
               let Objectparam = {
-                  ContentType:true,
-                  keywords: '',
+                  keywords: this.Manuscriptinput,
                   library: 'manuscript',
                   types: 'TEXT,COMPO,LIVE',
                   excludedIds: this.$route.query.id,
                   editorType: 'COMPO',
-                  page: this.Manuscrippage,
-                  size: 10,
-                  ids:res.data
+                  number: this.Manuscrippage,
+                  count: 10,
+                  favorIds:JSON.stringify(this.Manuscriptidarr),
+                  startDate:this.datavalue,
+                  endDate:this.datavalue,
+                  ContentType:true,
               }
               listObjects(Objectparam).then((res)=>{
-                  console.log(res)
                   this.Manuscript = res.content
               })
             })
@@ -218,12 +221,15 @@ export default {
                             item.partcontent = item.content
                         }
                     })
-                    console.log(res)
-                    console.log(this.Relatedarr)
                   }
               })
           })
          
+        }else if(tab.label=='模板'){
+          this.templateimgarr=[]
+          this.templatepage=0
+          this.loading = true
+          this.loadTemplates();
         }
       },
       templatearrclick(index){
@@ -234,7 +240,8 @@ export default {
         this.loadTemplates()
       },
       templeteSource(index,item){
-        store.ueditor.setContent(item.templeteSource,true)
+        store.ueditor.focus()
+        store.ueditor.execCommand('inserthtml',item.templeteSource)
       },
       searchtemplate(){
         this.templateimgarr=[]
@@ -245,25 +252,26 @@ export default {
         ilgcreations().then(res=>{
            getFavoriteMixmdedias().then((res)=>{
             this.loadingmusc = false
-            this.Manuscriptidarr = res.data
-
-            let Objectparam = {
-                ContentType:true,
-                keywords: this.Manuscriptinput,
-                library: 'manuscript',
-                types: 'TEXT,COMPO,LIVE',
-                excludedIds: this.$route.query.id,
-                editorType: 'COMPO',
-                page: this.Manuscrippage,
-                size: 10,
-                ids:res.data,
-                startDate:this.datavalue,
-                endDate:this.datavalue
-            }
-            listObjects(Objectparam).then((res)=>{
-                this.loadingmusc = false
-                this.Manuscript = res.content
-            })
+            res.data.forEach((item,key)=>{
+                let uuid = item.uuid
+                this.Manuscriptidarr[`${item.uuid}`]=item.createTime
+              })
+              let Objectparam = {
+                  keywords: this.Manuscriptinput,
+                  library: 'manuscript',
+                  types: 'TEXT,COMPO,LIVE',
+                  excludedIds: this.$route.query.id,
+                  editorType: 'COMPO',
+                  number: this.Manuscrippage,
+                  count: 10,
+                  favorIds:JSON.stringify(this.Manuscriptidarr),
+                  startDate:this.datavalue,
+                  endDate:this.datavalue,
+                  ContentType:true,
+              }
+              listObjects(Objectparam).then((res)=>{
+                  this.Manuscript = res.content
+              })
           })
         })
         
@@ -334,7 +342,8 @@ export default {
           }
       },
       Tooltipbtn(){
-        store.ueditor.setContent(this.text,true)
+        store.ueditor.focus()
+        store.ueditor.execCommand('inserthtml',this.text)
         this.Tooltipstyle = 'display:none'
       },
       loadTemplates(){
