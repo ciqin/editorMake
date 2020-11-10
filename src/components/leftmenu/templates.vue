@@ -24,7 +24,7 @@
                 </li>
 
                  <p v-if="loadimgtemplate" style='text-align:center'>加载中...</p>
-                 <p v-if="templatenoMore">没有更多了</p>
+                 <p v-if="templatenoMore" style='text-align:center'>没有更多了</p>
               </ul>
             
               <div v-else>
@@ -97,7 +97,7 @@
       <el-tab-pane label="稿库" name="third">
         <div class='third_search' style='padding: 10px 20px;display:flex'>
           <el-input v-model="Manuscriptinput" placeholder="请输入关键字(名称,内容)"></el-input>
-          <el-button icon="el-icon-search" @click="Manuscriptsearch()">搜索</el-button>
+          <el-button icon="el-icon-search" @click.stop="Manuscriptsearch()">搜索</el-button>
         </div>
 
         <div class="third_data">
@@ -141,7 +141,7 @@
               </div>
 
               <p v-if="loadimg" style='text-align:center'>加载中...</p>
-              <p v-if="collectionnoMore">没有更多了</p>
+              <p v-if="collectionnoMore" style='text-align:center'>没有更多了</p>
             </div>
             <div v-else-if='Manuscript.length ==0 && loadingManuscript==false'>
                 <p style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;'><i class='el-icon-warning-outline'></i>暂无数据</p>
@@ -222,7 +222,7 @@
     computed: {
       //稿库=========================================================
       collectionnoMore () {  
-        return this.Manuscript.length-1 >= this.Manuscriptotal
+        return this.Manuscript.length == this.Manuscriptotal
       },
       disabled () {
         return this.loadimg || this.collectionnoMore
@@ -230,7 +230,7 @@
 
       //模板=========================================================
       templatenoMore () {
-        return this.templateimgarr.length-1 >= this.templatetotal
+        return this.templateimgarr.length == this.templatetotal
       },
       disabledtemplate (){
           return this.loadimgtemplate || this.templatenoMore
@@ -283,7 +283,7 @@
             _that.ManuscripIDarr=[]
             _that.Manuscript = []
             let Objectparam = {
-               ContentType:true,
+                ContentType:true,
                 keywords: '',
                 library: 'manuscript',
                 types: 'TEXT,COMPO,LIVE',
@@ -472,41 +472,38 @@
                 startDate:_that.datavalue,
                 endDate:_that.datavalue
             }
-            templatelist(Objectparam).then(res=>{
-              if(res){
-                _that.loading = false
-                let rescontent = res.content
-               
-                _that.Manuscriptotal = res.totalElements
+          if(_that.Manuscript.length!==_that.Manuscriptotal){
+             ilgcreations().then(res=>{
+                templatelist(Objectparam).then(res=>{
+                  if(res){
+                    let rescontent = res.content
+                    _that.Manuscriptotal = res.totalElements
+                    rescontent.forEach(function (item) {
+                      _that.ManuscripIDarr.push(item.id)
+                    })
 
-                rescontent.forEach(function (item) {
-                   _that.ManuscripIDarr.push(item.id)
-                })
+                    let parmas ={
+                        uuids:_that.ManuscripIDarr
+                      }
+                      FavoriteMixmdedia(parmas).then((res)=>{
+                        if(res){  
+                          rescontent.forEach(function (item) {
+                              item.show=false
+                              if(res.data.indexOf(item.id)>=0){
+                                item.isFavorite = true
+                              }else{
+                                item.isFavorite = false
+                              }
+                              _that.Manuscript.push(item);
+                            });
 
-                let parmas ={
-                    uuids:_that.ManuscripIDarr
+                            _that.loadingManuscript = false
+                        }
+                      })
                   }
-                ilgcreations().then(res=>{
-                  FavoriteMixmdedia(parmas).then((res)=>{
-                    if(res){
-                      rescontent.forEach(function (item) {
-                          item.show=false
-                          if(res.data.indexOf(item.id)>=0){
-                            item.isFavorite = true
-                          }else{
-                            item.isFavorite = false
-                          }
-                          _that.Manuscript.push(item);
-                        });
-
-                        _that.loadingManuscript = false
-
-                    }
-                  })
                 })
-                
-              }
             })
+          }
       },
       ManuscriptClick(item){
           store.ueditor.focus()
@@ -518,29 +515,24 @@
           dangerouslyUseHTMLString: true
         });
       },
-      collectionIconmouseover(){
-      
-      },
-      collectionIconmouseout(){
-      },
       loadManuscript () {
           let _that = this
-           _that.loadimg = true
           let Objectparam = {
                 ContentType:true,
-                keywords: '',
+                keywords: _that.Manuscriptinput,
                 library: 'manuscript',
                 types: 'TEXT,COMPO,LIVE',
                 excludedIds: _that.$route.query.id,
                 editorType: 'COMPO',
                 page: _that.Manuscrippage,
-                size: _that.ManuscrippageNum
+                size: _that.ManuscrippageNum,
+                startDate:_that.datavalue,
+                endDate:_that.datavalue
             }
-          if(_that.loadimg){
+          if(_that.Manuscript.length!==_that.Manuscriptotal){
             ilgcreations().then(res=>{
                templatelist(Objectparam).then(res=>{
                 if(res){
-                  _that.loadimg = false
                   _that.Manuscrippage = Number(_that.Manuscrippage)+1
                   _that.Manuscriptotal = res.totalElements
                     res.content.forEach(function (item) {
@@ -548,17 +540,13 @@
                       _that.Manuscript.push(item);
                       _that.ManuscripIDarr.push(item.id)
                     }); 
-
                 }
               })
             }) 
           }
-         
-
       },
       loadTemplates(){
         let _that = this
-        _that.loadimgtemplate = true
 
         //获取标题模板
         let Listparam = {
@@ -570,13 +558,12 @@
             sort: 'use_num,desc',
         }
 
-        if(_that.loadimgtemplate){
+        if(_that.templateimgarr.length!==_that.loadimgtemplate){
           ilgcreations().then(res=>{
             getTempleteSourceList(Listparam).then(res=>{
                 if(res){
                   _that.loading = false
-                  _that.loadimgtemplate = false
-                  _that.templatepage = _that.templatepage+1
+                  _that.templatepage = Number(_that.templatepage)+1
                   _that.templatetotal = res.total
                   res.list.forEach(function (item) {
                     item.show = false

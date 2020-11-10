@@ -21,6 +21,9 @@
                              <i class="el-icon-star-on"></i>
                         </div>
                     </li>
+
+                    <p v-if="loadimgtemplate" style='text-align:center'>加载中...</p>
+                    <p v-if="templatenoMore" style='text-align:center'>没有更多了</p>
                   </ul>
                 
                   <div v-else>
@@ -50,7 +53,7 @@
 
            <div v-loading="loadingmusc">
               <div class='infinite-list-wrapper'>
-                  <div v-if="Manuscriptidarr && loading==false"  style="height: 872px;overflow-y: auto;margin-top: 20px;" >
+                  <div v-if="Manuscriptidarr && loading==false"  style="height: 778px;overflow-y: auto;margin-top: 20px;padding-bottom: 20px;" >
                         <div class="third_libisryarr" v-for="(item,key) in Manuscript" :key = key @click='ManuscriptClick(item)'>
                                  <div v-if="item.thumbnailUrl && item.htmlContent" style='display: flex;position: relative;' :class="{show_list_start:item.show===true}">
                                       <div class='third_libisryarr_list'> 
@@ -87,7 +90,7 @@
         <el-tab-pane label="关联文章" name="four">
           <div v-loading="loading" style='height: 894px;overflow-y: auto;'>
               <div v-if="Relatedarr.length>0 && loading==false"> 
-                <div v-for="(item,key) in  Relatedarr" :key = key  class='acticle_list'>
+                <div v-for="(item,key) in  Relatedarr" :key = key  class='acticle_list' v-infinite-scroll="loadRelated" infinite-scroll-disabled="disabledRelated">
                     <div class='collection_icon collectionAcitve' @click="collectionIconclick(key,Relatedarr)">
                       <i class="el-icon-star-on"></i>
                     </div>
@@ -107,11 +110,12 @@
                       </div>
                     </div>
                 </div>
-
-                 <div class="Tooltip" :style="Tooltipstyle">
+                <p v-if="loadimgRelated" style='text-align:center'>加载中...</p>
+                <p v-if="noMoreRelated" style='text-align:center'>没有更多了</p>
+                <div class="Tooltip" :style="Tooltipstyle">
                     <div class="arrow"></div>
                     <p @click="Tooltipbtn">插入正文</p>
-                 </div>
+                </div>
               </div>
               <div v-else-if="Relatedarr.length==0 && loading==false">
                   <p style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;'><i class='el-icon-warning-outline'></i>暂无数据</p>
@@ -154,13 +158,34 @@ export default {
 
       actpageNum:0,//关联文章的页数
       Relatedarr:[],//关联文章
-
+      Relatedtotal:'',
       text:'',//滑过获取关联文章
+      loadimgRelated:false,
       Tooltipstyle:'display:none',//滑过获取关联文章样式
       templeteType:1,
 
       caiApi:"http://qhcloudhongqi.wengegroup.com:9080",
     }
+  },
+  computed: {
+   //模板=========================================================
+    templatenoMore () {
+      return this.templateimgarr.length == this.templatetotal
+    },
+    disabledtemplate (){
+        return this.loadimgtemplate || this.templatenoMore
+    },
+
+    //关联文章收藏的滚动加载
+    noMoreRelated(){
+     return this.Relatedarr.length == this.Relatedtotal 
+    },
+
+    disabledRelated(){
+      return this.loadimgRelated || this.noMoreRelated 
+    },
+    
+
   },
   created(){
      this.loadTemplates()
@@ -195,36 +220,10 @@ export default {
           })
           
         }else if(tab.label=='关联文章'){
-          let actparam = {
-            pageNum:this.actpageNum,
-            pageSize:10
-          }
-
-          ilgcreations().then(res=>{
-               getTopics(actparam).then((res)=>{
-                  if(res){
-                    this.loading = false
-                    this.Relatedarr = res.data[0].list
-
-                    this.Relatedarr.forEach((item,key)=>{
-                        item.iscontent = false;
-                        item.partcontent = item.content
-                        if(item.content!==''){
-                          item.iscontent = false;
-                        }else{
-                          item.iscontent  = true;
-                        }
-
-                        if(item.content.length>125){
-                            item.partcontent = item.content.slice(0,125) + '...';
-                        }else{
-                            item.partcontent = item.content
-                        }
-                    })
-                  }
-              })
-          })
-         
+           this.Relatedarr=[]
+           this.actpageNum=0
+           this.loading = true
+           this.loadRelated()
         }else if(tab.label=='模板'){
           this.templateimgarr=[]
           this.templatepage=0
@@ -348,7 +347,6 @@ export default {
       },
       loadTemplates(){
         let _that = this
-        _that.loadimgtemplate = true
         //获取标题模板
         let Listparam = {
             label:  _that.templateinput,
@@ -359,12 +357,11 @@ export default {
             sort: 'use_num,desc',
         }
 
-        if(_that.loadimgtemplate){
+        if(_that.templateimgarr!==_that.templatetotal){
           ilgcreations().then(res=>{
             getFavorTemplate(Listparam).then(res=>{
               if(res){
                 _that.loading = false
-                _that.loadimgtemplate = false
                 _that.templatepage = _that.templatepage+1
                 _that.templatetotal = res.total
                 res.list.forEach(function (item) {
@@ -377,6 +374,41 @@ export default {
         }
         
       }, 
+      loadRelated(){
+         let actparam = {
+            pageNum:this.actpageNum,
+            pageSize:10
+          }
+          
+          if(this.Relatedarr!==this.Relatedtotal){
+             ilgcreations().then(res=>{
+               getTopics(actparam).then((res)=>{
+                  if(res){
+                    this.loading = false
+                    this.Relatedtotal = res.data[0].total
+                    this.actpageNum = Number(this.actpageNum)+1
+                    res.data[0].list.forEach((item,key)=>{
+                        item.iscontent = false;
+                        item.partcontent = item.content
+                        if(item.content!==''){
+                          item.iscontent = false;
+                        }else{
+                          item.iscontent  = true;
+                        }
+
+                        if(item.content.length>125){
+                            item.partcontent = item.content.slice(0,125) + '...';
+                        }else{
+                            item.partcontent = item.content
+                        }
+
+                        this.Relatedarr.push(item)
+                    })
+                  }
+              })
+            })
+          }
+      }
 
   }
 }
