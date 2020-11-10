@@ -72,7 +72,7 @@
                     </el-row>
                     
                 </el-form-item>
-                <el-form-item label="文章封面"  class="cover">
+                <el-form-item label="分享封面"  class="cover">
                     <div  style="padding-top:12px;">
                         <ImgCutter ref="imgCutterModal0"
                                     :cross-origin="true"
@@ -138,7 +138,7 @@
                         @blur="handleInputConfirm">
                         </el-input>
                         <el-button v-else class="button-new-tag" size="small" @click="showInput">+</el-button>
-                        <el-button  size="small" @click="hasWord">抽取关键词</el-button>
+                        <el-button  size="small" @click="hasWord">抽取关键字</el-button>
                     </div>
                     
                 </el-form-item>
@@ -210,7 +210,7 @@
 </template>
 <script>
 import ImgCutter from 'vue-img-cutter'
-import {newSignature,extractingKeywords} from '@/http/api'
+import {newSignature,extractingKeywords,abstract} from '@/http/api'
 import { store , mutations} from '@/store'
 import {mapActions, mapGetters} from 'vuex';
 // 加载jquery
@@ -316,15 +316,20 @@ export default {
     methods :{ 
     // 自动摘要
     automaticSummary(){
-        let html = $(store.ueditor.body).find("p").html();
-        if(!html || /\<br\>/.test(html)){
-            this.$message({
-                message: '内容为空！',
-                type: 'success'
-            });
-        }else {
-            this.form.summary = $(store.ueditor.body).find("p").html();
+        let param = {
+            content:store.ueditor.getContentTxt(),
+            ContentType:true
         }
+        abstract(param).then(res=>{
+            if(res){
+                this.form.summary = res;
+            }else{
+                this.$message({
+                    message: '没有可摘要内容！',
+                    type: 'success'
+                });
+            }
+        })
     },   
     // 抽取关键词
     hasWord(){

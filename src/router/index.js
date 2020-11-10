@@ -86,12 +86,5 @@ const router = new Router({
     }
   ]
 })
-// router.beforeEach(function(to, from, next) {
-//   if(!document.cookie){
-//     next('/login')
-//   }else {
-//     next()
-//   }
-// })
 export default router
 

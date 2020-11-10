@@ -64,6 +64,7 @@
 </template>
 <script>
 import {manuscript,manuscriptSubmit,hasDepartment,hasSubmitUser} from "@/http/api"
+import Axios from "axios"
 export default {
     created(){
         manuscript().then(res=>{
@@ -141,12 +142,14 @@ export default {
                 padding:Date.parse(new Date())
             }
             hasSubmitUser(data).then(res=>{
+                let opa = [];
                 res.forEach(item=>{
-                     this.options.push({
-                         label:item.account,
-                         value:item.uuid
-                     })
+                    opa.push({
+                        label:item.account,
+                        value:item.uuid
+                    })
                 })
+                this.options = opa;
             })
         }
     }

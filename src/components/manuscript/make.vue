@@ -62,7 +62,7 @@ import Tab4 from "../Auxiliary/pictureMatching"
 import { store } from '@/store'
 import {mapActions, mapGetters} from 'vuex';
 export default {
-    name: 'mask',
+    name: 'maskaa',
     data() {
         return {
             tabPosition: 'left',

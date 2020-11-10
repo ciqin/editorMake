@@ -89,10 +89,14 @@ import { checkIn ,hasCatalog, hasChildrenCatalog ,checkInData} from "@/http/api"
             }
             checkInData(data).then(res=>{
                 if(res == "success"){
-                    this.$message('稿件签入成功');
+                    this.$message({
+                        message: '稿件签入成功!',
+                        type: 'success'
+                    });
                 }else {
                     this.$message('稿件签入失败');
                 }
+            }).error(res=>{
             })
         },
         closeModale(){
