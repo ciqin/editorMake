@@ -4,7 +4,7 @@
         <el-row>
             <el-col :span="24">
                  <el-form-item label="稿库">
-                    <el-select v-model="value" placeholder="请选择"  size="mini" style="width:450px;">
+                    <el-select v-model="value" placeholder="请选择"  size="mini" style="width:450px;"   @change="loadCatalog">
                         <el-option
                         v-for="item in options"
                         :key="item.value"
@@ -35,7 +35,8 @@
   </div>
 </template>
 <script>
-import { checkIn ,hasCatalog, hasChildrenCatalog ,checkInData} from "@/http/api"
+import { checkIn,hasCatalog, hasChildrenCatalog ,checkInData} from "@/http/api"
+import Axios from 'axios'
   export default {
       created(){
         checkIn().then(res=>{
@@ -48,20 +49,11 @@ import { checkIn ,hasCatalog, hasChildrenCatalog ,checkInData} from "@/http/api"
                 }
             })
         })
+        // 获取目录云稿库接口
+        // export const hasCatalog= (data,id) => getHttp(caiApi+'/sprint/rest/libraries/manuscript/select/allFolders', data)
         hasCatalog().then(res=>{
-            function getTree(data) {
-                data.label = data.name; // 因为我需要的值跟返回的code是对应的，就直接给data添加了一个value属性 并把code 给它赋值
-                data.value = data.id;	// 因为我要的下级key也不对 所以这个 lowerLeves 我也换成了 children
-                if(data.children) {
-                    for(var i = 0; i < data.children.length; i++) {  // 因为树形结构 不确定内部层次到底有几层 所以要在循环里边做回调
-                        getTree(data.children[i])
-                    }
-                }else {
-                    return;
-                }  
-            }
             res.forEach(item=>{
-                getTree(item)
+                this.getTree(item)
             })
             let newData = JSON.parse(JSON.stringify(res));
             this.catalogList = newData;
@@ -101,6 +93,27 @@ import { checkIn ,hasCatalog, hasChildrenCatalog ,checkInData} from "@/http/api"
         },
         closeModale(){
             this.$store.dispatch('modifyCensorship',false);
+        },
+        getTree(data) {
+            data.label = data.name; // 因为我需要的值跟返回的code是对应的，就直接给data添加了一个value属性 并把code 给它赋值
+            data.value = data.id;	// 因为我要的下级key也不对 所以这个 lowerLeves 我也换成了 children
+            if(data.children) {
+                for(var i = 0; i < data.children.length; i++) {  // 因为树形结构 不确定内部层次到底有几层 所以要在循环里边做回调
+                    this.getTree(data.children[i])
+                }
+            }else {
+                return;
+            }  
+        },
+        loadCatalog() {
+            let url = 'http://qhcloudhongqi.wengegroup.com:9080/sprint/rest/libraries/'+this.value+'/select/allFolders';
+            Axios.get(url).then(res=>{
+                res.data.forEach(item=>{
+                    this.getTree(item)
+                })
+                let newData = JSON.parse(JSON.stringify(res.data));
+                this.catalogList = newData;
+            })
         }
     }
   }

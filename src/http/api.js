@@ -17,10 +17,10 @@ let newManuscriptId = manuscriptId.split("?")[1].split("&")[0].split("=")[1];
 let libId = manuscriptId.split("?")[1].split("&")[1].split("=")[1];
 /\#\//.test(libId)?libId=libId.replace(/\#\//g,""):"";
 // 获取tenantId
-Axios.get(caiApi+"/sprint/userinfo/rest/getInfo",res=>{
+Axios.get(caiApi+"/sprint/userinfo/rest/getInfo").then(res=>{
     // 设置tenantId
-    if(res.tenantId){
-        window.localStorage.setItem('tenantId',res.tenantId);
+    if(res.data.tenantId){
+        window.localStorage.setItem('tenantId',res.data.tenantId);
     }
 })
 
@@ -59,7 +59,7 @@ export const sensitivityAnalysis = data => postHttp(caiApi+'/ilgcreation/text/ch
 export const newSignature = data => getHttp(caiApi+'/sprint/rest/stories/'+libId+'/'+newManuscriptId+'/tags/edit?type=COMPO', data)
 
 // 自动保存
-export const newSave = data => postHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/save/smartWrite/process', data)
+export const newSave = (data,url) => postHttp(url?url:caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/save/smartWrite/process', data)
 
 // 获取模板
 export const getTempleteSourceList = data => postHttp(caiApi+'/ilgcreation/rmtTempleteSource/getTempleteSourceList', data)
@@ -121,9 +121,8 @@ export const SubmitGj = data => postHttp(caiApi+'/sprint/rest/workflow/stories/'
 // 获取稿件签入接口
 export const checkIn = data => postHttp(caiApi+'/sprint/rest/story/'+libId+'/'+newManuscriptId+'/checkin', data)
 
-// 获取目录接口
+// 获取目录云稿库接口
 export const hasCatalog= data => getHttp(caiApi+'/sprint/rest/libraries/manuscript/select/allFolders', data)
-
 
 // 稿件签入提交接口
 export const checkInData = data => postHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/checkin/process', data)
@@ -159,7 +158,7 @@ export const hasReject = data => postHttp(caiApi+'/sprint/rest/story/'+libId+'/'
 export const subReject = data => postHttp(caiApi+'/sprint/rest/story/'+libId+'/'+newManuscriptId+'/list/records/deny', data)
 
 // 改稿保存接口
-export const revision = data => postHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/product/edit/process', data)
+export const revision = (data,url) => postHttp(url?url:caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/product/edit/process', data)
 
 // 稿件选用
 export const subSelect = data => postHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/product/fetch/process', data)

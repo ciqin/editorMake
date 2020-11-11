@@ -367,7 +367,8 @@ export default {
         // 定时获取百度编辑器并赋值
         let that  = this;
         let timer = setInterval(() => {
-            if(that.instance.body) {
+
+            if(that.$store.state.htmlContent && that.instance.body) {
                 that.instance.setContent(that.$store.state.htmlContent)
                 clearInterval(timer);
             }
@@ -703,7 +704,9 @@ export default {
                 return  this.$message.error('标题不能为空！');
             }
             if(newData.libid =="product") {
-                revision(newData).then(res=>{
+                let newUrl = '';
+                /\_blank/.test(newData.objid)?"":newUrl = 'http://qhcloudhongqi.wengegroup.com:9080/sprint/rest/workflow/stories/'+newData.libid+'/'+newData.objid+'/save/smartWrite/process'
+                revision(newData,newUrl).then(res=>{
                     if(res) {
                         this.$message({
                             message: '保存成功！',
@@ -719,7 +722,9 @@ export default {
                     
                 })
             }else {
-                newSave(newData).then(res=>{
+                let newUrl = '';
+                /\_blank/.test(newData.objid)?"":newUrl = 'http://qhcloudhongqi.wengegroup.com:9080/sprint/rest/workflow/stories/'+newData.libid+'/'+newData.objid+'/save/smartWrite/process'
+                newSave(newData,newUrl).then(res=>{
                     if(res) {
                         this.$message({
                             message: '保存成功！',
