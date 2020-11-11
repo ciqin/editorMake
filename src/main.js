@@ -7,9 +7,13 @@ import 'element-ui/lib/theme-chalk/index.css';
 import App from './App'
 import router from './router'
 import store from './storex/index'
+import echarts from 'echarts'
 
 Vue.config.productionTip = false
+Vue.prototype.$echarts = echarts
+
 Vue.use(ElementUI)
+
 
 /* eslint-disable no-new */
 new Vue({

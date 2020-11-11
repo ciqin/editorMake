@@ -59,6 +59,7 @@ import letfTab1 from "../leftmenu/templates"
 import letfTab2 from "../leftmenu/articleedit"
 import letfTab3 from "../leftmenu/collection"
 import Tab4 from "../Auxiliary/pictureMatching"
+import Tab5 from "../Auxiliary/comprehensive"
 import { store } from '@/store'
 import {mapActions, mapGetters} from 'vuex';
 export default {
@@ -99,10 +100,10 @@ export default {
                 //     type:'Tab4',
                 //     view:'自动配图'
                 // },
-                // {
-                //     type:'tab2',
-                //     view:'综合 分析'
-                // }
+                {
+                    type:'Tab5',
+                    view:'综合分析'
+                }
             ],
         };
     },
@@ -140,7 +141,7 @@ export default {
         
     },
     components:{
-        Tab1,Tab2,Tab3,Ueditor,letfTab1,letfTab2,Tab4,letfTab3
+        Tab1,Tab2,Tab3,Ueditor,letfTab1,letfTab2,Tab4,letfTab3,Tab5
     }
 };
 
