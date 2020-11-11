@@ -44,7 +44,7 @@ export const submitData = data => postHttp('../../static/test/test.json', data)
 export const getRelatedArticles = data => postHttp(caiApi+'/ilgcreation/article/getRelatedArticles', data)
 
 //  媒资库分类的接口
-export const classifygetAll = data => postHttp(hongApi+'/classify/getAll', data)
+export const classifygetAll = data => postHttp(caiApi+'/classify/getAll', data)
 
 //  媒资库的检索
 export const SearchShareAssets = data => postHttp(caiApi+'/ilgcreation/article/getRelatedMedias', data)

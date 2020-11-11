@@ -35,7 +35,7 @@
 
       </el-tab-pane>
 
-      <!-- <el-tab-pane label="媒资库" name="second">
+      <el-tab-pane label="媒资库" name="second">
        <div class="labelselect">
           <label for="">分类</label>
           <el-select v-model="value1" placeholder="请选择">
@@ -92,7 +92,7 @@
               </div>
          </div>
 
-      </el-tab-pane> -->
+      </el-tab-pane>
 
       <el-tab-pane label="稿库" name="third">
         <div class='third_search' style='padding: 10px 20px;display:flex'>
@@ -214,10 +214,15 @@
 
         loadingManuscript:true,
         templeteType:1,
+
+        tenantId:'' //租户id
+
       };
     },
     created(){
        this.loadTemplates();
+       this.tenantId = window.localStorage.getItem("tenantId")
+       console.log(1111,window.localStorage.getItem("tenantId"))
     },
     computed: {
       //稿库=========================================================
@@ -243,7 +248,7 @@
             this.options1 = []
             //获取分类
             let param = {
-              tenantId: 5,
+              tenantId: this.tenantId,
             }
             classifygetAll(param).then(res=>{
               if(res){
@@ -267,7 +272,7 @@
                 classifyIds:value1arr, //分类的id
                 keyWords:this.Shareinput,//关键字
                 mediaType:this.value2, //类型
-                tenantId:5, //组织id
+                tenantId:this.tenantId, //组织id
                 sortParam:'create_time',
                 sortType:'desc',
             }
@@ -352,7 +357,7 @@
         let libraryparam = {
           ContentType:true,
           assetId:arr[index].assetId,
-          tenantId:5
+          tenantId:this.tenantId
         }
 
         let favoriteparam = {
@@ -438,7 +443,7 @@
              classifyIds:value1arr, //分类的id
              keyWords:this.Shareinput,//关键字
              mediaType:this.value2, //类型
-             tenantId:5 //组织id
+             tenantId:this.tenantId //组织id
          }
          ilgcreations().then(res=>{
             SearchShareAssets(Searchparam).then(res=>{  //媒资库检索
