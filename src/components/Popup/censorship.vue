@@ -105,6 +105,7 @@ import Axios from 'axios'
                 return;
             }  
         },
+
         loadCatalog() {
             let url = 'http://qhcloudhongqi.wengegroup.com:9080/sprint/rest/libraries/'+this.value+'/select/allFolders';
             Axios.get(url).then(res=>{
