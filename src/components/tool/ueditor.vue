@@ -367,7 +367,7 @@ export default {
         // 定时获取百度编辑器并赋值
         let that  = this;
         let timer = setInterval(() => {
-            if(that.instance) {
+            if(that.instance.body) {
                 that.instance.setContent(that.$store.state.htmlContent)
                 clearInterval(timer);
             }
@@ -641,7 +641,7 @@ export default {
                 folder:folderid,
                 title: this.$store.state.title,
                 keywords:data.dynamicTags?data.dynamicTags.join(","):"",
-                content: "编辑器内容",
+                content: store.ueditor.getContentTxt(),
                 summary: data.summary,
                 signature: data.signature,
                 linkHeadline: data.linkHeadline,

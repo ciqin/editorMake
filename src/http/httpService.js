@@ -31,7 +31,7 @@ Axios.interceptors.request.use(config => {
   if (config.data && config.data.ContentType) {
     delete config.data.ContentType
     config.data = qs.stringify(config.data);
-    config.headers = Object.assign(config.headers, { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',"X-CSRF-TOKEN":"f3a8f26e-3416-46dc-8957-abe46967f88a"})
+    // config.headers = Object.assign(config.headers, { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',"X-CSRF-TOKEN":"f3a8f26e-3416-46dc-8957-abe46967f88a"})
   }
   return config
 }, error => {
@@ -49,7 +49,10 @@ Axios.interceptors.request.use(config => {
 // get请求
 export const getHttp = (url, data) => {
   return new Promise((resolve, reject) => {
-    Axios.get(url,data).then(res => {
+    let datas = {
+      params:data
+    }
+    Axios.get(url,datas).then(res => {
       if(/请使用微信扫描下面小程序码/.test(res.data)) {
         // 返回登录页跳转
         window.location = "http://qhcloudhongqi.wengegroup.com:9080/uum/login"
@@ -59,7 +62,11 @@ export const getHttp = (url, data) => {
       // else resolve(res.data.output)
     }).catch(error => {
       reject(error) 
-      vue.$message('获取数据失败，请刷新')
+      if(error.response.status  == 404) {
+        vue.$message('获取数据失败，请刷新')
+      }else {
+        vue.$message(error.response.data.msg)
+      }
     })
   })
 }
@@ -76,8 +83,11 @@ export const postHttp = (url, data) => {
       // if (res.data.code !== 200) vue.$message('获取数据失败，请刷新')
       // else resolve(res.data.output)
     }).catch(error => {
-      reject(error) 
-      vue.$message('获取数据失败，请刷新')
+      if(/save\/smartWrite\/process/.test(error.response.config.url) && (!error.response.data.msg)){
+        vue.$message("稿件已保存！")
+      }else {
+        vue.$message(error.response.data.msg)
+      }
     })
   })
 }

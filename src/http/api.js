@@ -9,12 +9,20 @@ const hongApi = "http://qhcloudhongqi.wengegroup.com:9116"
 
 import { getHttp, postHttp } from "./httpService"
 import { store } from '@/store'
+import Axios from "axios";
 // 获取稿件id
 // let id = window.location.href.split().split("?")[1].split("=")[1];
 let manuscriptId = window.location.href;
 let newManuscriptId = manuscriptId.split("?")[1].split("&")[0].split("=")[1];
 let libId = manuscriptId.split("?")[1].split("&")[1].split("=")[1];
 /\#\//.test(libId)?libId=libId.replace(/\#\//g,""):"";
+// 获取tenantId
+Axios.get(caiApi+"/sprint/userinfo/rest/getInfo",res=>{
+    // 设置tenantId
+    if(res.tenantId){
+        window.localStorage.setItem('tenantId',res.tenantId);
+    }
+})
 
 //刚进页面需要掉一个接口
 export const ilgcreations = data => getHttp('/ilgcreation/', data)
@@ -170,3 +178,6 @@ export const hasFinalJudgment = data => getHttp(caiApi+'/sprint/rest/story/'+lib
 
 // 抽取关键词
 export const extractingKeywords = data => postHttp(caiApi+'/sprint/rest/deepCogni/KeyWord', data)
+
+// 自动摘要
+export const abstract = data => postHttp(caiApi+'/sprint/rest/deepCogni/getSummary', data)

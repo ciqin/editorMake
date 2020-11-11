@@ -63,7 +63,7 @@ import Tab5 from "../Auxiliary/comprehensive"
 import { store } from '@/store'
 import {mapActions, mapGetters} from 'vuex';
 export default {
-    name: 'mask',
+    name: 'maskaa',
     data() {
         return {
             tabPosition: 'left',
