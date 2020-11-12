@@ -26,14 +26,14 @@
             </el-col>
              <el-col :span="24">
                 <el-form-item label="备注">
-                    <el-input type="textarea" v-model="commit"  placeholder="请输入备注内容" style="width:450px;"></el-input>
+                    <el-input type="textarea" v-model="commit" size="medium" placeholder="请输入备注内容" style="width:450px;"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
     </el-form>
      <div slot="footer" class="dialog-footer" style="text-align:right;">
-        <el-button type="primary" @click="submit" size="mini">确定提交</el-button>
         <el-button @click="closeModale" size="mini">取消</el-button>
+        <el-button type="primary" @click="submit" size="mini">确定提交</el-button>
      </div>
   </div>
 </template>

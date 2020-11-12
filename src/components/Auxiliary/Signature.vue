@@ -547,13 +547,6 @@ export default {
 }
 </script>
 <style>
-.el-radio__input.is-checked .el-radio__inner {
-    border-color: #a16c6e;
-    background: #d62425;
-}
-.el-radio__input.is-checked+.el-radio__label {
-    color: #d62425;
-}
 .el-tag {
     margin-right: 10px;  
 }
