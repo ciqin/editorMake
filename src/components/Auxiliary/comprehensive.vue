@@ -5,7 +5,7 @@
             <p>根据文稿内容，对文稿进行综合分析，包括文字的易读性，情感属性等</p>
         </div>
         <div class="button_mainner">
-             <button>开始分析</button>
+             <button @click="InfosStart">开始分析</button>
         </div>
         <div class='information_box essential_information'>
             <p>基本信息：</p>
@@ -49,7 +49,9 @@
     </div>
 </template>
 <script>
-   
+   import { basicInfos } from '@/http/api'
+   import { emotionScore } from '@/http/api'
+   import { store } from '@/store'
    export default {
      data() {
         return {
@@ -424,6 +426,26 @@
                 ] 
          })
 
+     },
+
+     methods:{
+        InfosStart(){
+
+           //基本信息
+           basicInfos({content:store.ueditor.getContentTxt()}).then((res)=>{
+               if(res){
+                   console.log(res)
+               }
+           })
+
+           //情感得分
+           emotionScore({checkType:1,text:store.ueditor.getContentTxt()}).then((res)=>{
+               if(res){
+                   console.log(res)
+               }
+           })
+
+        }
      }
     }
 </script>
@@ -536,6 +558,6 @@
 
     #emotion_leftchaerts{
          width:180px;
-        height: 180px;
+        height: 145px;
     }
 </style>

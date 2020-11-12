@@ -5,7 +5,7 @@ const swaggerApi = "http://192.168.18.12:9117";
 // const caiApi = "http://qhcloudhongqi.wengegroup.com:9080";
 // 本地调试接口
 const caiApi = "http://127.0.0.1:9080";
-const hongApi = "http://qhcloudhongqi.wengegroup.com:9116"
+const hongApi = "http://qhcloudhongqi.wengegroup.com:9116/api"
 
 import { getHttp, postHttp } from "./httpService"
 import { store } from '@/store'
@@ -22,6 +22,7 @@ Axios.get(caiApi+"/sprint/userinfo/rest/getInfo").then(res=>{
     if(res.data.tenantId){
         // 设置全局租户id
         window.localStorage.setItem('tenantId',res.data.tenantId);
+        window.localStorage.setItem('userID',res.data.uuid);
     }
 })
 
@@ -45,10 +46,10 @@ export const submitData = data => postHttp('../../static/test/test.json', data)
 export const getRelatedArticles = data => postHttp(caiApi+'/ilgcreation/article/getRelatedArticles', data)
 
 //  媒资库分类的接口
-export const classifygetAll = data => postHttp(caiApi+'/classify/getAll', data)
+export const classifygetAll = data => postHttp(hongApi+'/classify/getAll', data)
 
 //  媒资库的检索
-export const SearchShareAssets = data => postHttp(caiApi+'/ilgcreation/article/getRelatedMedias', data)
+export const SearchShareAssets = data => postHttp(hongApi+'/search/highLevelSearchShareAssets', data)
 
 // 文稿纠错
 export const correction = data => postHttp(caiApi+'/ilgcreation/sensitiveAnalysis/analysis', data)
@@ -80,8 +81,11 @@ export const cancelFavorTemplate = data => postHttp(caiApi+'/ilgcreation/rmtTemp
 //媒资库添加收藏
 export const Mediadd = data => postHttp(caiApi+'/ilgcreation/favoriteMedia/add', data)
 
+//获取媒资库收藏列表
+export const Mediacollectlist = data => postHttp(caiApi+'/ilgcreation/favoriteMedia/getFavoriteTopic', data)
+
 //媒资库取消收藏
-export const Mediadell = data => postHttp(caiApi+'/ilgcreation/favoriteMedia/dell', data)
+export const Mediadell = data => postHttp(caiApi+'/ilgcreation/favoriteMedia/del', data)
 
 //稿库添加收藏
 export const favoriteadd = data => postHttp(caiApi+'/ilgcreation/favoriteMixmdedia/add', data)
@@ -181,3 +185,9 @@ export const extractingKeywords = data => postHttp(caiApi+'/sprint/rest/deepCogn
 
 // 自动摘要
 export const abstract = data => postHttp(caiApi+'/sprint/rest/deepCogni/getSummary', data)
+
+//综合分析基本信息
+export const basicInfos = data => getHttp(caiApi+'/ilgcreation/analysis/basicInfos', data)
+
+//综合分析情感的分
+export const emotionScore = data => postHttp(caiApi+'/ilgcreation/analysis/emotionScore', data)

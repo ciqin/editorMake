@@ -165,6 +165,7 @@
   import { FavoriteMixmdedia } from '@/http/api'    //稿件是否收藏
   import { favoriteadd  } from '@/http/api'    //稿件添加收藏
   import { favoritedell  } from '@/http/api'    //稿件取消收藏
+  import { Mediacollectlist } from '@/http/api'    //获取媒资库收藏列表
   import { store } from '@/store'
   export default {
     data() {
@@ -173,10 +174,8 @@
         activeName: 'first',
         templatearr:['标题','正文','图文','引导','分割线','二维码','其他'],
         texttemp:0,
-        Shareinput:'',//媒资库检索的关键字
-        Libraryarr:[],//媒资库检索结果
         options1: [],
-        value1: '分类',
+        value1: '',
         seen:false,
         options2: [{
           value: 1,
@@ -193,7 +192,6 @@
         }],
         value2: '图片',
         templateinput:'',//模板搜索的关键字
-
         templateimgarr:[], //模板
         loadimgtemplate:false,
         templatepage:0,//模板的页数
@@ -212,18 +210,23 @@
         ManuscrippageNum:10,//稿件每次加载条数
         ManuscripIDarr:[],//稿件id
 
+        Shareinput:'',//媒资库检索的关键字
+        Libraryarr:[],//媒资库检索结果
+        mediapageSize:20,//媒资库每页条数
+        mediapageNum:1,//媒资库页数
+        mediaIDarr:[],//媒资库id
+
         loadingManuscript:true,
         templeteType:1,
 
-        tenantId:'' //租户id
-
+        tenantId:'', //租户id
       };
     },
     created(){
        this.loadTemplates();
        this.tenantId = window.localStorage.getItem("tenantId")
-       console.log(1111,window.localStorage.getItem("tenantId"))
     },
+  
     computed: {
       //稿库=========================================================
       collectionnoMore () {  
@@ -260,28 +263,10 @@
                 })
               }
             })
-
-            if(this.value1=='分类' || this.value2=='全部'){
-              this.value1 = 1
-              this.value2 = 0
-            }
-            let value1arr = []
-            value1arr.push(this.value1.toString())
-            let Searchparam = {
-                ContentType:true,
-                classifyIds:value1arr, //分类的id
-                keyWords:this.Shareinput,//关键字
-                mediaType:this.value2, //类型
-                tenantId:this.tenantId, //组织id
-                sortParam:'create_time',
-                sortType:'desc',
-            }
-            SearchShareAssets(Searchparam).then(res=>{  //媒资库检索
-              if(res){
-                this.loading = false
-                this.Libraryarr = res.data
-              }
-            })
+            this.Libraryarr=[];
+            this.mediapageNum=0;
+            this.loading = true
+            this.loadMedialist()
         }else if(tab.label=='稿库'){
             let _that = this
             _that.loadingManuscript = true
@@ -349,76 +334,115 @@
           this.loadTemplates()
       },
       collectionIconclick(index,arr){
-        let param = {
-          templateId:arr[index].templeteId,
-          ContentType:true,
-        }
-
-        let libraryparam = {
-          ContentType:true,
-          assetId:arr[index].assetId,
-          tenantId:this.tenantId
-        }
-
-        let favoriteparam = {
-           uuid:arr[index].id,
-        }
-        
-
         if(arr == this.templateimgarr){
+            let param = {
+              templateId:arr[index].templeteId,
+              ContentType:true,
+            }
             if(this.templateimgarr[index].isFavorite==1){
-                this.templateimgarr[index].isFavorite = false
                 ilgcreations().then(res=>{
                   cancelFavorTemplate(param).then(res=>{ //取消模板收藏
-                    console.log(res)
+                    if(res.message=='取消成功'){
+                      this.templateimgarr[index].isFavorite = false
+                      this.$message({
+                            message: '取消收藏成功',
+                            type: 'success'
+                      });
+                    }else{
+                      this.$message('取消收藏失败');
+                    }
                   })
                 })
                 
             }else{
-                this.templateimgarr[index].isFavorite = true
                 ilgcreations().then(res=>{
                   favorTemplate(param).then(res=>{ //模板收藏
-                    console.log(res)
+                    if(res.message=='收藏成功'){
+                       this.templateimgarr[index].isFavorite = true
+                       this.$message({
+                            message: '收藏成功',
+                            type: 'success'
+                      });
+                    }else{
+                      this.$message('收藏失败');
+                    }
                   }) 
                 })         
             }
         }else if(arr == this.Libraryarr){
+            let libraryparam = {
+              assetId:arr[index].assetId,
+              tenantId:this.tenantId,
+              url:arr[index].url
+            }
+
            if(this.Libraryarr[index].isFavorite){
-                this.Libraryarr[index].isFavorite = false
                 ilgcreations().then(res=>{
                   Mediadell(libraryparam).then(res=>{ //取消媒资库收藏
-                    console.log(res)
+                    if(res.message='取消收藏成功'){
+                      this.Libraryarr[index].isFavorite = false
+                      this.$message({
+                            message: '取消收藏成功',
+                            type: 'success'
+                      });
+                    }else{
+                      this.$message('取消收藏失败');
+                    }
                   })
                 })
                 
            }else{
-                this.Libraryarr[index].isFavorite = true
                 ilgcreations().then(res=>{
                   Mediadd(libraryparam).then(res=>{ //媒资库收藏
+                     if(res.message=='收藏成功'){
+                         this.Libraryarr[index].isFavorite = true;
+                         this.$message({
+                            message: '收藏成功',
+                            type: 'success'
+                        });
+                     }else{
+                       this.$message('收藏失败');
+                     }
                     console.log(res)
                   })
                 })
                 
            }
         }else if(arr == this.Manuscript){
+          let favoriteparam = {
+           uuid:arr[index].id,
+          }
           if(this.Manuscript[index].isFavorite == true){
-            this.Manuscript[index].isFavorite = false
             ilgcreations().then(res=>{
               favoritedell(favoriteparam).then((res)=>{
-               
+                 if(res.message='取消收藏成功'){
+                    this.Manuscript[index].isFavorite = false
+                    this.$message({
+                          message: '取消收藏成功',
+                          type: 'success'
+                    });
+                  }else{
+                    this.$message('取消收藏失败');
+                  }
               })
             })
           }else{
-            this.Manuscript[index].isFavorite = true
             ilgcreations().then(res=>{
               favoriteadd(favoriteparam).then((res)=>{
-
+                if(res.message='收藏成功'){
+                    this.Manuscript[index].isFavorite = true
+                    this.$message({
+                          message: '收藏成功',
+                          type: 'success'
+                    });
+                  }else{
+                    this.$message('收藏失败');
+                  }
               })
             })
            
           }
         }
-        
       },
       LibraryClick(item){
        let str = ''
@@ -433,26 +457,9 @@
       },
       searchShare(){
          this.loading = true
-         if(this.value1=='分类' || this.value2=='全部'){
-           this.value1 = 1
-           this.value2 = 0
-         }
-         let value1arr = []
-         value1arr.push(this.value1.toString())
-         let Searchparam = {
-             classifyIds:value1arr, //分类的id
-             keyWords:this.Shareinput,//关键字
-             mediaType:this.value2, //类型
-             tenantId:this.tenantId //组织id
-         }
-         ilgcreations().then(res=>{
-            SearchShareAssets(Searchparam).then(res=>{  //媒资库检索
-              if(res){
-                this.loading = false
-                this.Libraryarr = res.data
-              }
-            })
-         })
+         this.mediapageNum = 1
+         this.Libraryarr = []
+         this.loadMedialist()
       },
       searchtemplate(){
         this.templateimgarr=[]
@@ -580,6 +587,55 @@
         }
         
       }, 
+      loadMedialist(){
+          let _that = this
+          if(this.value1=='分类' || this.value2=='全部'){
+              this.value1 = 1
+              this.value2 = 0
+            }
+            let value1arr = []
+            value1arr.push(this.value1)
+            let Searchparam = {
+                classifyIds:value1arr, //分类的id
+                keyWords:this.Shareinput,//关键字
+                mediaType:this.value2, //类型
+                tenantId:this.tenantId, //组织id
+                sortParam:'create_time',
+                sortType:'desc',
+                pageNum: this.mediapageNum,
+                pageSize: this.mediapageSize,
+            }
+            SearchShareAssets(Searchparam).then(res=>{  //媒资库检索
+              if(res){
+                this.loading = false
+                let rescontent = res.data
+
+                let parmas ={
+                    tenantId:this.tenantId,
+                }
+
+                Mediacollectlist(parmas).then((res)=>{
+                  if(res.message=='获取成功'){
+                     this.mediaIDarr = res.data
+
+                     rescontent.forEach(function (item) {
+                        item.show=false
+                        if(res.data.indexOf(item.id)>=0){
+                          item.isFavorite = true
+                        }else{
+                          item.isFavorite = false
+                        }
+                        _that.Libraryarr.push(item);
+                    });
+                     
+                     
+                  }
+                })
+
+
+              }
+            })
+      },
       collectionIconmouseover(key,item,arr){
         let newList = [];
         arr.forEach((val,ind)=>{
