@@ -48,16 +48,16 @@ div,ul,p {
 button{outline-style: none;}
 /* 单选框按钮样式 */
 .el-checkbox__inner {
-  border:1px solid #c93931!important;
+  border:1px solid #576779!important;
 }
 .el-checkbox__input.is-checked .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner {
-  background-color: #c93931!important;
+  background-color: #576779!important;
 }
 .el-checkbox__label {
   padding-left: 5px;
 }
 .el-progress-bar__inner {
-  background-color: #c93931;
+  background-color: #576779;
 }
 .mobileM>div{
     margin-top:0!important;
@@ -98,5 +98,44 @@ button{outline-style: none;}
 }
 .correction tbody .el-table__row td:nth-child(1) .cell{
   color: #EA5E5E;
+}
+/* 模态框优化 */
+.el-dialog__header {
+  border-bottom: 1px solid #F2F2F2;
+}
+.el-dialog__title {
+  color: #1A1A1A;
+}
+.el-dialog__headerbtn .el-dialog__close {
+      color:#808080;
+}
+
+.el-radio__input.is-checked .el-radio__inner{
+  border-color: #576779;
+  background: #576779;
+}
+.el-radio__input.is-checked+.el-radio__label {
+  color: #333333;
+}
+.el-dialog__body .el-form--inline .el-form-item{
+  margin-bottom:10px;
+}
+.dialog-footer {
+   margin-top:30px;
+}
+.el-dialog__body .el-textarea__inner {
+  height: 120px;
+}
+.el-dialog__body .el-button{
+  background: #666666;
+  color: #FFF;
+  padding: 12px 15px;
+}
+
+.el-dialog__body .el-button--primary {
+  color: #FFF;
+  background-color: #D72323;
+  border-color: #D72323;
+  padding: 12px 15px;
 }
 </style>

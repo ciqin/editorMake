@@ -21,8 +21,8 @@
                 
         </el-form>
         <div slot="footer" class="dialog-footer" style="text-align:right;">
-            <el-button type="primary" @click="submit"  size="mini">确定选用</el-button>
             <el-button @click="closeModale"  size="mini">取消</el-button>
+            <el-button type="primary" @click="submit"  size="mini">确定选用</el-button>
         </div>
   </div>
 </template>

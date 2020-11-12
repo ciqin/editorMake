@@ -546,14 +546,13 @@ export default {
      }
 }
 </script>
+
 <style>
-   .tabsContainer .el-button:active,.tabsContainer .el-button:focus{
+.tabsContainer .el-button:active,.tabsContainer .el-button:focus{
     background: #FFF;
     border: 1px solid #DCDFE6;
     color: #606266;
-   }
-</style>
-<style>
+}
 .el-radio__input.is-checked .el-radio__inner {
     border-color: #a16c6e;
     background: #d62425;

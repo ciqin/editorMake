@@ -23,7 +23,7 @@
              <el-form :inline="true" class="demo-form-inline" label-width="100px">
 
                  <el-form-item label="所有部门">
-                    <el-select v-model="departmentId" placeholder="请选择"  size="mini" @change="hasUser" style="width:300px;">
+                    <el-select v-model="departmentId" filterable :filter-method="dataFilter" placeholder="请选择"  size="mini" @change="hasUser" style="width:300px;">
                         <el-option
                         v-for="item in departmentList"
                         :key="item.value"
@@ -57,8 +57,8 @@
         </el-tab-pane>
     </el-tabs>
     <div slot="footer" class="dialog-footer" style="text-align:right;">
-        <el-button type="primary" @click="submit"  size="mini">确定传稿</el-button>
         <el-button @click="closeModale"  size="mini">取消</el-button>
+        <el-button type="primary" @click="submit"  size="mini">确定传稿</el-button>
     </div>
   </div>
 </template>
@@ -80,7 +80,22 @@ export default {
                     label:item.name,
                     value:item.uuid
                 })
+                this.departmentListCopy.push({
+                    label:item.name,
+                    value:item.uuid
+                })
             })
+        })
+        // 默认加载名称
+        hasSubmitUser().then(res=>{
+            let opa = [];
+            res.forEach(item=>{
+                opa.push({
+                    label:item.account,
+                    value:item.uuid
+                })
+            })
+            this.options = opa;
         })
     },
     data(){
@@ -94,6 +109,7 @@ export default {
             options: [],
             userListId:[],
             departmentList:[],
+            departmentListCopy:[],
             departmentId:"",
             userId:[],
             form:{
@@ -129,6 +145,18 @@ export default {
                     this.$store.dispatch("modifyAdopt",false)
                 }
             })
+        },
+        dataFilter(val){
+            this.value = val;
+            if (val) { //val存在
+                this.departmentList = this.departmentListCopy.filter((item) => {
+                if (!!~item.label.indexOf(val) || !!~item.label.toUpperCase().indexOf(val.toUpperCase())) {
+                    return true
+                }
+            })
+            } else { //val为空时，还原数组
+                    this.departmentList = this.departmentListCopy;
+            }
         },
         closeModale(){
             this.$store.dispatch("modifyAdopt",false)
