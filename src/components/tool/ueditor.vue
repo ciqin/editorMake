@@ -62,7 +62,7 @@
         <el-dialog
             title="传稿"
             :visible.sync="hasAdopt"
-            width="600px" :before-close="CloseSubmit">
+            width="645px" :before-close="CloseSubmit">
             <Adopt></Adopt>
         </el-dialog>
         <!-- 签入弹出窗 -->
