@@ -187,7 +187,7 @@ export const extractingKeywords = data => postHttp(caiApi+'/sprint/rest/deepCogn
 export const abstract = data => postHttp(caiApi+'/sprint/rest/deepCogni/getSummary', data)
 
 //综合分析基本信息
-export const basicInfos = data => getHttp(caiApi+'/ilgcreation/analysis/basicInfos', data)
+export const basicInfos = data => postHttp(caiApi+'/ilgcreation/analysis/basicInfos', data)
 
 //综合分析情感的分
 export const emotionScore = data => postHttp(caiApi+'/ilgcreation/analysis/emotionScore', data)

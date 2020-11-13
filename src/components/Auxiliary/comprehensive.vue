@@ -10,9 +10,9 @@
         <div class='information_box essential_information'>
             <p>基本信息：</p>
             <div class="essential_sec">
-                <p>字数：<span>821</span>个</p>
-                <p>字数：<span>821</span>个</p>
-                <p>字数：<span>821</span>个</p>
+                <p>字数：<span>{{charNum}}</span>个</p>
+                <p>词数：<span>{{wordNum}}</span>个</p>
+                <p>句数：<span>{{sentenceNum}}</span>个</p>
             </div>
         </div>
         <div  class='information_box information_reader'>
@@ -56,7 +56,11 @@
      data() {
         return {
                readervalue:8, //阅读统计图的
-               notreadervalue:10
+               notreadervalue:10,
+               charNum:'',
+               sentenceNum:'',
+               wordNum:'',
+               remotionvalue:'',//政负情感  
             }
         },
      mounted(){
@@ -137,230 +141,8 @@
               }]
           });
          
-
          //政负情感
-         let leftChartremotion = this.$echarts.init(document.getElementById('emotion_leftchaerts'))
-         let datas={
-                dataArr: [
-                {
-                    value: 0,
-                    name: "",
-                },
-                ],
-                min:-1,
-                max:1,
-            };
-            var dataArr = datas.dataArr;
-            let nowData=dataArr[0].value;
-            let min = datas.min;
-            let max = datas.max;
-            let splitNumber=max-min;
-            let per = (dataArr[0].value - min) / (max - min);
-            let unit = datas.unit;
-
-            var color = {
-                        normal: {
-                            color: { // 颜色渐变
-                                colorStops: [{
-                                            offset: 0,
-                                            color: '#FFA94C' // 0% 处的颜色
-                                        }, {
-                                            offset: 1,
-                                            color: '#FFA94C' // 100% 处的颜色1
-                                        }]
-                            },
-                            label: {
-                                show: false
-                            },
-                            labelLine: {
-                                show: false
-                            }
-                        }
-                    }
-            var colorSet = [
-                [per, color],
-                [1, "#413e54"],
-            ];
-            let startAngle = 180;
-            let endAngle = 0;
-            let center = ["50%", "63%"];
-
-         leftChartremotion.setOption({
-            tooltip: {
-            show: false,
-            },
-            series: [
-            {
-                type: "gauge",
-                radius: "90%",
-                startAngle,
-                endAngle,
-                center,
-                pointer: {
-                show: false,
-                },
-                title: {
-                show: false,
-                },
-                axisLine: {
-                show: false,
-                lineStyle: {
-                    color: colorSet,
-                    width: 20,
-                    shadowOffsetX: 0,
-                    shadowOffsetY: 0,
-                    opacity: 1,
-                },
-                },
-                axisTick: {
-                show: false,
-                splitNumber: 5,
-                length: 8,
-                },
-                splitLine: {
-                length: 1, //刻度节点线长度
-                lineStyle: {
-                    width: 1,
-                    color: "rgba(255,255,255,.8)",
-                }, //刻度节点线
-                },
-                axisLabel: {
-                show: false,
-                },
-                detail: {
-                show: 0,
-                },
-                animationDuration: 4000,
-            },
-            {
-                name: "白色圈刻度",
-                type: "gauge",
-                radius: "80%",
-                startAngle, //刻度起始
-                endAngle, //刻度结束
-                center,
-                min,
-                max,
-                splitNumber: 1,
-                z: 4,
-                axisTick: {
-                show: false,
-                },
-                splitLine: {
-                length: 16, //刻度节点线长度
-                lineStyle: {
-                    width: 2,
-                    color: "#018DFF",
-                }, //刻度节点线
-                },
-                axisLabel: {
-                formatter: function (v) {
-                    if (v == min) {
-                    return `{min|${min}\n}`;
-                    } else {
-                    return `{max|${max}\n}`;
-                    }
-                },
-                rich: {
-                    min: {
-                    // 下右上左
-                    padding: [0, 0, 80, -120],
-                    color: "#000",
-                    fontSize: 20,
-                    lineHeight: 30,
-                    },
-                    max: {
-                    // 下右上左
-                    padding: [0, -120, 80, 0],
-                    color: "#000",
-                    fontSize: 20,
-                    lineHeight: 30,
-                    },
-                },
-                }, //刻度节点文字颜色
-                pointer: {
-                show: false,
-                },
-                detail: {
-                show: false,
-                },
-                axisLine: {
-                show: true,
-                lineStyle: {
-                    color: colorSet,
-                    width: 10,
-                    shadowOffsetX: 0,
-                    shadowOffsetY: 0,
-                    opacity: 1,
-                },
-                },
-                data: dataArr,
-            },
-            {
-                name: '内部圈',
-                type: 'gauge',
-                z: 10,
-                center,
-                min,
-                max,
-                splitNumber: splitNumber,
-                radius: '120%',
-                startAngle, //刻度起始
-                endAngle, //刻度结束
-                axisLine: {
-                    show: false,
-                lineStyle: {
-                    color: colorSet,
-                },
-                },
-                
-                tooltip: {
-                    show: false
-                },
-                axisLabel: {
-                    show: false,
-                    // color:"red",
-                    // formatter:function(v){
-                    //     if(v==nowData){
-                    //         return "当前数值\n"+nowData;
-                    //     }
-                    // }
-                },
-                axisTick: {
-                    show: false,
-
-                },
-                splitLine: {
-                    show: false,
-                },
-                itemStyle: {
-                    show: false,
-                },
-                detail: {
-                    show: false
-                },
-                title: { //标题
-                    show: false,
-                },
-                data: [{
-                    name: "title",
-                    value: nowData,
-                }],
-                itemStyle: {
-                    normal: {
-                        color: 'rgba(145,207,255,1)'
-                    }
-                },
-                pointer: {
-                show: false,
-                width: 8,
-                length: "60%",
-                },
-                animationDuration: 4000,
-            },
-            ],
-         })
-
+         this.loadleftChartremotion()
 
          //新闻流行度
          let newsectioncharts = this.$echarts.init(document.getElementById('newsection_charts'))
@@ -433,18 +215,115 @@
 
            //基本信息
            basicInfos({content:store.ueditor.getContentTxt()}).then((res)=>{
-               if(res){
-                   console.log(res)
+               if(res.message='获取成功'){
+                   this.charNum = res.data[0].charNum
+                   this.sentenceNum = res.data[0].sentenceNum
+                   this.wordNum = res.data[0].wordNum
                }
            })
 
            //情感得分
-           emotionScore({checkType:1,text:store.ueditor.getContentTxt()}).then((res)=>{
-               if(res){
-                   console.log(res)
+           emotionScore({content:store.ueditor.getContentTxt(),title:this.$store.state.title}).then((res)=>{
+               if(res.message='获取成功'){
+                   this.remotionvalue = res.data[0]
+                   this.loadleftChartremotion()
                }
            })
 
+        },
+
+        //正负情感
+        loadleftChartremotion(){
+         let _that = this
+            //政负情感
+         let leftChartremotion = this.$echarts.init(document.getElementById('emotion_leftchaerts'))
+         let datas={
+                dataArr: [
+                {
+                    value: 0,
+                    name: "",
+                },
+                ],
+                min:-1,
+                max:1,
+            };
+            var dataArr = datas.dataArr;
+            let nowData=dataArr[0].value;
+            let min = datas.min;
+            let max = datas.max;
+            let splitNumber=max-min;
+            let per = (dataArr[0].value - min) / (max - min);
+            let unit = datas.unit;
+
+            leftChartremotion.setOption({
+                tooltip: {
+                    formatter: "{a} <br/>{b} : {c}"
+                },
+                series: [{
+                    //类型
+                    type: 'gauge',
+                    //半径
+                    radius: 80,
+                    //起始角度。圆心 正右手侧为0度，正上方为90度，正左手侧为180度。
+                    startAngle: 180,
+                    //结束角度。
+                    endAngle: 0,
+                    center: ['50%', '70%'],
+                    //仪表盘轴线相关配置。
+                    axisLine: {
+                        show: true,
+                        // 属性lineStyle控制线条样式
+                        lineStyle: {
+                            width: 10,
+                            color: [
+                                [0.23, '#4489ea'],
+                                [1, '#d8e8f2']
+                            ]
+                        }
+                    },
+                    //分隔线样式。
+                    splitLine: {
+                        show: false,
+                    },
+                    //刻度样式。
+                    axisTick: {
+                        show: false,
+                    },
+                    //刻度标签。
+                    axisLabel: {
+                        show: false,
+                    },
+                    //仪表盘指针。
+                    pointer: {
+                        //这个show属性好像有问题，因为在这次开发中，需要去掉指正，我设置false的时候，还是显示指针，估计是BUG吧，我用的echarts-3.2.3；希望改进。最终，我把width属性设置为0，成功搞定！
+                        show: false,
+                        //指针长度
+                        length: '90%',
+                        width: 0,
+                    },
+                    //仪表盘标题。
+                    title: {
+                        show: true,
+                        offsetCenter: [0, '25%'], // x, y，单位px
+                        textStyle: {
+                            color: '#666666',
+                        }
+                    },
+
+                    //仪表盘详情，用于显示数据。
+                    detail: {
+                        show: true,
+                        offsetCenter: [0, '-25%'],
+                        formatter: '{value}',
+                    },
+                    data: [{
+                        value: _that.remotionvalue,
+                        name: '政负情感',
+                    },
+                    ]
+                }]
+            })
+  
         }
      }
     }
