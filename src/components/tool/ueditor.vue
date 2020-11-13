@@ -84,21 +84,26 @@
             title="驳回"
             :visible.sync="hasReject"
             width="800px" :before-close="CloseSubmit">
-            <el-form :inline="true" class="demo-form-inline" label-width="100px">
+            <el-form :inline="true" class="demo-form-inline" label-width="50px">
                 <el-row>
                     <el-col :span="24">
                         <el-table
-                            :data="tableData"
-                            style="width: 100%;" class="ssContainer">
+                            :data="tableData" class="ssContainer" :cell-style="rowClass" :header-cell-style="headClass">
                             <el-table-column
-                                prop="time"
-                            label="时间"
-                                width="170">
+                                label="时间">
+                                <template slot-scope="scope">
+                                     <el-radio class="radiusNone" v-if="scope.row.type" v-model="radio" :label="scope.row.lable" @change="rejectSelect(scope.row)"></el-radio>
+                                    <span>{{ scope.row.time }}</span>
+                                </template>
                             </el-table-column>
                             <el-table-column
-                                prop="status"
                                 label="状态"
                                 width="80">
+                                 <template slot-scope="scope">
+                                    <el-tag type="success" v-if="scope.row.status=='已通过'">{{scope.row.status}}</el-tag>
+                                    <el-tag type="warning" v-if="scope.row.status=='待审批'">{{scope.row.status}}</el-tag>
+                                    <el-tag type="danger" v-if="scope.row.status=='已驳回'">{{scope.row.status}}</el-tag>
+                                </template>
                             </el-table-column>
                             <el-table-column
                                 prop="approverGroup"
@@ -120,18 +125,27 @@
                                 label="审批人"
                                 width="120">
                             </el-table-column>
-                            <el-table-column
+                            <!-- <el-table-column
                                 label="选项">
                                 <template slot-scope="scope">
                                      <el-radio class="radiusNone" v-if="scope.row.type" v-model="radio" :label="scope.row.lable" @change="rejectSelect(scope.row)"></el-radio>
                                 </template>
-                            </el-table-column>
+                            </el-table-column> -->
                         </el-table>
                     </el-col>
-                    <el-col :span="24">
+                    <!-- <el-col :span="24">
                         <div style="margin:10px;">备注</div>
                         <el-input type="textarea" v-model="commit" size="mini" placeholder="请输入备注内容" style="width:100%;margin-left:10px;margin-bottom:16px;"></el-input>
-                    </el-col>
+                       
+                    </el-col> -->
+                    <el-form-item label="备注:" style="margin-top:40px;">
+                        <el-input  type="textarea"
+                            placeholder="请输入备注内容"
+                            v-model="commit"
+                            maxlength="150"
+                            resize="none"
+                            show-word-limit style="width:700px;"></el-input>
+                    </el-form-item>
                 </el-row>
             </el-form>
             <div slot="footer" class="dialog-footer" style="text-align:right;">            
@@ -419,23 +433,24 @@ export default {
             releaseManuscript().then(res=>{})
         });
         // 驳回获取数据接口
-        if(this.storyApproveDeny) {
+        // if(this.storyApproveDeny) {
+        if(true) {
              hasReject().then(res=>{
                 res.records.forEach((item,index)=>{
                     let status = '';
                     switch(item.status){
                         case 0:
-                                status = "待审批"
-                                break
-                            case 1:
-                                status = "已驳回" 
-                                break
-                            case 2:
-                                status = "已通过"
-                                break
-                            case 3:
-                                status = "已通过（终审）"
-                                break
+                            status = "待审批"
+                            break
+                        case 1:
+                            status = "已驳回" 
+                            break
+                        case 2:
+                            status = "已通过"
+                            break
+                        case 3:
+                            status = "已通过（终审）"
+                            break
                     }
                     this.tableData.push({
                         time:this.timestampToTime (item.updated),
@@ -467,6 +482,12 @@ export default {
         Submit,Adopt,Censorship,CheckIn,Reject,Selection,ChangeTime,FinalJudgment
     },
     methods: {
+        headClass() { //表头居中显示
+            return "text-align:center"
+        },
+        rowClass() { //表格数据居中显示
+            return "text-align:center"
+        },
         // 按钮操作
         opaBtn1(){
             this.$store.dispatch('modifyAdopt',true);
@@ -530,9 +551,13 @@ export default {
             let data = this.saveParme()
             subAdopt(data).then(res=>{
                 if(res){
+                    this.$message({
+                        message: '稿件通过！',
+                        type: 'success'
+                    });
                     setTimeout(()=>{
                         window.close()
-                    },5000)
+                    },1000)
                 }
             })
         },
@@ -543,9 +568,13 @@ export default {
         finalJudgment(){
             let data = this.saveParme()
             subFinalJudgment(data).then(res=>{
+                this.$message({
+                    message: '终审通过！',
+                    type: 'success'
+                });
                 setTimeout(()=>{
                     window.close()
-                },5000)
+                },1000)
             })
         },
         
@@ -583,7 +612,6 @@ export default {
                             let i = uearr.length-2<0?0:uearr.length-2
                             _that.ueconter = uearr[i]
                         }
-                        console.log(_that.ueconter)
                         _that.$emit('listenEvent',_that.ueconter)
                     })
 
@@ -975,4 +1003,5 @@ export default {
 .mobileContainer img{
     max-width: 100%;
 }
+
 </style>
