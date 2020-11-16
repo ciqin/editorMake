@@ -570,24 +570,25 @@ export default {
                         let selection = _that.instance.selection._bakRange
                         let str = _that.instance.getContentTxt()
                         //do something
-                        if(nKeyCode==13){
-                         _that.ueconter = str
-                        }else if(nKeyCode==188){
-                            let newstr = str.substring(0,selection.endOffset+1);
-                            let uearr = newstr.split("，")
-                            let i = uearr.length-2<0?0:uearr.length-2
-                            _that.ueconter = uearr[i]
-                        }else if(nKeyCode==190){
-                            let newstr = str.substring(0,selection.endOffset+1);
-                            let uearr = newstr.split("。")
-                            let i = uearr.length-2<0?0:uearr.length-2
+                        if(nKeyCode==13||nKeyCode==188||nKeyCode==190||nKeyCode==86){
+                            str = str.replaceAll('，',',');
+                            str = str.replaceAll('。',',');
+                            let uearr = str.split(',');
+                            for(var i = 0;i<uearr.length;i++){
+                                if(uearr[i]==''||uearr[i]==null||typeof(uearr[i])==undefined){
+                                    uearr.splice(i,1);
+                                    i=i-1;
+                                }
+                            }
+
+                            let i = uearr.length-1==0?0:uearr.length-1
                             _that.ueconter = uearr[i]
                         }
-                        console.log(_that.ueconter)
                         _that.$emit('listenEvent',_that.ueconter)
                     })
 
                 });
+
                 store.ueditor = this.instance;
             });
         },
