@@ -126,16 +126,24 @@ button{outline-style: none;}
 .el-dialog__body .el-textarea__inner {
   height: 120px;
 }
-.el-dialog__body .el-button{
+.dialog-footer .el-button{
   background: #666666;
   color: #FFF;
   padding: 12px 15px;
 }
 
-.el-dialog__body .el-button--primary {
+.dialog-footer .el-button--primary {
   color: #FFF;
   background-color: #D72323;
   border-color: #D72323;
   padding: 12px 15px;
+}
+.el-table th {
+  background: #f2f2f2;
+  padding: 8px 0;
+}
+
+.ssContainer td.el-table_1_column_1  .cell{
+    text-align: right;
 }
 </style>
