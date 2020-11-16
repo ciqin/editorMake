@@ -602,6 +602,8 @@ export default {
                         if(nKeyCode==13||nKeyCode==188||nKeyCode==190||nKeyCode==86){
                             str = str.replaceAll('，',',');
                             str = str.replaceAll('。',',');
+                            str = str.replaceAll(',',',');
+                            str = str.replaceAll('.',',');
                             let uearr = str.split(',');
                             for(var i = 0;i<uearr.length;i++){
                                 if(uearr[i]==''||uearr[i]==null||typeof(uearr[i])==undefined){
