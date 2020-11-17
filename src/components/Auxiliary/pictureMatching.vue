@@ -11,7 +11,7 @@
           <el-card class="box-card">
               <div class="cardCon">
                 <h5>原文内容</h5>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar sic tempor. Sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci, sed rhoncus pronin sapien nunc accuan eget.</p>
+                <p>{{context}}</p>
               </div>
               <el-button type="primary" size="mini" style="background: #303841;border:none;margin-top:16px;">更新配图</el-button>
           </el-card>
@@ -30,6 +30,7 @@ export default {
   data(){
     return {
       checked:"",
+      context:store.gettaxt,
       tabs:[
         {
           url:"assets/container.jpg"

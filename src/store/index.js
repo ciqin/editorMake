@@ -11,6 +11,7 @@ export const store = Vue.observable({
     objid:"",
     Title:"",
     submit:false,
+    gettaxt:"",
     ueditorWidth:window.innerWidth- 1120
 })
 export const mutations = {

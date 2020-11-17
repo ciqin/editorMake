@@ -191,3 +191,7 @@ export const basicInfos = data => postHttp(caiApi+'/ilgcreation/analysis/basicIn
 
 //综合分析情感的分
 export const emotionScore = data => postHttp(caiApi+'/ilgcreation/analysis/emotionScore', data)
+
+//自动配图 192.168.4.68:9117/ilgcreation/autoIllustrated
+export const autoIllustrated = data => postHttp('192.168.4.68:9117/ilgcreation/autoIllustrated', data)
+

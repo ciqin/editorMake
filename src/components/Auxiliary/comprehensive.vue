@@ -21,7 +21,7 @@
            </div>
            <div class='reader_right'>
                <p>阅读时间：<span>8</span>分钟</p>
-               <p>郎读时间：<span>10</span>分钟</p>
+               <p>朗读时间：<span>10</span>分钟</p>
            </div>
         </div>
 
@@ -312,13 +312,13 @@
 
                     //仪表盘详情，用于显示数据。
                     detail: {
-                        show: true,
+                        show: false,
                         offsetCenter: [0, '-25%'],
-                        formatter: '{value}',
+                        // formatter: '{value}',
                     },
                     data: [{
                         value: _that.remotionvalue,
-                        name: '政负情感',
+                        name: '正负情感',
                     },
                     ]
                 }]

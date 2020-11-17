@@ -618,6 +618,16 @@ export default {
                         _that.$emit('listenEvent',_that.ueconter)
                     })
 
+
+                    
+                    UE.dom.domUtils.on(this.instance.body,"mouseup",function(oEvent){
+                        let gettaxt = _that.instance.selection.getText()
+                        store.gettaxt = gettaxt
+
+                    })
+
+
+
                 });
 
                 store.ueditor = this.instance;

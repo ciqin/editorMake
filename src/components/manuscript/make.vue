@@ -96,14 +96,15 @@ export default {
                 //     type:'tab1',
                 //     view:'AI改写'
                 // },
-                // {
-                //     type:'Tab4',
-                //     view:'自动配图'
-                // },
+                {
+                    type:'Tab4',
+                    view:'自动配图'
+                },
                 {
                     type:'Tab5',
                     view:'综合分析'
-                }
+                },
+
             ],
         };
     },
