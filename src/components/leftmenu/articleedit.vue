@@ -147,18 +147,33 @@ export default {
       }
 
       if(this.Relatedarr[index].isFavorite == true){
-        this.Relatedarr[index].isFavorite = false
         ilgcreations().then(res=>{
             Articledell(param).then((res)=>{
-          
+               if(res.message=='取消成功'){
+                  this.Relatedarr[index].isFavorite = false
+                      this.$message({
+                            message: '取消收藏成功',
+                            type: 'success'
+                      });
+                  }else{
+                    this.$message('取消收藏失败');
+                  }
             })
         })
         
       }else{
-        this.Relatedarr[index].isFavorite = true
          ilgcreations().then(res=>{
            Articleadd(param).then((res)=>{
-          
+             if(res.message=='收藏成功'){
+                this.Relatedarr[index].isFavorite = true
+                this.$message({
+                            message: '收藏成功',
+                            type: 'success'
+                      });
+             }else{
+                this.$message('收藏失败');
+             }
+
            })
          })
       }

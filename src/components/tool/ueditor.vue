@@ -367,7 +367,7 @@ export default {
             activeIndex:2,
             ueconter:'',
             gettaxt:'',
-            Tooltipstyle:'display:none,z-index:8888',//滑过获取关联文章样式
+            Tooltipstyle:'display:none,z-index:2000',//滑过获取关联文章样式
         };
     },
     created(){
@@ -1049,9 +1049,11 @@ export default {
     border-radius: 4px;
     border: 1px solid #EBEEF5;
     color:#000;
+    display:none;
 }
 
 #pictureMabth p:active{
     color:red
 }
+
 </style>

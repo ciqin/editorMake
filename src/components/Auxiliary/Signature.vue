@@ -16,7 +16,7 @@
                         <div v-for='(item,index) in showTitleimg' @click="setShowTitleimg(index)" :key = 'index' @mouseover='titleimgover(item,index)' @mouseout='titleimgout(item,index)' style='position:relative;margin-right: 15px;'>
                                 <img :src="item.url" alt="" style="cursor: pointer;" width="100" height="70">
 
-                                <div class='titleimgbottom'>
+                                <div class='titleimgbottom' :style="item.show==true?'display:flex':'display:none'">
                                         <span class='titleimgbottom_a' @click="lookmoddle(item)">预览</span> 
                                         <ImgCutter v-if='num==1' ref="imgCutterModal1"
                                                     :cross-origin="true"
@@ -432,13 +432,25 @@ export default {
         }
     },
     xztpCutDownSmall(fileName) { 
-        this.form.opaImg1 = fileName.dataURL
+        if(this.$store.state.title && this.titleimg.length>0){
+          this.showTitleimg[0].url = fileName.dataURL
+        }else{
+          this.form.opaImg1 = fileName.dataURL
+        }
     },
     xztpCutDownBig(fileName) { 
-        this.form.opaImg2 = fileName.dataURL
+        if(this.$store.state.title && this.titleimg.length>0){
+           this.showTitleimg[0].url = fileName.dataURL
+        }else{
+           this.form.opaImg2 = fileName.dataURL
+        }
     },
     xztpCutDownMany(fileName) { 
-        this.form.opaImg3 = fileName.dataURL
+        if(this.$store.state.title && this.titleimg.length>0){
+          this.showTitleimg[this.showTitleimgIdx].url = fileName.dataURL
+        }else{
+           this.form.opaImg3 = fileName.dataURL
+        }
     },
     xztpCutDownCover (fileName){
         this.form.addImg = fileName.dataURL
@@ -585,11 +597,11 @@ export default {
     },
 
     titleimgover(item,index){
-       this.titleimg[index].show=true
+       this.showTitleimg[index].show=true   
     },
 
     titleimgout(item,index){
-       this.titleimg[index].show=false
+       this.showTitleimg[index].show=false
     },
 
     loadpicture(){
@@ -603,7 +615,7 @@ export default {
     },
 
     lookmoddle(item){
-        let str=`<div style='width: 1000px;height: 800px;overflow-y: auto;'><img src='item.url'></div>`
+        let str=`<div style='width: 1000px;height: 800px;overflow-y: auto;'><img src=${item.url}></div>`
         this.$alert(str,'图片预览', {
           dangerouslyUseHTMLString: true
         });
@@ -802,7 +814,6 @@ export default {
     height: 25px;
     width: 100%;
     line-height: 25px;
-
 }
 .titleimgbottom span{
    text-align:center;
