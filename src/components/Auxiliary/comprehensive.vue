@@ -15,7 +15,7 @@
                 <p>句数：<span>{{sentenceNum}}</span>个</p>
             </div>
         </div>
-        <div  class='information_box information_reader'>
+        <!-- <div  class='information_box information_reader'>
            <div class='reader_left'>
                <div id='readerecharts'></div>
            </div>
@@ -23,7 +23,7 @@
                <p>阅读时间：<span>8</span>分钟</p>
                <p>朗读时间：<span>10</span>分钟</p>
            </div>
-        </div>
+        </div> -->
 
         <div  class='information_box information_emotion'>
            <p>情感得分：</p>
@@ -37,7 +37,7 @@
            </div>
         </div>
 
-        <div  class='information_box information_new'>
+        <!-- <div  class='information_box information_new'>
            <p>新闻流行度预测：</p>
            <div class='new_top'>
              <div id='newsection_charts'></div>
@@ -45,7 +45,7 @@
            <div class='new_bottom'>
  
            </div>
-        </div>
+        </div> -->
     </div>
 </template>
 <script>
@@ -60,7 +60,7 @@
                charNum:'',
                sentenceNum:'',
                wordNum:'',
-               remotionvalue:'',//政负情感  
+               remotionvalue:'-1',//政负情感  
             }
         },
      mounted(){
@@ -279,7 +279,7 @@
                         lineStyle: {
                             width: 10,
                             color: [
-                                [0.23, '#4489ea'],
+                                [-1, '#4489ea'],
                                 [1, '#d8e8f2']
                             ]
                         }
@@ -315,7 +315,7 @@
 
                     //仪表盘详情，用于显示数据。
                     detail: {
-                        show: true,
+                        show: false,
                         offsetCenter: [0, '-25%'],
                         formatter: '{value}',
                     },
