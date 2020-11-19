@@ -4,7 +4,7 @@
 const swaggerApi = "http://192.168.18.12:9117";
 // const caiApi = "http://qhcloudhongqi.wengegroup.com:9080";
 // 本地调试接口
-const caiApi = "http://127.0.0.1:9080";
+const caiApi = "http://qhcloudhongqi.wengegroup.com:9080";
 const hongApi = "http://qhcloudhongqi.wengegroup.com:9116/api"
 
 import { getHttp, postHttp } from "./httpService"
