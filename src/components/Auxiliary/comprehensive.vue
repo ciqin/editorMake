@@ -227,6 +227,8 @@
                if(res.message='获取成功'){
                    this.remotionvalue = res.data[0]
                    this.loadleftChartremotion()
+               }else{
+                   this.$message(res.message);
                }
            })
 
@@ -234,6 +236,7 @@
 
         //正负情感
         loadleftChartremotion(){
+         console.log(this.remotionvalue)
          let _that = this
             //政负情感
          let leftChartremotion = this.$echarts.init(document.getElementById('emotion_leftchaerts'))
@@ -312,12 +315,12 @@
 
                     //仪表盘详情，用于显示数据。
                     detail: {
-                        show: false,
+                        show: true,
                         offsetCenter: [0, '-25%'],
-                        // formatter: '{value}',
+                        formatter: '{value}',
                     },
                     data: [{
-                        value: _that.remotionvalue,
+                        value: this.remotionvalue?this.remotionvalue:'',
                         name: '正负情感',
                     },
                     ]
