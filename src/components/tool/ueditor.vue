@@ -3,6 +3,11 @@
     <!--下面通过传递进来的id完成初始化-->
     <div style="position:relative;">
         <div :id="randomId" ref="ueditor"></div>
+        <div  id="pictureMabth" :style="Tooltipstyle">
+            <p @click="pictureBTN">自动配图</p>
+            <p @click="pictureBTN">关联文章</p>
+            <div class='popper__arrow'></div>
+        </div>
         <div class="OperationButton" :style="{'left':btnLeft, 'position':'absolute', 'bottom': '0%'}">    
             <ul> 
                <li v-if="storyDeliver"><el-button type="text" @click="opaBtn1"><a href="javascript:" style="color:#fff;"><i class="el-icon-position" style="color: #d72323;font-size: 18px;"></i></a><span>传稿</span></el-button></li>
@@ -360,7 +365,9 @@ export default {
             show:false,
             mobileHtml:"",
             activeIndex:2,
-            ueconter:''
+            ueconter:'',
+            gettaxt:'',
+            Tooltipstyle:'display:none,z-index:8888',//滑过获取关联文章样式
         };
     },
     created(){
@@ -583,18 +590,17 @@ export default {
             //dom元素已经挂载上去了
             this.$nextTick(() => {
                 this.instance = UE.getEditor(this.randomId, this.ueditorConfig);
+
                 // 绑定事件，当 UEditor 初始化完成后，将编辑器实例通过自定义的 ready 事件交出去
                 this.instance.addListener('ready', () => {
                     this.ready = true;
                     this.$emit('ready', this.instance);
-
                     let _that = this
 
                     UE.dom.domUtils.on(this.instance.body,"keyup",function(oEvent){
-                        
-                        var oEvent = oEvent || window.oEvent; 
                         //获取键盘的keyCode值
                         var nKeyCode = oEvent.keyCode || oEvent.which || oEvent.charCode;
+                        var oEvent = oEvent || window.oEvent; 
 
                         let selection = _that.instance.selection._bakRange
                         let str = _that.instance.getContentTxt()
@@ -621,13 +627,21 @@ export default {
 
                     
                     UE.dom.domUtils.on(this.instance.body,"mouseup",function(oEvent){
-                        let gettaxt = _that.instance.selection.getText()
-                        store.gettaxt = gettaxt
+                        var oEvent = oEvent || window.oEvent; 
+                        _that.gettaxt = _that.instance.selection.getText()
+
+                        if(_that.gettaxt!=''){
+                           _that.Tooltipstyle=`position: fixed;top:${oEvent.screenY-50}px;left:${oEvent.screenX-50}px;display:block;z-index: 555555;`
+                        }else{
+                           _that.gettaxt = '';
+                           _that.Tooltipstyle = 'display:none,z-index:8888'
+                        }
 
                     })
 
-
-
+                    UE.dom.domUtils.on(this.instance.body,"click",function(oEvent){
+                        
+                    })
                 });
 
                 store.ueditor = this.instance;
@@ -914,6 +928,13 @@ export default {
         rejectSelect(data){
            this.radio = data.lable;
            this.rejectUuid = data.uuid;
+        },
+        
+        //自动配图
+        pictureBTN(){
+          store.gettaxt = this.gettaxt
+
+          this.$emit('listenEvent',this.gettaxt)
         }
     }
 };
@@ -1018,4 +1039,19 @@ export default {
     max-width: 100%;
 }
 
+#pictureMabth{
+     width: 90px;
+    line-height: 30px;
+    height: 66px;
+    background: rgb(255, 255, 255);
+    text-align: center;
+    box-shadow: rgba(212, 212, 212, 0.3) 0px 1px 3px inset;
+    border-radius: 4px;
+    border: 1px solid #EBEEF5;
+    color:#000;
+}
+
+#pictureMabth p:active{
+    color:red
+}
 </style>

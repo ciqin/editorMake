@@ -15,12 +15,12 @@
                 </div>
               </div>
 
-              <div class='acticle_list_title' :title='item.title'>{{item.title}}</div>
+              <div class='acticle_list_title' v-html="item.title"></div>
 
               <div v-if='item.content!=""'>
                 <div class="acticle_list_bottom">
-                  <div class='acticle_list_content' v-if="item.iscontent" @mouseup="listcontentup">{{item.content}}</div>
-                  <div class='acticle_list_content' v-else @mouseup="listcontentup">{{item.partcontent}}</div>
+                  <div class='acticle_list_content' v-if="item.iscontent" @mouseup="listcontentup" v-html='item.content'></div>
+                  <div class='acticle_list_content' v-else @mouseup="listcontentup" v-html='item.partcontent'></div>
                   <div class='acticle_list_keyword'>关联点：{{item.words}}</div>
                   <div class='acticle_list_Similarity'>关联度：{{item.similarity}}</div>
                 </div>
@@ -229,6 +229,9 @@ export default {
           height: 4px;
           background-color: #D72323;
    }
+   em{
+      font-style: normal;
+    }
 </style>
 <style scoped>
 .nav_top_articleedit{
@@ -349,4 +352,5 @@ export default {
    font-size: 14px;
    cursor: pointer;
 }
+
 </style>

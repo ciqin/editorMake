@@ -101,11 +101,11 @@
                       </div>
                     </div>
 
-                    <div class='acticle_list_title' :title='item.title'>{{item.title}}</div>
+                    <div class='acticle_list_title' v-html='item.title'></div>
 
                     <div v-if='item.content!=""'>
                       <div class="acticle_list_bottom">
-                        <div class='acticle_list_content' v-if="item.iscontent" @mouseup="listcontentup">{{item.content}}</div>
+                        <div class='acticle_list_content' v-if="item.iscontent" @mouseup="listcontentup" >{{item.content}}</div>
                         <div class='acticle_list_content' v-else @mouseup="listcontentup">{{item.partcontent}}</div>
                       </div>
                     </div>

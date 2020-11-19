@@ -11,57 +11,83 @@
           <el-card class="box-card">
               <div class="cardCon">
                 <h5>原文内容</h5>
-                <p>{{context}}</p>
+                <textarea v-model="context"></textarea>
               </div>
-              <el-button type="primary" size="mini" style="background: #303841;border:none;margin-top:16px;">更新配图</el-button>
+              <el-button @click="picture_btn" type="primary" size="mini" style="background: #303841;border:none;margin-top:16px;">更新配图</el-button>
           </el-card>
-          <div class="Refresh"><i class="el-icon-refresh" style="color:#1a8afa;"></i>换一批</div>
-          <div class="imgContainer">
-            <ul>
-              <li v-for="(tab,index) in tabs"><img src="@/assets/container.jpg" alt="" width="160"><el-checkbox v-model="checked" style="position:absolute;right:24px;top:-2px;"></el-checkbox></li>
+          <div class="imgContainer" v-loading="loading">
+            <ul v-if='tabs.length>0'>
+              <li v-for="(tab,index) in tabs"><img :src='tab.url' alt="" width="160" height="160"><el-checkbox @change="checkedclik(tab,index)" v-model='tab.checked' style="position:absolute;right:24px;top:-2px;"></el-checkbox></li>
             </ul>
+            <div v-else-if='tabs.length==0' style='text-align:center;margin-top: 50px;'>暂无数据</div>
           </div>
       </div>
     </el-form>
   </div>
 </template>
 <script>
+import { store } from '@/store'
+import Axios from "axios"
+import { autoIllustrated } from '@/http/api'
 export default {
   data(){
     return {
       checked:"",
-      context:store.gettaxt,
-      tabs:[
-        {
-          url:"assets/container.jpg"
-        },
-        {
-          url:""
-        },
-        {
-          url:""
-        },
-        {
-          url:""
-        },
-        {
-          url:""
-        },
-        {
-          url:""
-        },
-        {
-          url:""
-        },
-        {
-          url:""
-        },
-        {
-          url:""
+      tabs:[],
+      context:'',
+      loading:true,
+      pagenum:1,
+      textareavalue:''
+    }
+  },
+  watch:{
+    gettaxt:function(newval,oldval){
+      this.watchfun(newval)
+    },
+    context:function(newval,oldval){
+      this.textareavalue = newval;
+    }
+  },
+  computed:{
+     gettaxt(){
+      return store.gettaxt
+    }
+  },
+  created(){
+    this.textareavalue = store.gettaxt
+    this.picture_btn()
+  },
+  methods: {
+    watchfun(val){
+      this.context = val;
+      this.textareavalue = val;
+      this.picture_btn()
+    },
+    picture_btn(){
+      this.loading=true
+      autoIllustrated({content: this.textareavalue}).then((res)=>{
+         if(res){
+           this.loading=false
+
+           for(var i=0;i<res.data.length;i++){
+             this.tabs.push({url:res.data[i],checked:false})
+           }
+         }
+      })
+    },
+    checkedclik(item,index){
+        if(item.chcked){
+           item.chcked = false
+        }else{
+          item.chcked = true
+          store.ueditor.focus()
+          store.ueditor.execCommand('inserthtml',`<img src=${item.url}>`)
         }
-      ]
+        
     }
   }
+
+
 }
 </script>
 <style scoped>
@@ -93,6 +119,16 @@ export default {
   height: 200px;
   padding: 10px 5px;
 }
+.cardCon textarea{
+    min-width: 90%;
+    max-width: 90%;
+    max-height: 144px;
+    background: rgb(246, 247, 249);
+    border: none;
+    margin: 0px;
+    height: 158px;
+    width: 294px;
+}
 .cardCon h5 {
   text-align: left;
   color: #666666;
@@ -113,6 +149,7 @@ export default {
   color: #999999;
   line-height: 16px;
   margin:16px 0;
+  color: #000;
 }
 .imgContainer ul li{
   width: 50%;

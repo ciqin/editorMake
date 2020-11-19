@@ -10,49 +10,74 @@
                         <el-radio :label="9" @change="coverMany">三图</el-radio>
                     </el-radio-group>
                 </el-form-item>
-            <el-form-item label=""  class="cover">  
-                    <el-row :gutter="20">
-                            <el-col :span="8">
-                                <div class="grid-content bg-purple">
-                                    <ImgCutter ref="imgCutterModal1"
-                                                :cross-origin="true"
-                                                :tool-bgc="none"
-                                                :is-modal="true"
-                                                :show-choose-btn="true"
-                                                :lock-scroll="true"
-                                                :box-width="600"
-                                                :box-height="500"
-                                                :cut-width="200"
-                                                :cut-height="200"
-                                                :size-change="true"
-                                                :move-able="true"
-                                                @cutDown="xztpCutDownSmall">
-                                                <button slot="open" style="display:none;"></button>
-                                    </ImgCutter>
-                                    <img  v-if="opaBtn1" :src="form.opaImg1" alt="" slot="open" style="cursor: pointer;" width="70" @click="loadSmall(index)">
+
+                <el-form-item v-loading='loading' class='picture_mull' v-if='this.$store.state.title&& titleimg.length>0'>
+                    <div  style='display:flex'>
+                        <div v-for='(item,index) in showTitleimg' @click="setShowTitleimg(index)" :key = 'index' @mouseover='titleimgover(item,index)' @mouseout='titleimgout(item,index)' style='position:relative;margin-right: 15px;'>
+                                <img :src="item.url" alt="" style="cursor: pointer;" width="100" height="70">
+
+                                <div class='titleimgbottom'>
+                                        <span class='titleimgbottom_a' @click="lookmoddle(item)">预览</span> 
+                                        <ImgCutter v-if='num==1' ref="imgCutterModal1"
+                                                    :cross-origin="true"
+                                                            :tool-bgc="none"
+                                                            :is-modal="true"
+                                                            :show-choose-btn="true"
+                                                            :lock-scroll="true"
+                                                            :box-width="600"
+                                                            :box-height="500"
+                                                            :cut-width="200"
+                                                            :cut-height="200"
+                                                            :size-change="true"
+                                                            :move-able="true"
+                                                            @cutDown="xztpCutDownSmall">         
+                                                            <button class='titleimgbottom_b'  @click="loadpicture(index)">本地上传</button>
+                                        </ImgCutter>
+                                        <ImgCutter v-else-if='num==2' ref="imgCutterModal2"
+                                                    :cross-origin="true"
+                                                            :tool-bgc="none"
+                                                            :is-modal="true"
+                                                            :show-choose-btn="true"
+                                                            :lock-scroll="true"
+                                                            :box-width="600"
+                                                            :box-height="500"
+                                                            :cut-width="200"
+                                                            :cut-height="200"
+                                                            :size-change="true"
+                                                            :move-able="true"
+                                                            @cutDown="xztpCutDownBig">
+                                                            <button class='titleimgbottom_b'  @click="loadpicture(index)">本地上传</button>
+                                        </ImgCutter>
+                                        <ImgCutter v-else-if='num==3' ref="imgCutterModal3"
+                                                    :cross-origin="true"
+                                                                :tool-bgc="none"
+                                                                :is-modal="true"
+                                                                :show-choose-btn="true"
+                                                                :lock-scroll="true"
+                                                                :box-width="600"
+                                                                :box-height="500"
+                                                                :cut-width="200"
+                                                                :cut-height="200"
+                                                                :size-change="true"
+                                                                :move-able="true"
+                                                                @cutDown="xztpCutDownMany">
+                                                                <button class='titleimgbottom_b'  @click="loadpicture(index)">本地上传</button>  
+                                        </ImgCutter>
                                 </div>
-                            </el-col>
-                            <el-col :span="8"><div class="grid-content bg-purple">
-                                    <ImgCutter ref="imgCutterModal2"
-                                                :cross-origin="true"
-                                                :tool-bgc="none"
-                                                :is-modal="true"
-                                                :show-choose-btn="true"
-                                                :lock-scroll="true"
-                                                :box-width="600"
-                                                :box-height="500"
-                                                :cut-width="200"
-                                                :cut-height="200"
-                                                :size-change="true"
-                                                :move-able="true"
-                                                @cutDown="xztpCutDownBig">
-                                                <button slot="open" style="display:none;"></button>
-                                    </ImgCutter>
-                                    <img  v-if="opaBtn2" :src="form.opaImg2" alt="" slot="open" style="cursor: pointer;" width="70" @click="loadBig(index)">
-                                
-                                </div></el-col>
-                                <el-col   el-col :span="8"><div class="grid-content bg-purple">
-                                    <ImgCutter ref="imgCutterModal3"
+                        </div> 
+                    </div>
+                    
+                    <div class='refrech_img' style='display: flex;padding-left: 100px;'>
+                        <p @click="refreshbtnprev" :style='isdisshow'><i class='el-icon-top-left'></i>上一张</p>
+                        <p @click="refreshbtn"><i class='el-icon-refresh'></i>换一张</p>
+                    </div>
+                </el-form-item>
+
+                <el-form-item  v-else-if='!this.$store.state.title && titleimg.length==0' label=""  class="cover">  
+                        <el-row :gutter="20">
+                                <el-col :span="8">
+                                    <div class="grid-content bg-purple">
+                                        <ImgCutter ref="imgCutterModal1"
                                                     :cross-origin="true"
                                                     :tool-bgc="none"
                                                     :is-modal="true"
@@ -64,14 +89,53 @@
                                                     :cut-height="200"
                                                     :size-change="true"
                                                     :move-able="true"
-                                                    @cutDown="xztpCutDownMany">
+                                                    @cutDown="xztpCutDownSmall">
                                                     <button slot="open" style="display:none;"></button>
-                                    </ImgCutter>
-                                    <img  v-if="opaBtn3" :src="form.opaImg3" alt="" slot="open" width="70" style="cursor: pointer;" @click="loadMany(index)">
-                                </div></el-col>
-                    </el-row>
-                    
+                                        </ImgCutter>
+                                        <img  v-if="opaBtn1" :src="form.opaImg1" alt="" slot="open" style="cursor: pointer;" width="70" @click="loadSmall(index)">
+                                    </div>
+                                </el-col>
+                                <el-col :span="8"><div class="grid-content bg-purple">
+                                        <ImgCutter ref="imgCutterModal2"
+                                                    :cross-origin="true"
+                                                    :tool-bgc="none"
+                                                    :is-modal="true"
+                                                    :show-choose-btn="true"
+                                                    :lock-scroll="true"
+                                                    :box-width="600"
+                                                    :box-height="500"
+                                                    :cut-width="200"
+                                                    :cut-height="200"
+                                                    :size-change="true"
+                                                    :move-able="true"
+                                                    @cutDown="xztpCutDownBig">
+                                                    <button slot="open" style="display:none;"></button>
+                                        </ImgCutter>
+                                        <img  v-if="opaBtn2" :src="form.opaImg2" alt="" slot="open" style="cursor: pointer;" width="70" @click="loadBig(index)">
+                                    
+                                    </div></el-col>
+                                    <el-col   el-col :span="8"><div class="grid-content bg-purple">
+                                        <ImgCutter ref="imgCutterModal3"
+                                                        :cross-origin="true"
+                                                        :tool-bgc="none"
+                                                        :is-modal="true"
+                                                        :show-choose-btn="true"
+                                                        :lock-scroll="true"
+                                                        :box-width="600"
+                                                        :box-height="500"
+                                                        :cut-width="200"
+                                                        :cut-height="200"
+                                                        :size-change="true"
+                                                        :move-able="true"
+                                                        @cutDown="xztpCutDownMany">
+                                                        <button slot="open" style="display:none;"></button>
+                                        </ImgCutter>
+                                        <img  v-if="opaBtn3" :src="form.opaImg3" alt="" slot="open" width="70" style="cursor: pointer;" @click="loadMany(index)">
+                                    </div></el-col>
+                        </el-row>
+                        
                 </el-form-item>
+
                 <el-form-item label="分享封面"  class="cover">
                     <div  style="padding-top:12px;">
                         <ImgCutter ref="imgCutterModal0"
@@ -210,7 +274,7 @@
 </template>
 <script>
 import ImgCutter from 'vue-img-cutter'
-import {newSignature,extractingKeywords,abstract} from '@/http/api'
+import {newSignature,extractingKeywords,abstract,coverAutoIllustrated} from '@/http/api'
 import { store , mutations} from '@/store'
 import {mapActions, mapGetters} from 'vuex';
 // 加载jquery
@@ -276,6 +340,7 @@ export default {
                 value: '选项1',
                 label: '黄金糕'
             }],
+            loading:true,
             checked:true,
             radio:"",
             value:"",
@@ -306,7 +371,14 @@ export default {
             opaBtn1:false,
             opaBtn2:false,
             opaBtn3:false,
-            none:"none"
+            none:"none",
+            num:'',
+            titleimg:[],
+            showTitleimg:[],
+            showTitleimgIdx:0,
+            titleimgNextIdx:1,
+            showTitleimgNum:0,
+            isdisshow:'cursor: not-allowed'
         }
     },
     inject:['app'],
@@ -373,6 +445,11 @@ export default {
     },
     // 小图操作函数
     coverSmall(){
+        this.num = 1
+        if(this.$store.state.title){
+           this.loadcoverAutoIllu()
+        }
+
         this.opaBtn1 = true;
         this.opaBtn2 = false;
         this.opaBtn3 = false;
@@ -383,6 +460,10 @@ export default {
     },
     // 大图操作函数
     coverBig(){
+        this.num = 2
+        if(this.$store.state.title){
+           this.loadcoverAutoIllu()
+        }
         this.opaBtn1 = false;
         this.opaBtn2 = true;
         this.opaBtn3 = false;
@@ -393,6 +474,10 @@ export default {
     },
     // 三图操作函数
     coverMany(){
+        this.num = 3
+        if(this.$store.state.title){
+           this.loadcoverAutoIllu()
+        }
         this.opaBtn1 = true;
         this.opaBtn2 = true;
         this.opaBtn3 = true;
@@ -407,6 +492,7 @@ export default {
         this.opaBtn2 = false;
         this.opaBtn3 = false;
         this.form.coverType = 0;
+        this.showTitleimg = [];
     },
     loadSmall(index){
         this.$refs.imgCutterModal1.handleOpen({
@@ -463,6 +549,133 @@ export default {
         this.form.inputValue = '';
     },
     hasHtmlContent(){
+    },
+    //点击第几个封面图
+    setShowTitleimg(idx){
+        this.showTitleimgIdx = idx;
+        console.log(idx);
+    },
+    //获取封面图
+    loadcoverAutoIllu(){
+        this.titleimgNextIdx = 1;
+        if(this.radio==9){
+            this.showTitleimgNum = 3;
+        }else if(this.radio==12){
+            this.showTitleimgNum = 0;
+        }else{
+            this.showTitleimgNum = 1;
+        }   
+        this.titleimg=[];
+        this.showTitleimg=[];
+         let param={
+             title:this.$store.state.title,
+         }
+         coverAutoIllustrated(param).then((res)=>{
+            if(res){
+                console.log(res.data);
+                this.loading =false
+                for(let i=0;i<res.data.length;i++){
+                    if(i<this.showTitleimgNum){
+                        this.showTitleimg.push({show:false,url:res.data[i]})
+                    }
+                    this.titleimg.push({show:false,url:res.data[i]})
+                }
+            }
+         })
+    },
+
+    titleimgover(item,index){
+       this.titleimg[index].show=true
+    },
+
+    titleimgout(item,index){
+       this.titleimg[index].show=false
+    },
+
+    loadpicture(){
+       if(this.num==1){
+          this.loadSmall()
+       }else if(this.num==2){
+          this.loadBig()
+       }else if(this.num==3){
+          this.loadMany()
+       }
+    },
+
+    lookmoddle(item){
+        let str=`<div style='width: 1000px;height: 800px;overflow-y: auto;'><img src='item.url'></div>`
+        this.$alert(str,'图片预览', {
+          dangerouslyUseHTMLString: true
+        });
+    },
+
+    refreshbtn(){//换一张
+        if(this.titleimgNextIdx == 0){
+          this.isdisshow = 'cursor: not-allowed'
+        }else{
+          this.isdisshow = 'cursor: pointer'
+        }
+        let idx = this.showTitleimgIdx;
+        let next = this.titleimgNextIdx; 
+        let total = this.showTitleimgNum;
+        if(total+next > this.titleimg.length){
+           this.$message('没有更多图片了');
+           return false
+        }
+
+        let tempArr = [];
+        this.showTitleimg.forEach(function(item){
+            tempArr.push(item);
+        });
+        tempArr[idx] = this.titleimg[total+next-1];
+        this.showTitleimg = tempArr;
+        this.titleimgNextIdx++;
+
+        console.log(this.showTitleimgIdx,this.titleimgNextIdx,this.showTitleimgNum)
+    },
+    refreshbtnprev(){ //上一张
+        let idx = this.showTitleimgIdx;
+        let next = this.titleimgNextIdx; 
+        let total = this.showTitleimgNum;
+
+
+        if(this.titleimgNextIdx == 1){
+          this.isdisshow = 'cursor: not-allowed'
+          this.$message('没有更多图片了');
+          return false
+        }else{
+          this.isdisshow = 'cursor: pointer'
+        }
+
+
+        let tempArr = [];
+        this.showTitleimg.forEach(function(item){
+            tempArr.push(item);
+        });
+        let loop = false;
+        let data = null;
+        do{
+            loop = false;
+            data = this.titleimg[total+next-2];
+            let url = data.url;
+            for(let i=0;i<this.showTitleimg.length;i++){
+                if(url==this.showTitleimg[i].url){
+                    loop = true;
+                    break;
+                }
+            }
+            if(loop){
+                next--;
+            }
+        }while(loop);
+        if(!loop){
+            next--;
+        }
+        this.titleimgNextIdx = total+next-2;
+        console.log(data);
+        tempArr[idx] = data;
+        this.showTitleimg = tempArr;
+        console.log(this.showTitleimgIdx,this.titleimgNextIdx,this.showTitleimgNum)
     }
     
     },
@@ -582,4 +795,55 @@ export default {
     padding-right:44px;
 }
 
+.titleimgbottom{
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    height: 25px;
+    width: 100%;
+    line-height: 25px;
+
+}
+.titleimgbottom span{
+   text-align:center;
+   background:rgba(0, 0, 0, 1);
+   opacity: 0.46;
+   color:#ffffff
+}
+
+.titleimgbottom_a{
+    width:30px;
+    margin-right: 10px;
+
+}
+
+.titleimgbottom_b{
+    width:60px;
+}
+
+
+.picture_mull .el-form-item__content>div{
+    margin-right: 15px;
+    height: 70px;
+}
+
+.titleimgbottom .btn-primary{
+    padding: 0!important;
+    height: 24px !important;
+    line-height: 27px !important;
+    border: none !important;
+    background:rgba(0, 0, 0, 1) !important;
+    opacity: 0.46 !important;
+    color: #ffff !important;
+    margin: 0 !important;
+    border-radius: 0% !important;
+    width: 60px;
+ }
+
+ .refrech_img p{
+    width:80px;
+    height: 30px;
+    line-height: 30px;
+    cursor: pointer;
+ }
 </style>

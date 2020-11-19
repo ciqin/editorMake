@@ -12,6 +12,7 @@ export const store = Vue.observable({
     Title:"",
     submit:false,
     gettaxt:"",
+    textcheck:'',
     ueditorWidth:window.innerWidth- 1120
 })
 export const mutations = {

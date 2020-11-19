@@ -100,7 +100,7 @@ export const FavoriteMixmdedia = data => postHttp(caiApi+'/ilgcreation/favoriteM
 export const getFavoriteMixmdedias = data => getHttp(caiApi+'/ilgcreation/favoriteMixmdedia/getFavoriteMixmdedias', data)
 
 //关联文章添加收藏
-export const Articleadd = data => postHttp(caiApi+'/ilgcreation/favoriteArticle/add', data)
+export const Articleadd = data => postHttp(caiApi+'http://192.168.4.68:9117/ilgcreation/favoriteArticle/add', data)
 
 //关联文章取消收藏
 export const Articledell = data => postHttp(caiApi+'/ilgcreation/favoriteArticle/del', data)
@@ -193,5 +193,9 @@ export const basicInfos = data => postHttp(caiApi+'/ilgcreation/analysis/basicIn
 export const emotionScore = data => postHttp(caiApi+'/ilgcreation/analysis/emotionScore', data)
 
 //自动配图 192.168.4.68:9117/ilgcreation/autoIllustrated
-export const autoIllustrated = data => postHttp('192.168.4.68:9117/ilgcreation/autoIllustrated', data)
+export const autoIllustrated = data => postHttp(caiApi+'/ilgcreation/autoIllustrated', data)
+
+//封面自动配图 ilgcreation/coverAutoIllustrated
+export const coverAutoIllustrated = data => postHttp(caiApi+'/ilgcreation/coverAutoIllustrated', data)
+
 
