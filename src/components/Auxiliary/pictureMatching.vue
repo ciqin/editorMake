@@ -64,6 +64,7 @@ export default {
       this.picture_btn()
     },
     picture_btn(){
+      this.tabs=[]
       this.loading=true
       autoIllustrated({content: this.textareavalue}).then((res)=>{
          if(res){
