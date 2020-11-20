@@ -21,7 +21,7 @@
             <div class="grid-content bg-purple" style="position:relative">
                 <div :style="{'margin-left': inputLeft}">
                     <el-input type="text" v-model="input" @input="inputChange" placeholder="请输入内容" maxlength="300" show-word-limit :style="{'width':inputWidth,'margin':'16px 0'}"></el-input>
-                    <Ueditor @listenEvent = 'uedior'></Ueditor>
+                    <Ueditor @listenEvent = 'uedior' @listenup = 'uedior2'></Ueditor>
                 </div>
             </div>
         </el-col>
@@ -39,7 +39,11 @@
                     </el-col>
                     <el-col :span="21" style="overflow:auto;padding-top:16px;">
                         <!--:is实现多个组件实现同一个挂载点-->
-                        <component :is="currentView"></component>
+                        <Tab1 :style='style1'/>
+                        <Tab2 :style='style2'/>
+                        <Tab3 :style='style3'/>
+                        <Tab4 :style='style4'/>
+                        <Tab5 :style='style5'/>
                     </el-col>
                 </el-row>
             </div>
@@ -75,6 +79,11 @@ export default {
             uedstr:'' ,//获取ueditor根据符号检索的值
             inputLeft:"calc(50% - "+store.ueditorWidth/2+"px)",
             inputWidth:store.ueditorWidth+"px",
+            style1:'display:block',
+            style2:'display:none',
+            style3:'display:none',
+            style4:'display:none',
+            style5:'display:none',
             tabs:[
                 {
                     type:'Tab1',
@@ -129,13 +138,58 @@ export default {
         toggle(i,v){
             this.active=i;
             this.currentView=v.type;
+
+            if(i==0){
+               this.style1 = 'display:block'
+               this.style2 = 'display:none'
+               this.style3 = 'display:none'
+               this.style4 = 'display:none'
+               this.style5 = 'display:none'
+            }else if(i==1){
+               this.style1 = 'display:none'
+               this.style2 = 'display:block'
+               this.style3 = 'display:none'
+               this.style4 = 'display:none'
+               this.style5 = 'display:none'
+            }else if(i==2){
+               this.style1 = 'display:none'
+               this.style2 = 'display:none'
+               this.style3 = 'display:block'
+               this.style4 = 'display:none'
+               this.style5 = 'display:none'
+            }else if(i==3){
+               this.style1 = 'display:none'
+               this.style2 = 'display:none'
+               this.style3 = 'display:none'
+               this.style4 = 'display:block'
+               this.style5 = 'display:none'
+            }else if(i==4){
+               this.style1 = 'display:none'
+               this.style2 = 'display:none'
+               this.style3 = 'display:none'
+               this.style4 = 'display:none'
+               this.style5 = 'display:block'
+            }
+            
         },
         leftToggle(v){
           this.Navcurrent = v
         },
         uedior(param){  //获取ueditor根据符号检索的值
-          this.uedstr = param
+          this.uedstr = param;
+          this.Navcurrent = 'letfTab2'
         },
+
+        uedior2(){
+               this.style1 = 'display:none'
+               this.style2 = 'display:none'
+               this.style3 = 'display:none'
+               this.style4 = 'display:block'
+               this.style5 = 'display:none'
+
+               this.active = '3'
+        },
+
         inputChange(e){
             this.$store.dispatch('modifyDataTitle',this.input);
         },

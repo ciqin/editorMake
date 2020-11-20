@@ -162,7 +162,7 @@
                         type="textarea"
                         placeholder="请输入内容"
                         v-model="form.summary"
-                        maxlength="150"
+                        maxlength="200"
                         resize="none"
                         show-word-limit>
                     </el-input>

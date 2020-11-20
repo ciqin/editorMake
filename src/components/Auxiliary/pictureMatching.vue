@@ -16,8 +16,8 @@
               <el-button @click="picture_btn" type="primary" size="mini" style="background: #303841;border:none;margin-top:16px;">更新配图</el-button>
           </el-card>
           <div class="imgContainer" v-loading="loading">
-            <ul v-if='tabs.length>0'>
-              <li v-for="(tab,index) in tabs"><img :src='tab.url' alt="" width="160" height="160"><el-checkbox @change="checkedclik(tab,index)" v-model='tab.checked' style="position:absolute;right:24px;top:-2px;"></el-checkbox></li>
+            <ul v-if='tabs.length>0' style='margin-top:20px'>
+              <li v-for="(tab,index) in tabs"><img :src='tab.url' alt="" width="170" height="120" style='margin-top:29px'><el-checkbox @change="checkedclik(tab,index)" v-model='tab.checked' style="position:absolute;right:8px;top:3px;"></el-checkbox></li>
             </ul>
             <div v-else-if='tabs.length==0' style='text-align:center;margin-top: 50px;'>暂无数据</div>
           </div>
@@ -153,9 +153,12 @@ export default {
   color: #000;
 }
 .imgContainer ul li{
-  width: 50%;
-  float: left;
-  position: relative;
-  margin-bottom: 10px;
+    width: 180px;
+    height: 160px;
+    float: left;
+    position: relative;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    margin-right: 6px
 }
 </style>

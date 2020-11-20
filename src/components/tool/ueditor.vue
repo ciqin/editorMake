@@ -4,8 +4,8 @@
     <div style="position:relative;">
         <div :id="randomId" ref="ueditor"></div>
         <div  id="pictureMabth" :style="Tooltipstyle">
-            <p @click="pictureBTN">自动配图</p>
-            <p @click="pictureBTN">关联文章</p>
+            <p @click="picturetuBTN('自动配图')">自动配图</p>
+            <p @click="pictureBTN('关联文章')">关联文章</p>
             <div class='popper__arrow'></div>
         </div>
         <div class="OperationButton" :style="{'left':btnLeft, 'position':'absolute', 'bottom': '0%'}">    
@@ -628,15 +628,15 @@ export default {
                     
                     UE.dom.domUtils.on(this.instance.body,"mouseup",function(oEvent){
                         var oEvent = oEvent || window.oEvent; 
-                        _that.gettaxt = _that.instance.selection.getText()
+                        let gettaxts = _that.instance.selection.getText()
 
-                        if(_that.gettaxt!=''){
-                           _that.Tooltipstyle=`position: fixed;top:${oEvent.screenY-50}px;left:${oEvent.screenX-50}px;display:block;z-index: 555555;`
+                        if(gettaxts!=''){
+                            _that.gettaxt = gettaxts;
+                           _that.Tooltipstyle=`position: fixed;top:${oEvent.screenY-65}px;left:${oEvent.screenX-10}px;display:block;z-index: 555555;`
                         }else{
                            _that.gettaxt = '';
-                           _that.Tooltipstyle = 'display:none,z-index:8888'
+                           _that.Tooltipstyle = 'display:none;z-index:8888'
                         }
-
                     })
 
                     UE.dom.domUtils.on(this.instance.body,"click",function(oEvent){
@@ -932,9 +932,12 @@ export default {
         
         //自动配图
         pictureBTN(){
-          store.gettaxt = this.gettaxt
+          this.$emit('listenEvent',this.ueconter)
+        },
 
-          this.$emit('listenEvent',this.gettaxt)
+        picturetuBTN(){
+            store.gettaxt = this.gettaxt
+            this.$emit('listenup',this.gettaxt)
         }
     }
 };

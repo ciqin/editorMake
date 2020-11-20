@@ -194,7 +194,7 @@ export default {
 
     },
     listcontentup(e){
-       let texts = window.getSelection().toString();
+        let texts = window.getSelection().toString();
         if(texts!=''){
           this.text = texts;
           this.Tooltipstyle = `position: fixed;top:${e.pageY - e.offsetY - 10}px;left:${e.pageX}px;z-index: 999;width: 80px;height: 40px;border:1px solid #ccc;background: #fff;line-height: 40px;display: inline-block;border-radius: 5px;vertical-align: top;`
