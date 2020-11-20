@@ -67,7 +67,7 @@
                         </div> 
                     </div>
                     
-                    <div class='refrech_img' style='display: flex;padding-left: 100px;'>
+                    <div class='refrech_img' style='display: flex;padding-left: 100px;' :style="isrefreshshow">
                         <p @click="refreshbtnprev" :style='isdisshow'><i class='el-icon-top-left'></i>上一张</p>
                         <p @click="refreshbtn"><i class='el-icon-refresh'></i>换一张</p>
                     </div>
@@ -378,7 +378,8 @@ export default {
             showTitleimgIdx:0,
             titleimgNextIdx:1,
             showTitleimgNum:0,
-            isdisshow:'cursor: not-allowed'
+            isdisshow:'cursor: not-allowed',
+            isrefreshshow:'display:flex'
         }
     },
     inject:['app'],
@@ -469,6 +470,8 @@ export default {
         this.form.opaImg2 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
         this.form.opaImg3 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
         this.form.coverType = 1;
+         this.isrefreshshow = 'display:flex'
+
     },
     // 大图操作函数
     coverBig(){
@@ -483,6 +486,8 @@ export default {
         this.form.opaImg2 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
         this.form.opaImg3 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
         this.form.coverType = 2;
+        this.isrefreshshow = 'display:flex'
+
     },
     // 三图操作函数
     coverMany(){
@@ -497,6 +502,7 @@ export default {
         this.form.opaImg2 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
         this.form.opaImg3 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
         this.form.coverType = 3;
+        this.isrefreshshow = 'display:flex'
     },
     // 无图操作函数
     coverNone(){
@@ -505,6 +511,7 @@ export default {
         this.opaBtn3 = false;
         this.form.coverType = 0;
         this.showTitleimg = [];
+        this.isrefreshshow = 'display:none'
     },
     loadSmall(index){
         this.$refs.imgCutterModal1.handleOpen({
