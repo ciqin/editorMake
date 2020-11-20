@@ -639,9 +639,6 @@ export default {
                         }
                     })
 
-                    UE.dom.domUtils.on(this.instance.body,"click",function(oEvent){
-                        
-                    })
                 });
 
                 store.ueditor = this.instance;

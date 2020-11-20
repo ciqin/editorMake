@@ -213,6 +213,11 @@
      methods:{
         InfosStart(){
 
+          if(store.ueditor.getContentTxt()==''&&this.$store.state.title==''){
+              this.$message('请输入标题内容及文章内容');
+              return false
+          }
+
            //基本信息
            basicInfos({content:store.ueditor.getContentTxt()}).then((res)=>{
                if(res.message='获取成功'){

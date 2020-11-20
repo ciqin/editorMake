@@ -11,7 +11,7 @@
           <el-card class="box-card">
               <div class="cardCon">
                 <h5>原文内容</h5>
-                <textarea v-model="context"></textarea>
+                <div class='cardCon_input' contenteditable='true'>{{context}}</div>
               </div>
               <el-button @click="picture_btn" type="primary" size="mini" style="background: #303841;border:none;margin-top:16px;">更新配图</el-button>
           </el-card>
@@ -64,6 +64,10 @@ export default {
       this.picture_btn()
     },
     picture_btn(){
+      if(this.textareavalue==''){
+        this.$message('请输入原文内容');
+        return false
+      }
       this.tabs=[]
       this.loading=true
       autoIllustrated({content: this.textareavalue}).then((res)=>{
@@ -97,7 +101,7 @@ export default {
 }
 .line {
   border-bottom: 1px solid #DCDEE3;
-  margin-bottom: 60px;
+  margin-bottom: 20px;
   margin-top: 12px;
 }
 .wordTitle {
@@ -120,15 +124,18 @@ export default {
   height: 200px;
   padding: 10px 5px;
 }
-.cardCon textarea{
+.cardCon .cardCon_input{
     min-width: 90%;
     max-width: 90%;
     max-height: 144px;
+    line-height:25px;
     background: rgb(246, 247, 249);
     border: none;
     margin: 0px;
     height: 158px;
     width: 294px;
+    text-align:left;
+    padding:10px
 }
 .cardCon h5 {
   text-align: left;
@@ -160,5 +167,13 @@ export default {
     margin-bottom: 10px;
     border: 1px solid #ccc;
     margin-right: 6px
+}
+
+.box-card{
+    background: #FFFFFF;
+    border: 1px solid #E9E9E9;
+    box-shadow: 0 9px 9px 0 rgba(0,0,0,0.02), 0 3px 3px 0 rgba(0,0,0,0.02), 0 1px 1px 0 rgba(0,0,0,0.02);
+    border-radius: 4px;
+    border-radius: 4px;
 }
 </style>
