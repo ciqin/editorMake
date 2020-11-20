@@ -236,97 +236,114 @@
 
         //正负情感
         loadleftChartremotion(){
-         console.log(this.remotionvalue)
+         console.log(Number(this.remotionvalue))
          let _that = this
             //政负情感
          let leftChartremotion = this.$echarts.init(document.getElementById('emotion_leftchaerts'))
-         let datas={
-                dataArr: [
+
+         var axislineColor = new this.$echarts.graphic.LinearGradient(0, 0, 1, 0, [{
+                    offset: 0,
+                    color: '#2E64EF'
+                },
                 {
-                    value: 0,
-                    name: "",
-                },
-                ],
-                min:-1,
-                max:1,
-            };
-            var dataArr = datas.dataArr;
-            let nowData=dataArr[0].value;
-            let min = datas.min;
-            let max = datas.max;
-            let splitNumber=max-min;
-            let per = (dataArr[0].value - min) / (max - min);
-            let unit = datas.unit;
+                    offset: 1,
+                    color: '#6D9BFF'
+                }
+            ]);
 
+        
             leftChartremotion.setOption({
-                tooltip: {
-                    formatter: "{a} <br/>{b} : {c}"
-                },
-                series: [{
-                    //类型
-                    type: 'gauge',
-                    //半径
-                    radius: 80,
-                    //起始角度。圆心 正右手侧为0度，正上方为90度，正左手侧为180度。
-                    startAngle: 180,
-                    //结束角度。
-                    endAngle: 0,
-                    center: ['50%', '70%'],
-                    max:1,
-                    min:-1,
-                    //仪表盘轴线相关配置。
-                    axisLine: {
-                        show: true,
-                        // 属性lineStyle控制线条样式
-                        lineStyle: {
-                            width: 10,
-                            color: [
-                                [-1, '#4489ea'],
-                                [1, '#d8e8f2']
-                            ]
+                  series: [{
+                            center: [50, 80], //仪表的位置
+                            type: "gauge", //统计图类型为仪表
+                            radius: '60%', //统计图的半径大小
+                            min: 0, //最小刻度
+                            max: 100, //最大刻度
+                            splitNumber: 10, //刻度数量
+                            startAngle: 0, //开始刻度的角度
+                            endAngle: 180, //结束刻度的角度
+                            axisLine: { //设置默认刻度盘上的刻度不显示，重新定义刻度盘
+                                show: false,
+                                lineStyle: {
+                                    width: 1,
+                                    color: [
+                                        [1, "rgba(255,255,255,0)"]
+                                    ]
+                                }
+                            }, //仪表盘轴线
+                            axisTick: {
+                                show: true,
+                                splitNumber: 0, //刻度的段落数
+                                lineStyle: {
+                                    color: '#fff',
+                                    width: 0 //刻度的宽度
+                                },
+                                length: 0 //刻度的长度
+                            }, //刻度样式
+                            splitLine: { //文字和刻度的偏移量
+                                show: true,
+                                length: -120, //便宜的长度
+                                lineStyle: {
+                                    color: "#fff",
+                                }
+                            },
                         },
-                    },
-                    //分隔线样式。
-                    splitLine: {
-                        show: false,
-                    },
-                    //刻度样式。
-                    axisTick: {
-                        show: false,
-                    },
-                    //刻度标签。
-                    axisLabel: {
-                        show: false,
-                    },
-                    //仪表盘指针。
-                    pointer: {
-                        //这个show属性好像有问题，因为在这次开发中，需要去掉指正，我设置false的时候，还是显示指针，估计是BUG吧，我用的echarts-3.2.3；希望改进。最终，我把width属性设置为0，成功搞定！
-                        show: false,
-                        //指针长度
-                        length: '90%',
-                        width: 0,
-                    },
-                    //仪表盘标题。
-                    title: {
-                        show: true,
-                        offsetCenter: [0, '25%'], // x, y，单位px
-                        textStyle: {
-                            color: '#666666',
-                        }
-                    },
+                        {
+                        radius: '90%',
+                        center: ["50%", "50%"],
+                        min: 1,
+                        max: 2,
+                        startAngle: 180,
+                        endAngle: 0,
+                        type: 'gauge',
+                        axisLabel: {
+                            show: false
+                        },
+                        detail: {
+                            show:true,
+                            //formatter: '1\正负情感',
+                            formatter:[
+                                '{value}',
+                                '{name|正负情感}',
+                                ].join('\n'),
+                            rich: {
+                                name: {
+                                fontSize: 16,
+                                lineHeight: 20,
+                                color: '#666666'
+                                }
+                            },
+                            color: '#4E81F7',
+                            fontSize: 18,
+                            fontWeight:'normal',
+                            offsetCenter: [-0, 0]
+                        },
 
-                    //仪表盘详情，用于显示数据。
-                    detail: {
-                        show: false,
-                        offsetCenter: [0, '-25%'],
-                        formatter: '{value}',
-                    },
-                    data: [{
-                        value: this.remotionvalue?this.remotionvalue:'',
-                        name: '正负情感',
-                    },
-                    ]
-                }]
+                        axisLine: {
+                            lineStyle: {
+                                width: 15,
+                                color: [
+                                    [Number(this.remotionvalue)+1 / 2, axislineColor, axislineColor],
+                                    [1, '#DCDCDC']
+                                ]
+                            }
+                        },
+                        pointer: {
+                            show: false,
+                        },
+                        itemStyle: {
+                            color: '#DCDCDC'
+                        },
+                        axisTick: {
+                            show: false
+                        },
+                        splitLine: {
+                            show: false
+                        },
+                        data: [{
+                            value: Number(this.remotionvalue)
+                        }]
+                    }]
             })
   
         }
