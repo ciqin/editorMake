@@ -461,14 +461,16 @@ export default {
         this.num = 1
         if(this.$store.state.title){
            this.loadcoverAutoIllu()
+        }else{
+           this.form.opaImg1 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
+           this.form.opaImg2 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
+           this.form.opaImg3 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
         }
 
         this.opaBtn1 = true;
         this.opaBtn2 = false;
         this.opaBtn3 = false;
-        this.form.opaImg1 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
-        this.form.opaImg2 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
-        this.form.opaImg3 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
+       
         this.form.coverType = 1;
          this.isrefreshshow = 'display:flex'
 
@@ -478,13 +480,14 @@ export default {
         this.num = 2
         if(this.$store.state.title){
            this.loadcoverAutoIllu()
+        }else{
+            this.form.opaImg1 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
+            this.form.opaImg2 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
+            this.form.opaImg3 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
         }
         this.opaBtn1 = false;
         this.opaBtn2 = true;
         this.opaBtn3 = false;
-        this.form.opaImg1 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
-        this.form.opaImg2 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
-        this.form.opaImg3 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
         this.form.coverType = 2;
         this.isrefreshshow = 'display:flex'
 
@@ -494,13 +497,14 @@ export default {
         this.num = 3
         if(this.$store.state.title){
            this.loadcoverAutoIllu()
+        }else{
+            this.form.opaImg1 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
+            this.form.opaImg2 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
+            this.form.opaImg3 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
         }
         this.opaBtn1 = true;
         this.opaBtn2 = true;
         this.opaBtn3 = true;
-        this.form.opaImg1 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
-        this.form.opaImg2 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
-        this.form.opaImg3 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
         this.form.coverType = 3;
         this.isrefreshshow = 'display:flex'
     },
@@ -521,6 +525,8 @@ export default {
             width:400,
             height:400,
         });
+
+        console.log(this.form.opaImg1)
     },
     loadBig(index){
         this.$refs.imgCutterModal2.handleOpen({
@@ -591,7 +597,6 @@ export default {
          }
          coverAutoIllustrated(param).then((res)=>{
             if(res){
-                console.log(res.data);
                 this.loading =false
                 for(let i=0;i<res.data.length;i++){
                     if(i<this.showTitleimgNum){
@@ -599,8 +604,20 @@ export default {
                     }
                     this.titleimg.push({show:false,url:res.data[i]})
                 }
+
+                if(this.showTitleimg.length==3){
+                    this.form.opaImg1 = this.showTitleimg[0].url;
+                    this.form.opaImg2 = this.showTitleimg[1].url;
+                    this.form.opaImg3 = this.showTitleimg[2].url;
+                }else{
+                    this.form.opaImg1 = this.showTitleimg[0].url;
+                }
             }
          })
+
+         
+
+       
     },
 
     titleimgover(item,index){
@@ -612,6 +629,14 @@ export default {
     },
 
     loadpicture(){
+        if(this.showTitleimg.length==3){
+           this.form.opaImg1 = this.showTitleimg[0].url;
+           this.form.opaImg2 = this.showTitleimg[1].url;
+           this.form.opaImg3 = this.showTitleimg[2].url;
+        }else{
+           this.form.opaImg1 = this.showTitleimg[0].url;
+        }
+
        if(this.num==1){
           this.loadSmall()
        }else if(this.num==2){
@@ -649,8 +674,15 @@ export default {
         tempArr[idx] = this.titleimg[total+next-1];
         this.showTitleimg = tempArr;
         this.titleimgNextIdx++;
+        if(this.showTitleimg.length==3){
+           this.form.opaImg1 = this.showTitleimg[0].url;
+           this.form.opaImg2 = this.showTitleimg[1].url;
+           this.form.opaImg3 = this.showTitleimg[2].url;
+        }else{
+           this.form.opaImg1 = this.showTitleimg[0].url;
+        }
 
-        console.log(this.showTitleimgIdx,this.titleimgNextIdx,this.showTitleimgNum)
+        console.log(this.form)
     },
     refreshbtnprev(){ //上一张
         let idx = this.showTitleimgIdx;
@@ -691,10 +723,17 @@ export default {
             next--;
         }
         this.titleimgNextIdx = total+next-2;
-        console.log(data);
         tempArr[idx] = data;
         this.showTitleimg = tempArr;
-        console.log(this.showTitleimgIdx,this.titleimgNextIdx,this.showTitleimgNum)
+
+        if(this.showTitleimg.length==3){
+           this.form.opaImg1 = this.showTitleimg[0].url;
+           this.form.opaImg2 = this.showTitleimg[1].url;
+           this.form.opaImg3 = this.showTitleimg[2].url;
+        }else{
+           this.form.opaImg1 = this.showTitleimg[0].url;
+        }
+        
     }
     
     },

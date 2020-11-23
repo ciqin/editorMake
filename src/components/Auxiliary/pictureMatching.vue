@@ -55,7 +55,17 @@ export default {
   },
   created(){
     this.textareavalue = store.gettaxt
-    this.picture_btn()
+    this.tabs=[]
+    this.loading=true
+    autoIllustrated({content: this.textareavalue}).then((res)=>{
+        if(res){
+          this.loading=false
+
+          for(var i=0;i<res.data.length;i++){
+            this.tabs.push({url:res.data[i],checked:false})
+          }
+        }
+    })
   },
   methods: {
     watchfun(val){

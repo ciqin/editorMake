@@ -22,7 +22,6 @@
                   <div class='acticle_list_content' v-if="item.iscontent" @mouseup="listcontentup" v-html='item.content'></div>
                   <div class='acticle_list_content' v-else @mouseup="listcontentup" v-html='item.partcontent'></div>
                   <div class='acticle_list_keyword'>关联点：{{item.words}}</div>
-                  <div class='acticle_list_Similarity'>关联度：{{item.similarity}}</div>
                 </div>
               </div>
 
@@ -49,9 +48,6 @@ import { getRelatedArticles } from '@/http/api'
 import { Articleadd,Articledell,ilgcreations} from '@/http/api'
 import { store } from '@/store'
 export default {
-    props:{
-       uestrvalue:String
-    },
     data() {
       return {
         activeName: 'first',
@@ -62,6 +58,7 @@ export default {
         loading:true,
         text:'',//滑过获取关联文章
         Tooltipstyle:'display:none',//滑过获取关联文章样式
+
       };
     },
     mounted(){
@@ -69,11 +66,10 @@ export default {
     },
     created(){
       let param = {
-           content: this.uestrvalue,
+           content: store.uedstr,
         }
 
         ilgcreations().then(res=>{
-          if(res){
               getRelatedArticles(param).then(res=>{
                   if(res){  
                     this.loading = false
@@ -98,36 +94,45 @@ export default {
                     this.loading = false
                   }
               })
-          }
         })
 
         
     },
+    computed:{
+       listen(){
+         return store.uedstr
+       }
+    },
     watch:{
-      uestrvalue:function(uestrvalue,newuestrvalue){
+      listen:function(uestrvalue,newuestrvalue){
         let param = {
-           content: this.uestrvalue,
+           content:store.uedstr,
         }
+        this.loading=true
         ilgcreations().then(res=>{
           getRelatedArticles(param).then(res=>{
-            if(res){  
-                this.Relatedarr = res.data 
-
-                this.Relatedarr.forEach((item,key)=>{
-                  item.iscontent = false;
-                  item.partcontent = item.content
-                  if(item.content!==''){
-                    item.iscontent = false;
-                  }else{
-                    item.iscontent  = true;
-                  }
-
-                  if(item.content.length>125){
-                      item.partcontent = item.content.slice(0,125) + '...';
-                  }else{
+            if(res){ 
+                this.loading = false 
+                if(res.data.length>0){
+                  this.Relatedarr = res.data 
+                  res.data.forEach((item,key)=>{
+                      item.iscontent = false;
                       item.partcontent = item.content
-                  }
-                })
+                      if(item.content!==''){
+                        item.iscontent = false;
+                      }else{
+                        item.iscontent  = true;
+                      }
+
+                      if(item.content.length>125){
+                          item.partcontent = item.content.slice(0,125) + '...';
+                      }else{
+                          item.partcontent = item.content
+                      }
+                   })
+
+                   console.log(this.Relatedarr)
+                }
               }
            })
         })
@@ -194,7 +199,7 @@ export default {
 
     },
     listcontentup(e){
-        let texts = window.getSelection().toString();
+       let texts = window.getSelection().toString();
         if(texts!=''){
           this.text = texts;
           this.Tooltipstyle = `position: fixed;top:${e.pageY - e.offsetY - 10}px;left:${e.pageX}px;z-index: 999;width: 80px;height: 40px;border:1px solid #ccc;background: #fff;line-height: 40px;display: inline-block;border-radius: 5px;vertical-align: top;`

@@ -33,7 +33,65 @@
           </div>
         </el-tab-pane>
 
-        <!-- <el-tab-pane label="我的素材" name="second">我的素材</el-tab-pane> -->
+        <!-- <el-tab-pane label="我的媒资库" name="second">
+            <div class="labelselect">
+                <label for="">分类</label>
+                <el-select v-model="value1" placeholder="请选择">
+                  <el-option
+                    v-for="item in options1"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+            </div>
+
+              <div class="labelselect">
+                <label for="">类型</label>
+                <el-select v-model="value2" placeholder="请选择">
+                  <el-option
+                    v-for="item in options2"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+            </div>
+
+            <div class='third_search' style='padding: 10px 20px;display:flex'>
+              <el-input v-model="Shareinput" placeholder="请输入关键字(名称,内容)"></el-input>
+              <el-button icon="el-icon-search" @click="searchShare()">搜索</el-button>
+            </div>
+
+    　　　　　<div v-loading="loading">
+                  <div v-if="Libraryarr.length>0">
+                    <div class="libisryarr" v-for="(item,key) in Libraryarr" :key = key>
+                        <div class='libisryarr_list' @click="LibraryClick(item)">
+                            <div class='collection_icon' @click.stop="collectionIconclick(key,Libraryarr)" :class='item.isFavorite == true ? "collectionAcitve" : "nocollectionAcitve" '>
+                                <i class="el-icon-star-on"></i>
+                            </div>
+                            <div class="libisryarr_img" v-if="item.fileFormat=='mp4'">
+                                <video :src="item.url" controls="controls" :poster="item.coverImageUrl">
+                                </video>
+                            </div>
+
+                            <div class="libisryarr_img" v-else-if="item.fileFormat=='jpg'">
+                                <img :src="item.url" alt="">
+                            </div>
+                        </div>
+                        <div class="libisryarr_botal">
+                          <p>{{item.mediaName}}</p>
+                          <p>{{item.createTime}}</p>
+                        </div>
+                    </div>
+                  </div>
+                  <div v-else>
+                    <p style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;'><i class='el-icon-warning-outline'></i>暂无数据</p>
+                  </div>
+         </div>
+
+        </el-tab-pane> -->
+
        
         <el-tab-pane label="我的稿件" name="third">
           <div class='third_search' style='padding: 10px 20px;display:flex'>
@@ -52,8 +110,8 @@
           </div>
 
            <div v-loading="loadingmusc">
-              <div class='infinite-list-wrapper'>
-                  <div v-if="Manuscriptidarr && loading==false"  style="height: 778px;overflow-y: auto;margin-top: 20px;padding-bottom: 20px;" >
+              <div class='infinite-list-wrapper'  v-loading="loadingmusc">
+                  <div v-if="Manuscript.length>0 && loadingmusc==false"  style="height: 778px;overflow-y: auto;margin-top: 20px;padding-bottom: 20px;" v-infinite-scroll="loadgetFavorite" infinite-scroll-disabled="disabled">
                         <div class="third_libisryarr" v-for="(item,key) in Manuscript" :key = key @click='ManuscriptClick(item)'>
                                  <div v-if="item.thumbnailUrl && item.htmlContent" style='display: flex;position: relative;' :class="{show_list_start:item.show===true}">
                                       <div class='third_libisryarr_list'> 
@@ -80,7 +138,7 @@
                                  </div>
                         </div>
                   </div>
-                  <div v-else-if='!Manuscriptidarr && loading==false'>
+                  <div v-else-if='Manuscript.length==0 && loadingmusc==false'>
                       <p style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;'><i class='el-icon-warning-outline'></i>暂无数据</p>
                   </div>
               </div>
@@ -126,7 +184,7 @@
   </div>
 </template>
 <script>
-import { getFavorTemplate } from '@/http/api'
+import { getFavorTemplate,Mediacollectlist,classifygetAll } from '@/http/api'
 import { listObjects } from '@/http/api'           //稿库
 import { getFavoriteMixmdedias } from '@/http/api'    //查看收藏的文稿
 import { cancelFavorTemplate } from '@/http/api'           //取消模板收藏
@@ -139,7 +197,7 @@ export default {
     return{
       loading:true,
       loadingmusc:true,
-      activeName: 'first',
+      activeName: '',
       templatearr:['标题','正文','图文','引导','分割线','二维码','其他'],
       texttemp:0,
       templateinput:'',//模板搜索的关键字
@@ -149,12 +207,13 @@ export default {
       templatepageNum:10,//模板每次加载条数
       templatetotal:'',//模板的总条数
 
+      loadimg:false, //稿件滚动加载
       Manuscript:[],   //稿件从template的所有数据
       Manuscriptidarr:{},//收藏的id
       Manuscriptinput:'', //稿库的检索的字
       datavalue: '', //稿件时间检索
-
       Manuscrippage:0,//稿库的页数
+      Manuscriptotal:'',   //稿库的总条数
 
       actpageNum:0,//关联文章的页数
       Relatedarr:[],//关联文章
@@ -163,6 +222,30 @@ export default {
       loadimgRelated:false,
       Tooltipstyle:'display:none',//滑过获取关联文章样式
       templeteType:1,
+
+      tenantId:'',
+      value1:'',
+      options1: [],
+      options2: [{
+        value: 1,
+        label: '图片'
+      }, {
+        value: 2,
+        label: '音频'
+      }, {
+        value: 3,
+        label: '视频'
+      }, {
+        value: 0,
+        label: '全部'
+      }],
+      value2: '图片',
+      Shareinput:'',//媒资库检索的关键字
+      Libraryarr:[],//媒资库检索结果
+      mediapageSize:20,//媒资库每页条数
+      mediapageNum:1,//媒资库页数
+      mediaIDarr:[],//媒资库id
+
 
       caiApi:"http://qhcloudhongqi.wengegroup.com:9080",
     }
@@ -174,6 +257,14 @@ export default {
     },
     disabledtemplate (){
         return this.loadimgtemplate || this.templatenoMore
+    },
+
+    //稿库=========================================================
+    collectionnoMore () {  
+      return this.Manuscript.length == this.Manuscriptotal
+    },
+    disabled () {
+      return this.loadimg || this.collectionnoMore
     },
 
     //关联文章收藏的滚动加载
@@ -188,34 +279,56 @@ export default {
 
   },
   created(){
-     this.loadTemplates()
+    this.tenantId = window.localStorage.getItem("tenantId")
+    if(store.collectindex=='0'){
+        this.activeName = 'first'
+        this.templateimgarr=[]
+        this.templatepage=0
+        this.loading = true
+        this.loadTemplates();
+    }else if(store.collectindex=='1'){
+        this.activeName = 'third'
+        ilgcreations().then(res=>{
+             getFavoriteMixmdedias().then((res)=>{
+              res.data.forEach((item,key)=>{
+                let uuid = item.uuid
+                this.Manuscriptidarr[`${item.uuid}`]=item.createTime
+              })
+
+              this.Manuscriptotal = this.Manuscriptidarr.length
+              this.Manuscrippage = 0
+              this.Manuscript=[]
+              this.loadgetFavorite()
+            })
+          })
+    }else if(store.collectindex=='2'){
+        this.activeName = 'four'
+        this.Relatedarr=[]
+        this.actpageNum=0
+        this.loading = true
+        this.loadRelated()
+    }else{
+        this.activeName = 'first'
+        this.templateimgarr=[]
+        this.templatepage=0
+        this.loading = true
+        this.loadTemplates();
+    }
   },
   methods: {
       handleClick(tab, event) {
         if(tab.label=='我的稿件'){
           ilgcreations().then(res=>{
              getFavoriteMixmdedias().then((res)=>{
-              this.loadingmusc = false
               res.data.forEach((item,key)=>{
                 let uuid = item.uuid
                 this.Manuscriptidarr[`${item.uuid}`]=item.createTime
               })
-              let Objectparam = {
-                  keywords: this.Manuscriptinput,
-                  library: 'manuscript',
-                  types: 'TEXT,COMPO,LIVE',
-                  excludedIds: this.$route.query.id,
-                  editorType: 'COMPO',
-                  number: this.Manuscrippage,
-                  count: 10,
-                  favorIds:JSON.stringify(this.Manuscriptidarr),
-                  startDate:this.datavalue,
-                  endDate:this.datavalue,
-                  ContentType:true,
-              }
-              listObjects(Objectparam).then((res)=>{
-                  this.Manuscript = res.content
-              })
+
+              this.Manuscriptotal = this.Manuscriptidarr.length
+              this.Manuscrippage = 0
+              this.Manuscript=[]
+              this.loadgetFavorite()
             })
           })
           
@@ -229,7 +342,30 @@ export default {
           this.templatepage=0
           this.loading = true
           this.loadTemplates();
+        }else if(tab.label == '我的媒资库'){
+
+          this.options1 = []
+            //获取分类
+            let param = {
+              tenantId: 5,
+            }
+            classifygetAll(param).then(res=>{
+              if(res){
+                res.data.forEach((val,ind)=>{
+                    this.options1.push({
+                      value: val.classifyId,
+                      label: val.classifyName
+                    })
+                })
+              }
+            })
+            this.Libraryarr=[];
+            this.mediapageNum=0;
+            this.loading = true
+            this.loadMedialist()
         }
+
+        store.collectindex = tab.index
       },
       templatearrclick(index){
          let _that = this
@@ -248,32 +384,9 @@ export default {
       },
       Manuscriptsearch(){
         this.loadingmusc = true
-        ilgcreations().then(res=>{
-           getFavoriteMixmdedias().then((res)=>{
-            this.loadingmusc = false
-            res.data.forEach((item,key)=>{
-                let uuid = item.uuid
-                this.Manuscriptidarr[`${item.uuid}`]=item.createTime
-              })
-              let Objectparam = {
-                  keywords: this.Manuscriptinput,
-                  library: 'manuscript',
-                  types: 'TEXT,COMPO,LIVE',
-                  excludedIds: this.$route.query.id,
-                  editorType: 'COMPO',
-                  number: this.Manuscrippage,
-                  count: 10,
-                  favorIds:JSON.stringify(this.Manuscriptidarr),
-                  startDate:this.datavalue,
-                  endDate:this.datavalue,
-                  ContentType:true,
-              }
-              listObjects(Objectparam).then((res)=>{
-                  this.Manuscript = res.content
-              })
-          })
-        })
-        
+        this.Manuscrippage = 0
+        this.Manuscript = []
+        this.loadgetFavorite()
       },
       collectionIconclick(index,arr){
         if(arr == this.templateimgarr){
@@ -329,7 +442,7 @@ export default {
           newList.push(val)
         })
         this.Relatedarr = newList;
-    },
+      },
       listcontentup(e){
         let texts = window.getSelection().toString();
           if(texts!=''){
@@ -408,6 +521,39 @@ export default {
               })
             })
           }
+      },
+      loadgetFavorite(){
+        let _that = this
+        let Objectparam = {
+            keywords: _that.Manuscriptinput,
+            library: 'manuscript',
+            types: 'TEXT,COMPO,LIVE',
+            excludedIds: _that.$route.query.id,
+            editorType: 'COMPO',
+            number: _that.Manuscrippage,
+            count: 10,
+            favorIds:JSON.stringify(_that.Manuscriptidarr)=='{}'?'':JSON.stringify(_that.Manuscriptidarr),
+            startDate:_that.datavalue,
+            endDate:_that.datavalue,
+            ContentType:true,
+        }
+        listObjects(Objectparam).then((res)=>{
+            _that.loadingmusc = false
+            _that.loading = false
+            _that.Manuscrippage = _that.Manuscrippage+1
+            _that.Manuscriptotal = _that.Manuscriptidarr.length
+            res.content.forEach(function(item){
+              _that.Manuscript.push(item)
+            })
+        })
+      },
+      loadMedialist(){
+            let param={
+              tenantId:this.tenantId
+            }
+            Mediacollectlist(param).then((res)=>{
+               
+            })
       }
 
   }

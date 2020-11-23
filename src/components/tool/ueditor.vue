@@ -652,6 +652,7 @@ export default {
             this.mobileHtml = "<h2 style='text-align:center;font-weight:700;'>"+this.$store.state.title +"</h2>" + this.instance.getContent();
         },
         saveParme(){
+            console.log(this.$store.showTitleimg,'++++++++++++++++')
             let data = this.app.form;
             let customMetas = {
                 // leadinLineUrl:data.properties.leadinLineUrl,

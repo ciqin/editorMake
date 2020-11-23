@@ -17,7 +17,7 @@
           <div class="first_main_imgs infinite-list-wrapper" v-loading="loading" >
               <ul v-if="templateimgarr.length>0" style='height: 705px;overflow-y: auto;' v-infinite-scroll="loadTemplates" infinite-scroll-disabled="disabledtemplate">
                 <li v-for="(item,key) in templateimgarr" :key = key :title="item.label" @click="templeteSource(key,item)" :class="{show_list_start:item.show===true}" @mouseover="collectionIconmouseover(key,item,templateimgarr)"  @mouseout="collectionIconmouseout(key,item,templateimgarr)">
-                    <div v-html = item.templeteSource ></div>
+                    <div v-html = item.templeteSource></div>
                     <div class='collection_icon' :connectid="item.userId"   @click.stop="collectionIconclick(key,templateimgarr)" :class='item.isFavorite==1 ? "collectionAcitve" : "nocollectionAcitve" '>
                            <i class="el-icon-star-on"></i>
                     </div>
@@ -119,7 +119,7 @@
                               <i class="el-icon-star-on"></i>
                           </div> 
                           <div class="third_libisryarr_img">
-                              <img  :src="item.thumbnailUrl.indexOf('http')? caiApi+item.thumbnailUrl : item.thumbnailUrl">
+                              <img  :src="item.thumbnailUrl.indexOf('http')?caiApi+item.thumbnailUrl : item.thumbnailUrl">
                           </div>
                       </div>
                       <div class="third_libisryarr_botal">
@@ -171,7 +171,7 @@
     data() {
       return {
         datavalue: '', //稿件时间检索
-        activeName: 'first',
+        activeName: '',
         templatearr:['标题','正文','图文','引导','分割线','二维码','其他'],
         texttemp:0,
         options1: [],
@@ -190,7 +190,7 @@
           value: 0,
           label: '全部'
         }],
-        value2: '图片',
+        value2: '全部',
         templateinput:'',//模板搜索的关键字
         templateimgarr:[], //模板
         loadimgtemplate:false,
@@ -220,11 +220,94 @@
         templeteType:1,
 
         tenantId:'', //租户id
+
       };
     },
     created(){
-       this.loadTemplates();
-       this.tenantId = window.localStorage.getItem("tenantId")
+      this.tenantId = window.localStorage.getItem("tenantId")
+      if(store.letfTab1Idx=='0'){
+          this.activeName = 'first'
+          this.templateimgarr=[]
+          this.templatepage=0
+          this.loading = true
+          this.loadTemplates();
+      }else if(store.letfTab1Idx=='1'){
+          this.activeName = 'second'
+          this.options1 = []
+            //获取分类
+            let param = {
+              tenantId: this.tenantId,
+            }
+            classifygetAll(param).then(res=>{
+              if(res){
+                res.data.forEach((val,ind)=>{
+                    this.options1.push({
+                      value: val.classifyId,
+                      label: val.classifyName
+                    })
+                })
+              }
+            })
+            this.Libraryarr=[];
+            this.mediapageNum=0;
+            this.loading = true
+            this.loadMedialist()
+      }else if(store.letfTab1Idx=='2'){
+           this.activeName = 'third'
+
+           let _that = this
+            _that.loadingManuscript = true
+            _that.ManuscripIDarr=[]
+            _that.Manuscript = []
+            let Objectparam = {
+                ContentType:true,
+                keywords: '',
+                library: 'manuscript',
+                types: 'TEXT,COMPO,LIVE',
+                excludedIds: this.$route.query.id,
+                editorType: 'COMPO',
+                number: this.Manuscrippage,
+                count: 10
+            }
+            ilgcreations().then(res=>{
+                templatelist(Objectparam).then(res=>{
+                    if(res){
+                      let rescontent = res.content
+                      _that.Manuscriptotal = res.totalElements
+
+                      rescontent.forEach(function (item) {
+                        _that.ManuscripIDarr.push(item.id)
+                      })
+
+                      let parmas ={
+                          uuids:_that.ManuscripIDarr
+                        }
+                      FavoriteMixmdedia(parmas).then((res)=>{
+                        if(res){
+                          rescontent.forEach(function (item) {
+                              item.show=false
+                              if(res.data.indexOf(item.id)>=0){
+                                item.isFavorite = true
+                              }else{
+                                item.isFavorite = false
+                              }
+                              _that.Manuscript.push(item);
+                            });
+
+                          _that.loadingManuscript = false
+
+                        }
+                      })
+                    }
+               }) 
+            })
+      }else{
+          this.activeName = 'first'
+          this.templateimgarr=[]
+          this.templatepage=0
+          this.loading = true
+          this.loadTemplates();
+      }
     },
   
     computed: {
@@ -320,6 +403,7 @@
           this.loading = true
           this.loadTemplates();
         }
+        store.letfTab1Idx = tab.index
       },
       templeteSource(index,item){
         store.ueditor.focus()
@@ -331,7 +415,8 @@
           this.loading = true
           this.texttemp = index
           this.templeteType = index+1
-          this.loadTemplates()
+          this.loadTemplates();
+         
       },
       collectionIconclick(index,arr){
         if(arr == this.templateimgarr){
@@ -767,7 +852,7 @@
    box-shadow: inset 0 0 10px 0px #ccc;
  }
  .first_main_imgs ul li img{
-   max-width: 100%;
+   width: 90%;
    margin-top: 5px;
  }
  .third_data{

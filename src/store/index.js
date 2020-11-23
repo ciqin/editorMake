@@ -10,9 +10,11 @@ export const store = Vue.observable({
     savedata:{},
     objid:"",
     Title:"",
+    uedstr:'',
     submit:false,
     gettaxt:"",
     textcheck:'',
+    showTitleimg:[],
     ueditorWidth:window.innerWidth- 1120
 })
 export const mutations = {

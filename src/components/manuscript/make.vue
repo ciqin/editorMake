@@ -2,7 +2,7 @@
   <div class="maskContainer">
     <!-- <Nav></Nav> -->
     <!--下面通过传递进来的id完成初始化-->
-    <el-row :gutter="10" style="background:#eef1f1;">
+    <el-row :gutter="10" style="background:#eff2f7;">
         <el-col :span="6">
             <div class="grid-content bg-purple">
                <div class="iconNav">
@@ -32,7 +32,7 @@
                         <div class="grid-content bg-purple" style="border-right: 1px solid #DCDEE3;padding: 0 6px">
                             <ul class="rightTab">
                                 <li v-for="(tab,index) in tabs" @click="toggle(index,tab)" :class="{active:active==index}">
-                                    <span>{{tab.view}}</span>
+                                    <span v-html='tab.view'></span>
                                 </li>
                             </ul>
                         </div>
@@ -84,6 +84,9 @@ export default {
             style3:'display:none',
             style4:'display:none',
             style5:'display:none',
+            leftstyle1:'display:block',
+            leftstyle2:'display:none',
+            leftstyle3:'display:none',
             tabs:[
                 {
                     type:'Tab1',
@@ -91,7 +94,7 @@ export default {
                 },
                 {
                     type:'Tab2',
-                    view:'文稿纠错'
+                    view:'文稿<br>纠错'
                 },
                 {
                     type:'Tab3',
@@ -107,14 +110,17 @@ export default {
                 // },
                 {
                     type:'Tab4',
-                    view:'自动配图'
+                    view:'自动<br>配图'
                 },
                 {
                     type:'Tab5',
-                    view:'综合分析'
+                    view:'综合<br>分析'
                 },
 
             ],
+            letfTab1Idx : 0,
+            letfTab2Idx : 0,
+            letfTab3Idx : 0,
         };
     },
     watch:{
@@ -178,6 +184,9 @@ export default {
         uedior(param){  //获取ueditor根据符号检索的值
           this.uedstr = param;
           this.Navcurrent = 'letfTab2'
+
+          store.uedstr = param
+          console.log(param)
         },
 
         uedior2(){
