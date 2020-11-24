@@ -25193,6 +25193,7 @@ UE.ui = baidu.editor.ui = {};
             this.fireEvent('postrender');
         },
         getHtmlTpl:function () {
+            console.log(this,'------------')
             return '';
         },
         formatHtml:function (tpl) {

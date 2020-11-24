@@ -146,4 +146,7 @@ button{outline-style: none;}
 .ssContainer td.el-table_1_column_1  .cell{
     text-align: right;
 }
+#edui68,#edui69{
+    display: none !important;
+}
 </style>

@@ -153,7 +153,7 @@
                                     @cutDown="xztpCutDownCover">
                                     <button slot="open" style="display:none;"></button>
                         </ImgCutter>
-                         <img v-if="true" :src="form.addImg"  @click="forIe9(index)" alt="" width="70" style="cursor: pointer;">
+                         <img v-if="true" :src="form.addImg"  @click="forIe9()" alt="" width="70" style="cursor: pointer;">
                     </div>
                 </el-form-item>
                 <el-form-item label="摘要">
@@ -198,7 +198,7 @@
                         v-model="form.inputValue"
                         ref="saveTagInput"
                         size="small"
-                        @keyup.enter.native="handleInputConfirm"
+                        @change="handleInputConfirm"
                         @blur="handleInputConfirm">
                         </el-input>
                         <el-button v-else class="button-new-tag" size="small" @click="showInput">+</el-button>
@@ -274,7 +274,7 @@
 </template>
 <script>
 import ImgCutter from 'vue-img-cutter'
-import {newSignature,extractingKeywords,abstract,coverAutoIllustrated} from '@/http/api'
+import {newSignature,extractingKeywords,abstract,coverAutoIllustrated,upload} from '@/http/api'
 import { store , mutations} from '@/store'
 import {mapActions, mapGetters} from 'vuex';
 // 加载jquery
@@ -454,7 +454,12 @@ export default {
         }
     },
     xztpCutDownCover (fileName){
-        this.form.addImg = fileName.dataURL
+        upload({data:fileName.dataURL,fileName:fileName.fileName,ContentType:true,}).then(res=>{ 
+            if(res){
+               this.form.addImg = res.shareCover
+            }
+        })
+
     },
     // 小图操作函数
     coverSmall(){
@@ -545,10 +550,10 @@ export default {
             height:400,
         });
     },
-    forIe9(index){
+    forIe9(){
         this.$refs.imgCutterModal0.handleOpen({
             name:'img',
-            src:this.form.addImg ,
+            src:this.form.addImg,
             "cross-origin":true,
             width:400,
             height:400,

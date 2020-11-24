@@ -75,6 +75,7 @@ export const getHttp = (url, data) => {
 export const postHttp = (url, data) => {
   return new Promise((resolve, reject) => {
     Axios.post(url,data).then(res => {
+     
       if(/请使用微信扫描下面小程序码/.test(res.data)) {
         // 返回登录页跳转
         window.location = "http://qhcloudhongqi.wengegroup.com:9080/uum/login"
@@ -83,7 +84,8 @@ export const postHttp = (url, data) => {
       // if (res.data.code !== 200) vue.$message('获取数据失败，请刷新')
       // else resolve(res.data.output)
     }).catch(error => {
-      if(/save\/smartWrite\/process/.test(error.response.config.url) && (!error.response.data.msg)){
+      console.log(error)
+      if(error.response && /save\/smartWrite\/process/.test(error.response.config.url) && (!error.response.data.msg)){
         vue.$message("稿件已保存！")
       }else {
         vue.$message(error.response.data.msg)

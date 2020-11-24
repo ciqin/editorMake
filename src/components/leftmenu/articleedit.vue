@@ -148,13 +148,13 @@ export default {
           tenantId:5,
           title:this.Relatedarr[index].title,
           content:this.Relatedarr[index].content,
-          pubtime:this.Relatedarr[index].pubtime
+          pubtime:this.Relatedarr[index].pubtime,  
       }
 
       if(this.Relatedarr[index].isFavorite == true){
         ilgcreations().then(res=>{
             Articledell(param).then((res)=>{
-               if(res.message=='取消成功'){
+               if(res.message=='取消收藏成功'){
                   this.Relatedarr[index].isFavorite = false
                       this.$message({
                             message: '取消收藏成功',

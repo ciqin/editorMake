@@ -65,6 +65,7 @@ import letfTab3 from "../leftmenu/collection"
 import Tab4 from "../Auxiliary/pictureMatching"
 import Tab5 from "../Auxiliary/comprehensive"
 import { store } from '@/store'
+import { ilgcreations } from '@/http/api'
 import {mapActions, mapGetters} from 'vuex';
 export default {
     name: 'maskaa',
@@ -131,7 +132,11 @@ export default {
             this.input = newVal
         }
     },
-    
+    created(){
+       ilgcreations().then(res=>{
+           console.log('123')
+       })
+    },   
     provide(){
         return {
             'app':this

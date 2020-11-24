@@ -101,13 +101,14 @@
         </div>
 
         <div class="third_data">
-            <el-date-picker
-            v-model="datavalue"
-            type="date"
-            placeholder="选择日期"
-            value-format="yyyy-MM-dd"
-            >
-          </el-date-picker>
+           <el-date-picker
+              v-model="datavalue"
+              type="daterange"
+              value-format="yyyy-MM-dd"    
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期">
+           </el-date-picker>
         </div>
 
         <div class='infinite-list-wrapper' v-loading="loadingManuscript">
@@ -331,6 +332,7 @@
     methods: {
       handleClick(tab, event) {
         if(tab.label=='媒资库'){
+            this.datavalue = ''
             this.options1 = []
             //获取分类
             let param = {
@@ -398,6 +400,7 @@
                }) 
             })
         }else if(tab.label=='模板'){
+          this.datavalue = ''
           this.templateimgarr=[]
           this.templatepage=0
           this.loading = true
@@ -566,8 +569,8 @@
                 editorType: 'COMPO',
                 page: 0,
                 size: 10,
-                startDate:_that.datavalue,
-                endDate:_that.datavalue
+                startDate:_that.datavalue[0],
+                endDate:_that.datavalue[1]
             }
           if(_that.Manuscript.length!==_that.Manuscriptotal){
              ilgcreations().then(res=>{
@@ -623,8 +626,8 @@
                 editorType: 'COMPO',
                 page: _that.Manuscrippage,
                 size: _that.ManuscrippageNum,
-                startDate:_that.datavalue,
-                endDate:_that.datavalue
+                startDate:_that.datavalue[0],
+                endDate:_that.datavalue[1]
             }
           if(_that.Manuscript.length!==_that.Manuscriptotal){
             ilgcreations().then(res=>{
@@ -752,9 +755,6 @@
    .el-message-box{
      width: 1100px;
    }
-   .nav_top_temlaptes .el-input__icon{
-     line-height: 36px;
-   }
    .nav_top_temlaptes .is-active {
       color: #D72323;
    }
@@ -786,9 +786,20 @@
      border-radius: 0px 4px 4px 0px;
    }
    .third_data .el-input__inner{
-     width: 140px;
      height: 35px;
    }
+   .third_data .el-date-editor .el-range-input{
+    width: 85px;
+  }
+   .third_data .el-date-editor--daterange.el-input__inner{
+    width: 228px;
+  }
+   .third_data .nav_top_temlaptes .el-input__icon {
+    line-height: 28px;
+  }
+   .third_data .el-date-editor .el-range__icon,.third_data .el-date-editor .el-range-separator,.third_data .el-date-editor .el-range__close-icon{
+    line-height: 28px;
+  }
    .nav_top_temlaptes .labelselect .el-input--suffix .el-input__inner{
       background: #FFFFFF;
       border: 1px solid #D9D9D9;
@@ -856,10 +867,10 @@
    margin-top: 5px;
  }
  .third_data{
-   width:140px;
-   height:35px;
-   margin-left: 240px;
+    height: 35px;
+    margin-left: 143px;
  }
+
  .collection_icon{
     width: 18px;
     height: 18px;

@@ -25,7 +25,7 @@
                 <li><el-button type="text" @click="contributionFun"  v-if="contribution"><a href="javascript:" style="color:#fff;"><i class="el-icon-smoking" style="color: #d72323;font-size: 18px;"></i></a><span>撤稿</span></el-button></li>
                 <!-- <li><el-button type="text" @click="manyContributionFun"  v-if="manyContribution"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>一键撤稿</span></el-button></li> -->
                 <li><el-button type="text" @click="centerDialogVisible = true"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>预览</span></el-button></li>
-                <li><a href="javascript:" @click="save" class="autoClick">
+                <li><a href="javascript:" @click="save" class="autoClick" :style='savestyle' :disabled='savedisabled'>
                     <img src="@/assets/icon2.png" width="20" alt=""></a>保存
                 </li>
                 <li @mouseenter="onMouseOver" @mouseleave="onMouseOut" style="position:relative;"><a href="javascript:">
@@ -266,6 +266,7 @@ export default {
                     // 'fontborder', //字符边框
                     // 'superscript', //上标
                     'formatmatch', //格式刷
+                    'removeformat', //清除格式
                     // 'source', //源代码
                     // 'blockquote', //引用
                     // 'pasteplain', //纯文本粘贴模式
@@ -273,7 +274,6 @@ export default {
                     // 'print', //打印
                     // 'preview', //预览
                     'horizontal', //分隔线
-                    // 'removeformat', //清除格式
                     // 'time', //时间
                     // 'date', //日期
                     // 'unlink', //取消链接
@@ -368,6 +368,8 @@ export default {
             ueconter:'',
             gettaxt:'',
             Tooltipstyle:'display:none,z-index:2000',//滑过获取关联文章样式
+            savestyle:'cursor: pointer',
+            savedisabled:'true'
         };
     },
     created(){
@@ -440,8 +442,8 @@ export default {
             releaseManuscript().then(res=>{})
         });
         // 驳回获取数据接口
-        // if(this.storyApproveDeny) {
-        if(true) {
+        if(this.storyApproveDeny) {
+        // if(true) {
              hasReject().then(res=>{
                 res.records.forEach((item,index)=>{
                     let status = '';
@@ -652,7 +654,6 @@ export default {
             this.mobileHtml = "<h2 style='text-align:center;font-weight:700;'>"+this.$store.state.title +"</h2>" + this.instance.getContent();
         },
         saveParme(){
-            console.log(this.$store.showTitleimg,'++++++++++++++++')
             let data = this.app.form;
             let customMetas = {
                 // leadinLineUrl:data.properties.leadinLineUrl,
@@ -754,9 +755,14 @@ export default {
         },
         save(){
             let newData = this.saveParme();
+            let savestyle = this.savestyle
+            let savedisabled = this.savedisabled
             if(this.$store.state.title =="") {
                 return  this.$message.error('标题不能为空！');
             }
+
+            savestyle = 'cursor: not-allowed'
+            savedisabled = 'false'
             if(newData.libid =="product") {
                 let newUrl = '';
                 /\_blank/.test(newData.objid)?"":newUrl = 'http://qhcloudhongqi.wengegroup.com:9080/sprint/rest/workflow/stories/'+newData.libid+'/'+newData.objid+'/save/smartWrite/process'
@@ -766,6 +772,7 @@ export default {
                             message: '保存成功！',
                             type: 'success'
                         });
+
                     }
                     mutations.setobjid(res.id);
                     /\_blank/.test(res.id)?"":this.$store.dispatch("modifyIsNew",false);
@@ -773,7 +780,13 @@ export default {
                     setTimeout(() => {
                         self.opener.$LibrarySearchController.searchObjects()
                     }, 500);
-                    
+
+                    savestyle = 'cursor: pointer'
+                    savedisabled = 'true'
+
+                }).catch(error=>{
+                    savestyle = 'cursor: pointer'
+                    savedisabled = 'true'
                 })
             }else {
                 let newUrl = '';
@@ -791,6 +804,11 @@ export default {
                     setTimeout(() => {
                         self.opener.$LibrarySearchController.searchObjects()
                     }, 500);
+
+                    savestyle = 'cursor: pointer'
+                }).catch(error=>{
+                    savestyle = 'cursor: pointer'
+                    savedisabled = 'true'
                 })
             }
         },
@@ -941,6 +959,11 @@ export default {
 };
 
 </script>
+<style>
+.mobileContainer img{
+  max-width: 100%;
+}
+</style>
 <style scoped>
 .edui-editort {
     margin: 0 auto;
@@ -1056,5 +1079,7 @@ export default {
 #pictureMabth p:active{
     color:red
 }
-
+#edui68,#edui69{
+    display: none !important;
+}
 </style>

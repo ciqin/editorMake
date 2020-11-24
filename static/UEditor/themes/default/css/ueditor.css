@@ -1901,3 +1901,8 @@ div.edui-box {
 .edui-default  .edui-pastecontainer .edui-button  .edui-state-hover .edui-plaintxticon{
     background-position: -72px -34px;
 }
+
+
+#edui68,#edui69{
+    display: none;
+}
