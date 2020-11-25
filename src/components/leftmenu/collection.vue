@@ -16,7 +16,7 @@
               <div class="first_main_imgs infinite-list-wrapper" v-loading="loading" >
                   <ul v-if="templateimgarr.length>0" style='height: 755px;overflow: auto;'>
                     <li v-for="(item,key) in templateimgarr" :key = key :title="item.label" @click="templeteSource(key,item)" :class="{show_list_start:item.show===true}">
-                      <div v-html = item.templeteSource ></div>
+                      <div class='beijing' v-html = item.templeteSource ></div>
                       <div class='collection_icon' :connectid="item.userId"   @click.stop="collectionIconclick(key,templateimgarr)" :class='item.userId ? "collectionAcitve" : "nocollectionAcitve" '>
                              <i class="el-icon-star-on"></i>
                         </div>
@@ -33,66 +33,6 @@
           </div>
         </el-tab-pane>
 
-        <!-- <el-tab-pane label="我的媒资库" name="second">
-            <div class="labelselect">
-                <label for="">分类</label>
-                <el-select v-model="value1" placeholder="请选择">
-                  <el-option
-                    v-for="item in options1"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                  </el-option>
-                </el-select>
-            </div>
-
-              <div class="labelselect">
-                <label for="">类型</label>
-                <el-select v-model="value2" placeholder="请选择">
-                  <el-option
-                    v-for="item in options2"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                  </el-option>
-                </el-select>
-            </div>
-
-            <div class='third_search' style='padding: 10px 20px;display:flex'>
-              <el-input v-model="Shareinput" placeholder="请输入关键字(名称,内容)"></el-input>
-              <el-button icon="el-icon-search" @click="searchShare()">搜索</el-button>
-            </div>
-
-    　　　　　<div v-loading="loading">
-                  <div v-if="Libraryarr.length>0">
-                    <div class="libisryarr" v-for="(item,key) in Libraryarr" :key = key>
-                        <div class='libisryarr_list' @click="LibraryClick(item)">
-                            <div class='collection_icon' @click.stop="collectionIconclick(key,Libraryarr)" :class='item.isFavorite == true ? "collectionAcitve" : "nocollectionAcitve" '>
-                                <i class="el-icon-star-on"></i>
-                            </div>
-                            <div class="libisryarr_img" v-if="item.fileFormat=='mp4'">
-                                <video :src="item.url" controls="controls" :poster="item.coverImageUrl">
-                                </video>
-                            </div>
-
-                            <div class="libisryarr_img" v-else-if="item.fileFormat=='jpg'">
-                                <img :src="item.url" alt="">
-                            </div>
-                        </div>
-                        <div class="libisryarr_botal">
-                          <p>{{item.mediaName}}</p>
-                          <p>{{item.createTime}}</p>
-                        </div>
-                    </div>
-                  </div>
-                  <div v-else>
-                    <p style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;'><i class='el-icon-warning-outline'></i>暂无数据</p>
-                  </div>
-         </div>
-
-        </el-tab-pane> -->
-
-       
         <el-tab-pane label="我的稿件" name="third">
           <div class='third_search' style='padding: 10px 20px;display:flex'>
             <el-input v-model="Manuscriptinput" placeholder="请输入关键字(名称,内容)"></el-input>
@@ -180,12 +120,71 @@
               </div>
           </div>
         </el-tab-pane>
+
+        <!-- <el-tab-pane label="我的媒资库" name="second">
+            <div class="labelselect">
+                <label for="">分类</label>
+                <el-select v-model="value1" placeholder="请选择">
+                  <el-option
+                    v-for="item in options1"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+            </div>
+
+              <div class="labelselect">
+                <label for="">类型</label>
+                <el-select v-model="value2" placeholder="请选择">
+                  <el-option
+                    v-for="item in options2"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+            </div>
+
+            <div class='third_search' style='padding: 10px 20px;display:flex'>
+              <el-input v-model="Shareinput" placeholder="请输入关键字(名称,内容)"></el-input>
+              <el-button icon="el-icon-search" @click="searchShare()">搜索</el-button>
+            </div>
+
+    　　　　　<div v-loading="loading">
+                  <div v-if="Libraryarr.length>0">
+                    <div class="libisryarr" v-for="(item,key) in Libraryarr" :key = key>
+                        <div class='libisryarr_list' @click="LibraryClick(item)">
+                            <div class='collection_icon' @click.stop="collectionIconclick(key,Libraryarr)" :class='item.isFavorite == true ? "collectionAcitve" : "nocollectionAcitve" '>
+                                <i class="el-icon-star-on"></i>
+                            </div>
+                            <div class="libisryarr_img" v-if="item.fileFormat=='mp4'">
+                                <video :src="item.url" controls="controls" :poster="item.coverImageUrl">
+                                </video>
+                            </div>
+
+                            <div class="libisryarr_img" v-else-if="item.fileFormat=='jpg'">
+                                <img :src="item.url" alt="">
+                            </div>
+                        </div>
+                        <div class="libisryarr_botal">
+                          <p>{{item.mediaName}}</p>
+                          <p>{{item.createTime}}</p>
+                        </div>
+                    </div>
+                  </div>
+                  <div v-else>
+                    <p style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;'><i class='el-icon-warning-outline'></i>暂无数据</p>
+                  </div>
+         </div>
+
+        </el-tab-pane>  -->
       </el-tabs> 
   </div>
 </template>
 <script>
 import { getFavorTemplate,Mediacollectlist,classifygetAll } from '@/http/api'
-import { listObjects } from '@/http/api'           //稿库
+import { listObjects,getFavoriteMediaIds } from '@/http/api'           //稿库
 import { getFavoriteMixmdedias } from '@/http/api'    //查看收藏的文稿
 import { cancelFavorTemplate } from '@/http/api'           //取消模板收藏
 import { favoritedell  } from '@/http/api'    //稿件取消收藏
@@ -548,11 +547,11 @@ export default {
         })
       },
       loadMedialist(){
-            let param={
-              tenantId:this.tenantId
+            let param = {
+              tenantId: this.tenantId,
             }
-            Mediacollectlist(param).then((res)=>{
-               
+            getFavoriteMediaIds(param).then((res)=>{
+               console.log(res)
             })
       }
 
@@ -635,11 +634,23 @@ export default {
  }
 
  .first_main_imgs ul li{
-    width: 100%;
+    width: 150px;
+    height: 150px;
     text-align: center;
-    padding: 15px 0px;
     position: relative;
+    float: left;
+    margin: 9px;
+    background: #F6F8FA;
  }
+
+  .first_main_imgs ul li .beijing{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+     transform:scale(0.5,0.5) translate(-100%, -100%);
+    -webkit-transform:scale(0.5,0.5) translate(-100%, -100%);  /*兼容-webkit-引擎浏览器*/
+    -moz-transform:scale(0.5,0.5) translate(-100%, -100%); 
+  }
  .first_main_imgs ul li:hover{
    box-shadow: inset 0 0 10px 0px #ccc;
  }

@@ -7,9 +7,9 @@
             <div class="grid-content bg-purple">
                <div class="iconNav">
                    <ul>
-                       <li  @click="leftToggle('letfTab1')" :class="{Navcurrent:Navcurrent=='letfTab1'}"><i class="el-icon-s-unfold"></i></li>
-                       <li  @click="leftToggle('letfTab2')" :class="{Navcurrent:Navcurrent=='letfTab2'}"><i class="el-icon-s-order" ></i></li>
-                       <li  @click="leftToggle('letfTab3')" :class="{Navcurrent:Navcurrent=='letfTab3'}"><i class="el-icon-star-on"></i></li>
+                       <li  @click="leftToggle('letfTab1')" :class="{Navcurrent:Navcurrent=='letfTab1'}"><i class="el-icon-s-unfold"></i><div class='saucxs'></div></li>
+                       <li  @click="leftToggle('letfTab2')" :class="{Navcurrent:Navcurrent=='letfTab2'}"><i class="el-icon-s-order" ></i><div class='saucxs'></div></li>
+                       <li  @click="leftToggle('letfTab3')" :class="{Navcurrent:Navcurrent=='letfTab3'}"><i class="el-icon-star-on"></i><div class='saucxs'></div></li>
                    </ul>
                </div>
                <div class="NavContainer">
@@ -18,10 +18,10 @@
             </div>
         </el-col>
         <el-col :span="12">
-            <div class="grid-content bg-purple" style="position:relative">
+            <div class="grid-content bg-purple conetnts" style="position:relative">
                 <div :style="{'margin-left': inputLeft}">
-                    <el-input type="text" v-model="input" @input="inputChange" placeholder="请输入内容" maxlength="300" show-word-limit :style="{'width':inputWidth,'margin':'16px 0'}"></el-input>
-                    <Ueditor @listenEvent = 'uedior' @listenup = 'uedior2'></Ueditor>
+                    <el-input type="text" v-model="input" @input="inputChange" placeholder="请输入内容" maxlength="300" show-word-limit :style="{'width':inputWidth,'margin':'16px 0'}" style="border:none"></el-input>
+                    <Ueditor @listenEvent = 'uedior' @listenup = 'uedior2' style="height:100%"></Ueditor>
                 </div>
             </div>
         </el-col>
@@ -215,18 +215,26 @@ export default {
 };
 
 </script>
-
+<style>
+.conetnts .el-input__inner{
+    border:none;
+    border-radius: 5px;
+}
+</style>
 <style scoped>
+
 .iconNav {
     float: left;
+    height: 100%;
+    width: 64px;
 }
 .iconNav ul {
-    width: 60px;
-    margin-left: 16px;
-    margin-top: 24px;;
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
 }
 .iconNav li{
-    width: 60px;
+    width: 64px;
     height: 60px;
     display: inline-block;
     line-height: 72px;
@@ -243,7 +251,7 @@ export default {
     width: 390px;
     background: #fff;
     height: 100%;
-    margin-left: 90px;
+    margin-left: 65px;
 }
 
 .el-row,.el-row>div{
@@ -288,8 +296,22 @@ ul li.active{
 }
 
 /*右边菜单点击事件 */
-.Navcurrent i{
-  color:red !important;
+.Navcurrent{
+    border-left: 6px solid #D72323;
+    background: #F2F2F2 !important;
+    width: 58px !important;
 }
 
+.Navcurrent i{
+  color:#D72323 !important;
+}
+.Navcurrent .saucxs{
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-right: 10px solid white;
+    border-bottom: 6px solid transparent;
+    margin-left: 49px;
+    margin-top: -47px;
+}
 </style>

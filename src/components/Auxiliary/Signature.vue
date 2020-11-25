@@ -435,13 +435,17 @@ export default {
     xztpCutDownSmall(fileName) { 
         if(this.$store.state.title && this.titleimg.length>0){
           this.showTitleimg[0].url = fileName.dataURL
+          this.form.opaImg1 = fileName.dataURL
         }else{
           this.form.opaImg1 = fileName.dataURL
         }
+
+
     },
     xztpCutDownBig(fileName) { 
         if(this.$store.state.title && this.titleimg.length>0){
            this.showTitleimg[0].url = fileName.dataURL
+           this.form.opaImg2 = fileName.dataURL
         }else{
            this.form.opaImg2 = fileName.dataURL
         }
@@ -449,6 +453,7 @@ export default {
     xztpCutDownMany(fileName) { 
         if(this.$store.state.title && this.titleimg.length>0){
           this.showTitleimg[this.showTitleimgIdx].url = fileName.dataURL
+          this.form.opaImg3 = fileName.dataURL
         }else{
            this.form.opaImg3 = fileName.dataURL
         }
@@ -687,7 +692,6 @@ export default {
            this.form.opaImg1 = this.showTitleimg[0].url;
         }
 
-        console.log(this.form)
     },
     refreshbtnprev(){ //上一张
         let idx = this.showTitleimgIdx;

@@ -37,7 +37,8 @@ export default {
       context:'',
       loading:true,
       pagenum:1,
-      textareavalue:''
+      textareavalue:'',
+      loading:false
     }
   },
   watch:{
@@ -54,18 +55,18 @@ export default {
     }
   },
   created(){
-    this.textareavalue = store.gettaxt
-    this.tabs=[]
-    this.loading=true
-    autoIllustrated({content: this.textareavalue}).then((res)=>{
-        if(res){
-          this.loading=false
+    // this.textareavalue = store.gettaxt
+    // this.tabs=[]
+    // this.loading=true
+    // autoIllustrated({content: this.textareavalue}).then((res)=>{
+    //     if(res){
+    //       this.loading=false
 
-          for(var i=0;i<res.data.length;i++){
-            this.tabs.push({url:res.data[i],checked:false})
-          }
-        }
-    })
+    //       for(var i=0;i<res.data.length;i++){
+    //         this.tabs.push({url:res.data[i],checked:false})
+    //       }
+    //     }
+    // })
   },
   methods: {
     watchfun(val){

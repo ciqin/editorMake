@@ -201,5 +201,8 @@ export const coverAutoIllustrated = data => postHttp(caiApi+'/ilgcreation/coverA
 //上头像 
 export const upload = data => postHttp(caiApi+'/sprint/media-library/upload', data)
 
+//媒资库收藏列表
+export const getFavoriteMediaIds = data => postHttp(caiApi+'/ilgcreation/favoriteMedia/getFavoriteMediaIds', data)
+
 
 

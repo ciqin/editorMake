@@ -108,11 +108,9 @@ export default {
         let param = {
            content:store.uedstr,
         }
-        this.loading=true
         ilgcreations().then(res=>{
           getRelatedArticles(param).then(res=>{
             if(res){ 
-                this.loading = false 
                 if(res.data.length>0){
                   this.Relatedarr = res.data 
                   res.data.forEach((item,key)=>{

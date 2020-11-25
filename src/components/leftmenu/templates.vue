@@ -15,9 +15,9 @@
 
         <div>
           <div class="first_main_imgs infinite-list-wrapper" v-loading="loading" >
-              <ul v-if="templateimgarr.length>0" style='height: 705px;overflow-y: auto;' v-infinite-scroll="loadTemplates" infinite-scroll-disabled="disabledtemplate">
+              <ul v-if="templateimgarr.length>0" style='height: 750px;overflow-y: auto;' v-infinite-scroll="loadTemplates" infinite-scroll-disabled="disabledtemplate">
                 <li v-for="(item,key) in templateimgarr" :key = key :title="item.label" @click="templeteSource(key,item)" :class="{show_list_start:item.show===true}" @mouseover="collectionIconmouseover(key,item,templateimgarr)"  @mouseout="collectionIconmouseout(key,item,templateimgarr)">
-                    <div v-html = item.templeteSource></div>
+                    <div class='beijing' v-html = item.templeteSource></div>
                     <div class='collection_icon' :connectid="item.userId"   @click.stop="collectionIconclick(key,templateimgarr)" :class='item.isFavorite==1 ? "collectionAcitve" : "nocollectionAcitve" '>
                            <i class="el-icon-star-on"></i>
                     </div>
@@ -659,7 +659,6 @@
         }
 
         if(_that.templateimgarr.length!==_that.loadimgtemplate){
-          ilgcreations().then(res=>{
             getTempleteSourceList(Listparam).then(res=>{
                 if(res){
                   _that.loading = false
@@ -671,7 +670,6 @@
                   });  
                 }
             })
-          })
         }
         
       }, 
@@ -854,11 +852,23 @@
  }
 
  .first_main_imgs ul li{
-    width: 100%;
+    width: 150px;
+    height: 150px;
     text-align: center;
-    padding: 15px 0px;
     position: relative;
+    float: left;
+    margin: 9px;
+    background: #F6F8FA;
  }
+
+  .first_main_imgs ul li .beijing{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+     transform:scale(0.5,0.5) translate(-100%, -100%);
+    -webkit-transform:scale(0.5,0.5) translate(-100%, -100%);  /*兼容-webkit-引擎浏览器*/
+    -moz-transform:scale(0.5,0.5) translate(-100%, -100%); 
+  }
  .first_main_imgs ul li:hover{
    box-shadow: inset 0 0 10px 0px #ccc;
  }
