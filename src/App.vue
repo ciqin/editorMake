@@ -162,4 +162,14 @@ button{outline-style: none;}
 .tabsContainer .el-input__inner{
   width: 100px;
 }
+.NavContainer .el-input__inner{
+  height: 30px;
+  line-height: 30px;
+}
+.NavContainer .el-button{
+  padding: 6px 20px
+}
+.NavContainer .el-input__icon{
+  line-height: 30px;
+}
 </style>

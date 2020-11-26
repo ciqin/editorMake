@@ -817,7 +817,7 @@
      border-radius: 0px 4px 4px 0px;
    }
    .third_data .el-input__inner{
-     height: 35px;
+     height: 30px;
    }
    .third_data .el-date-editor .el-range-input{
     width: 85px;
@@ -826,10 +826,10 @@
     width: 228px;
   }
    .third_data .nav_top_temlaptes .el-input__icon {
-    line-height: 28px;
+    line-height: 22px;
   }
    .third_data .el-date-editor .el-range__icon,.third_data .el-date-editor .el-range-separator,.third_data .el-date-editor .el-range__close-icon{
-    line-height: 28px;
+    line-height: 22px;
   }
    .nav_top_temlaptes .labelselect .el-input--suffix .el-input__inner{
       background: #FFFFFF;
@@ -988,7 +988,7 @@
 }
 .labelselect label{
     width: 82px;
-    line-height: 38px;
+    line-height: 30px;
     font-family: MicrosoftYaHei;
     font-size: 14px;
     color: #333333;

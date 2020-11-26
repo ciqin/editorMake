@@ -7,9 +7,9 @@
             <div class="grid-content bg-purple">
                <div class="iconNav">
                    <ul>
-                       <li  @click="leftToggle('letfTab1')" :class="{Navcurrent:Navcurrent=='letfTab1'}"><i class="el-icon-s-unfold"></i><div class='saucxs'></div></li>
-                       <li  @click="leftToggle('letfTab2')" :class="{Navcurrent:Navcurrent=='letfTab2'}"><i class="el-icon-s-order" ></i><div class='saucxs'></div></li>
-                       <li  @click="leftToggle('letfTab3')" :class="{Navcurrent:Navcurrent=='letfTab3'}"><i class="el-icon-star-on"></i><div class='saucxs'></div></li>
+                       <li  @click="leftToggle('letfTab1')" :class="{Navcurrent:Navcurrent=='letfTab1'}"><i class="el-icon-s-unfold"></i><p>资源</p><div class='saucxs'></div></li>
+                       <li  @click="leftToggle('letfTab2')" :class="{Navcurrent:Navcurrent=='letfTab2'}"><i class="el-icon-s-order" ></i><p>供稿</p><div class='saucxs'></div></li>
+                       <li  @click="leftToggle('letfTab3')" :class="{Navcurrent:Navcurrent=='letfTab3'}"><i class="el-icon-star-on"></i><p>收藏</p><div class='saucxs'></div></li>
                    </ul>
                </div>
                <div class="NavContainer">
@@ -346,14 +346,17 @@ export default {
     width: 64px;
     height: 60px;
     display: inline-block;
-    line-height: 72px;
     text-align: center;
     background: #fff;
     margin-bottom:16px;
 }
+.iconNav ul li p{
+    font-size: 12px;
+}
 .iconNav li i {
     font-size: 30px;
     color: #999999;
+    padding-top: 6px;
 }
 /* 导航展示内容 */
 .NavContainer {
@@ -413,7 +416,7 @@ ul li.active img{
     width: 58px !important;
 }
 
-.Navcurrent i{
+.Navcurrent i,.Navcurrent p{
   color:#D72323 !important;
 }
 .Navcurrent .saucxs{
@@ -423,7 +426,7 @@ ul li.active img{
     border-right: 10px solid white;
     border-bottom: 6px solid transparent;
     margin-left: 49px;
-    margin-top: -47px;
+    margin-top: -30px;
 }
 .el-textarea__inner,.el-input__inner{
     border: 1px solid #A0A2B2;
