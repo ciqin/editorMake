@@ -4,14 +4,14 @@
             <el-form ref="form" :model="form" label-width="80px">
                 <el-form-item label="文章封面">
                     <el-radio-group v-model="radio">
-                        <el-radio :label="12" @change="coverNone">无图</el-radio>
                         <el-radio :label="3" @change="coverSmall">小图</el-radio>
                         <el-radio :label="6" @change="coverBig">大图</el-radio>
                         <el-radio :label="9" @change="coverMany">三图</el-radio>
+                        <el-radio :label="12" @change="coverNone">无图</el-radio>
                     </el-radio-group>
                 </el-form-item>
 
-                <el-form-item v-loading='loading' class='picture_mull' v-if='this.$store.state.title&& titleimg.length>0'>
+                <el-form-item v-loading='loading' class='picture_mull' v-if='this.$store.state.title && titleimg.length>0'>
                     <div  style='display:flex'>
                         <div v-for='(item,index) in showTitleimg' @click="setShowTitleimg(index)" :key = 'index' @mouseover='titleimgover(item,index)' @mouseout='titleimgout(item,index)' style='position:relative;margin-right: 15px;'>
                                 <img :src="item.url" alt="" style="cursor: pointer;" width="100" height="70">
@@ -73,10 +73,10 @@
                     </div>
                 </el-form-item>
 
-                <el-form-item  v-else-if='!this.$store.state.title && titleimg.length==0' label=""  class="cover">  
+                <el-form-item  v-else-if='!this.$store.state.title && titleimg.length==0 && coverflag' label=""  class="cover">  
                         <el-row :gutter="20">
                                 <el-col :span="8">
-                                    <div class="grid-content bg-purple">
+                                    <div class="grid-content bg-purple" style="width:100px">
                                         <ImgCutter ref="imgCutterModal1"
                                                     :cross-origin="true"
                                                     :tool-bgc="none"
@@ -92,10 +92,10 @@
                                                     @cutDown="xztpCutDownSmall">
                                                     <button slot="open" style="display:none;"></button>
                                         </ImgCutter>
-                                        <img  v-if="opaBtn1" :src="form.opaImg1" alt="" slot="open" style="cursor: pointer;" width="70" @click="loadSmall(index)">
+                                        <img  v-if="opaBtn1" :src="form.opaImg1" alt="" slot="open" style="cursor: pointer;" width="100%" @click="loadSmall(index)">
                                     </div>
                                 </el-col>
-                                <el-col :span="8"><div class="grid-content bg-purple">
+                                <el-col :span="8"><div class="grid-content bg-purple"  style="width:100px">
                                         <ImgCutter ref="imgCutterModal2"
                                                     :cross-origin="true"
                                                     :tool-bgc="none"
@@ -111,10 +111,10 @@
                                                     @cutDown="xztpCutDownBig">
                                                     <button slot="open" style="display:none;"></button>
                                         </ImgCutter>
-                                        <img  v-if="opaBtn2" :src="form.opaImg2" alt="" slot="open" style="cursor: pointer;" width="70" @click="loadBig(index)">
+                                        <img  v-if="opaBtn2" :src="form.opaImg2" alt="" slot="open" style="cursor: pointer;" width="100%" @click="loadBig(index)">
                                     
                                     </div></el-col>
-                                    <el-col   el-col :span="8"><div class="grid-content bg-purple">
+                                    <el-col   el-col :span="8"><div class="grid-content bg-purple" style="width:100px">
                                         <ImgCutter ref="imgCutterModal3"
                                                         :cross-origin="true"
                                                         :tool-bgc="none"
@@ -130,7 +130,7 @@
                                                         @cutDown="xztpCutDownMany">
                                                         <button slot="open" style="display:none;"></button>
                                         </ImgCutter>
-                                        <img  v-if="opaBtn3" :src="form.opaImg3" alt="" slot="open" width="70" style="cursor: pointer;" @click="loadMany(index)">
+                                        <img  v-if="opaBtn3" :src="form.opaImg3" alt="" slot="open" width="100%" style="cursor: pointer;" @click="loadMany(index)">
                                     </div></el-col>
                         </el-row>
                         
@@ -166,7 +166,13 @@
                         resize="none"
                         show-word-limit>
                     </el-input>
-                    <el-button @click="automaticSummary"  size="mini" style="float:right;position:relative;top:10px">自动摘要</el-button>
+                    <el-button @click="automaticSummary"  size="mini" style="float: right;
+                        position: relative;
+                        top: 10px;
+                        right: 30px;
+                        border: 1px solid #96C4FF;
+                        background: #CAE1FF;
+                        color: #0170FF;">自动摘要</el-button>
                 </el-form-item>
                 <el-form-item label="来源">
                     <el-select v-model="form.origination" placeholder="请选择来源"  size="mini">
@@ -201,11 +207,17 @@
                         @change="handleInputConfirm"
                         @blur="handleInputConfirm">
                         </el-input>
-                        <el-button v-else class="button-new-tag" size="small" @click="showInput">+</el-button>
-                        <el-button  size="small" @click="hasWord">抽取关键字</el-button>
+                        <el-button v-else class="button-new-tag" size="small" @click="showInput" >+</el-button>
+                        <el-button @click="hasWord" size="mini" style="float: right;
+                        position: relative;
+                        top: 10px;
+                        right: 30px;
+                        border: 1px solid #96C4FF;
+                        background: #CAE1FF;
+                        color: #0170FF;">抽取关键字</el-button>
                     </div>
-                    
                 </el-form-item>
+                
                 <el-form-item label="稿件级别">
                     <el-select v-model="form.levelId" placeholder="请选择" size="mini">
                         <el-option
@@ -330,7 +342,7 @@ export default {
                     }
                 ],
                 levelId:1,
-                coverType:0,
+                coverType:1,
                 addImg:"http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png",
                 opaImg1:"http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png",
                 opaImg2:"http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png",
@@ -367,8 +379,8 @@ export default {
                 opaImg:false,
                 baseUrl:""
             },
-            radio: 12,
-            opaBtn1:false,
+            radio: 3,
+            opaBtn1:true,
             opaBtn2:false,
             opaBtn3:false,
             none:"none",
@@ -379,7 +391,8 @@ export default {
             titleimgNextIdx:1,
             showTitleimgNum:0,
             isdisshow:'cursor: not-allowed',
-            isrefreshshow:'display:flex'
+            isrefreshshow:'display:flex',
+            coverflag:true
         }
     },
     inject:['app'],
@@ -469,7 +482,7 @@ export default {
     // 小图操作函数
     coverSmall(){
         this.num = 1
-        if(this.$store.state.title){
+        if(this.$store.state.title && this.coverList){
            this.loadcoverAutoIllu()
         }else{
            this.form.opaImg1 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
@@ -482,13 +495,12 @@ export default {
         this.opaBtn3 = false;
        
         this.form.coverType = 1;
-         this.isrefreshshow = 'display:flex'
-
+        this.isrefreshshow = 'display:flex'
     },
     // 大图操作函数
     coverBig(){
         this.num = 2
-        if(this.$store.state.title){
+        if(this.$store.state.title && this.coverList){
            this.loadcoverAutoIllu()
         }else{
             this.form.opaImg1 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
@@ -505,7 +517,7 @@ export default {
     // 三图操作函数
     coverMany(){
         this.num = 3
-        if(this.$store.state.title){
+        if(this.$store.state.title && this.coverList){
            this.loadcoverAutoIllu()
         }else{
             this.form.opaImg1 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
@@ -571,7 +583,7 @@ export default {
     showInput() {
         this.form.inputVisible = true;
         this.$nextTick(_ => {
-        this.$refs.saveTagInput.$refs.input.focus();
+           this.$refs.saveTagInput.$refs.input.focus();
         });
     },
 
@@ -749,11 +761,11 @@ export default {
      mounted(){
           // 初始化稿签数据
         newSignature().then(res=>{
-           
             if(/系统登录认证信息输入区域/.test(res) && /智能采编平台/.test(res)) {
                 this.$router.push("/login") 
             }
             if(res.coverList) {
+                this.coverflag = true
                 switch(res.coverType){
                     case 1:
                         this.radio = 3;
@@ -912,4 +924,14 @@ export default {
     line-height: 30px;
     cursor: pointer;
  }
+
+ .bg-purple-light .el-textarea .el-input__count {
+    color: #909399;
+    background: #FFF;
+    position: absolute;
+    font-size: 12px;
+    bottom: 14px;
+    right: 40px;
+    height: 20px;
+}
 </style>

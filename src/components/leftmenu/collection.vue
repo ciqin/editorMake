@@ -121,7 +121,7 @@
           </div>
         </el-tab-pane>
 
-        <!-- <el-tab-pane label="我的媒资库" name="second">
+        <el-tab-pane label="我的媒资库" name="second">
             <div class="labelselect">
                 <label for="">分类</label>
                 <el-select v-model="value1" placeholder="请选择">
@@ -155,7 +155,7 @@
                   <div v-if="Libraryarr.length>0">
                     <div class="libisryarr" v-for="(item,key) in Libraryarr" :key = key>
                         <div class='libisryarr_list' @click="LibraryClick(item)">
-                            <div class='collection_icon' @click.stop="collectionIconclick(key,Libraryarr)" :class='item.isFavorite == true ? "collectionAcitve" : "nocollectionAcitve" '>
+                            <div class='collection_icon collectionAcitve' @click.stop="collectionIconclick(key,Libraryarr)">
                                 <i class="el-icon-star-on"></i>
                             </div>
                             <div class="libisryarr_img" v-if="item.fileFormat=='mp4'">
@@ -163,7 +163,7 @@
                                 </video>
                             </div>
 
-                            <div class="libisryarr_img" v-else-if="item.fileFormat=='jpg'">
+                            <div class="libisryarr_img" v-else-if="item.fileFormat=='jpg'||item.fileFormat=='jpeg'">
                                 <img :src="item.url" alt="">
                             </div>
                         </div>
@@ -178,12 +178,12 @@
                   </div>
          </div>
 
-        </el-tab-pane>  -->
+        </el-tab-pane> 
       </el-tabs> 
   </div>
 </template>
 <script>
-import { getFavorTemplate,Mediacollectlist,classifygetAll } from '@/http/api'
+import { getFavorTemplate,Mediacollectlist,classifygetAll,SearchShareAssets,Mediadell} from '@/http/api'
 import { listObjects,getFavoriteMediaIds } from '@/http/api'           //稿库
 import { getFavoriteMixmdedias } from '@/http/api'    //查看收藏的文稿
 import { cancelFavorTemplate } from '@/http/api'           //取消模板收藏
@@ -223,8 +223,8 @@ export default {
       templeteType:1,
 
       tenantId:'',
-      value1:'',
-      options1: [],
+      value1:'全部',
+      options1: [{value:'全部',label:'全部'}],
       options2: [{
         value: 1,
         label: '图片'
@@ -244,7 +244,8 @@ export default {
       mediapageSize:20,//媒资库每页条数
       mediapageNum:1,//媒资库页数
       mediaIDarr:[],//媒资库id
-
+      collectAssets:[],
+      mediatotal:'',
 
       caiApi:"http://qhcloudhongqi.wengegroup.com:9080",
     }
@@ -342,11 +343,10 @@ export default {
           this.loading = true
           this.loadTemplates();
         }else if(tab.label == '我的媒资库'){
-
-          this.options1 = []
+           this.options1 = [{value:'全部',label:'全部'}]
             //获取分类
             let param = {
-              tenantId: 5,
+              tenantId: this.tenantId,
             }
             classifygetAll(param).then(res=>{
               if(res){
@@ -358,8 +358,9 @@ export default {
                 })
               }
             })
+
             this.Libraryarr=[];
-            this.mediapageNum=0;
+            this.mediapageNum=1;
             this.loading = true
             this.loadMedialist()
         }
@@ -387,6 +388,14 @@ export default {
         this.Manuscript = []
         this.loadgetFavorite()
       },
+
+      searchShare(){
+         this.loading = true
+         this.mediapageNum = 1
+         this.Libraryarr = []
+         this.loadMedialist()
+      },
+
       collectionIconclick(index,arr){
         if(arr == this.templateimgarr){
           let param = {
@@ -396,7 +405,15 @@ export default {
           this.templateimgarr[index].isFavorite = false
           ilgcreations().then(res=>{
             cancelFavorTemplate(param).then(res=>{ //取消模板收藏
-             this.templateimgarr.splice(index,1)
+              if(res.message='取消收藏成功'){
+                  this.$message({
+                        message: '取消收藏成功',
+                        type: 'success'
+                    });
+                  this.templateimgarr.splice(index,1)
+              }else{
+                  this.$message('取消收藏失败');
+              }
             })
           })
         }else if(arr == this.Manuscript){
@@ -406,7 +423,15 @@ export default {
         
             ilgcreations().then(res=>{
               favoritedell(favoriteparam).then((res)=>{
-               this.Manuscript.splice(index,1)
+                if(res.message='取消收藏成功'){
+                    this.$message({
+                        message: '取消收藏成功',
+                        type: 'success'
+                    });
+                  this.Manuscript.splice(index,1)
+                }else{
+                  this.$message('取消收藏失败');
+                }
               })
             })
             
@@ -421,10 +446,36 @@ export default {
 
             ilgcreations().then(res=>{
               Articledell(Relateparam).then((res)=>{
-                this.Relatedarr.splice(index,1)
+                if(res.message='取消收藏成功'){
+                  this.$message({
+                        message: '取消收藏成功',
+                        type: 'success'
+                  });
+                  this.Relatedarr.splice(index,1)
+                }else{
+                  this.$message('取消收藏失败');
+                }
               })
             })
             
+        }else if(arr == this.Libraryarr){
+            let libraryparam = {
+              assetId:arr[index].assetId,
+              tenantId:this.tenantId,
+              url:arr[index].url
+            }
+            
+            Mediadell(libraryparam).then(res=>{ //取消媒资库收藏
+                if(res.message='取消收藏成功'){
+                  this.$message({
+                        message: '取消收藏成功',
+                        type: 'success'
+                  });
+                  this.Libraryarr.splice(index,1)
+                }else{
+                  this.$message('取消收藏失败');
+                }
+              })
         }
 
       },
@@ -547,25 +598,75 @@ export default {
         })
       },
       loadMedialist(){
-            let param = {
+            let _that = this
+            if(this.value1=='全部' || this.value2=='全部'){
+              this.value1 = '全部'
+              this.value2 = 0
+            }
+
+            let value1arr = []
+            if(this.value1!=='全部'){
+              value1arr.push(this.value1)
+            }
+
+            let params = {
               tenantId: this.tenantId,
             }
-            getFavoriteMediaIds(param).then((res)=>{
-               console.log(res)
+
+
+            getFavoriteMediaIds(params).then((res)=>{
+               if(res){
+                 this.collectAssets=res.data
+
+                  let Searchparam = {
+                      classifyIds:value1arr, //分类的id
+                      keyWords:this.Shareinput,//关键字
+                      mediaType:this.value2, //类型
+                      tenantId:this.tenantId, //组织id
+                      sortParam:'create_time',
+                      sortType:'desc',
+                      pageNum: this.mediapageNum,
+                      pageSize: this.mediapageSize,
+                      isClassifyRecursion:true,
+                      collectAssets:this.collectAssets
+                  }
+
+                 SearchShareAssets(Searchparam).then(res=>{  //媒资库检索
+                    if(res){
+                      this.loading = false
+                      let rescontent = res.data
+
+                      this.mediapageNum = Number(_that.mediapageNum)+1
+                      this.mediatotal = res.total
+
+                      rescontent.forEach(function (item) {
+                          _that.Libraryarr.push(item);
+                      });
+      
+                    }
+                  })
+               }
             })
+
+
+          
       }
 
   }
 }
 </script>
 <style>
+
+   .collect_list .el-tabs__nav-wrap{
+     background: #F6F8FA; 
+   }
    .collect_list .is-active {
-      color: #D72323;
+      color: #1A1A1A;
+      background: #ffffff;
+      font-weight: bold;
    }
    .collect_list .el-tabs__active-bar{
-      width: 112px;
-      height: 4px;
-      background-color: #D72323;
+     display:none;
    }
    .collect_list .el-loading-mask .el-loading-spinner .path {
     stroke: #d72323;
@@ -574,14 +675,14 @@ export default {
      color:#D72323
    }
    .collect_list .el-tabs--top .el-tabs__item.is-top{
-      width: 87px;
+      width: 97px;
       text-align: center;
+      padding: 0;
    }
    .collect_list .el-tabs__nav{
-     margin-left: 20px;
-     height: 60px;
-     line-height: 70px;
-     font-size: 14px;
+      height: 40px;
+      line-height: 40px;
+      font-size: 14px;
    }
 </style>
 <style scoped>
@@ -634,25 +735,28 @@ export default {
  }
 
  .first_main_imgs ul li{
-    width: 150px;
-    height: 150px;
+    width: 366px;
     text-align: center;
     position: relative;
     float: left;
-    margin: 9px;
+    margin: 4px;
+    margin-bottom: 0;
     background: #F6F8FA;
  }
 
+.first_main_imgs ul li:nth-of-type(odd){ 
+  margin-right:0;
+}
+
   .first_main_imgs ul li .beijing{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-     transform:scale(0.5,0.5) translate(-100%, -100%);
-    -webkit-transform:scale(0.5,0.5) translate(-100%, -100%);  /*兼容-webkit-引擎浏览器*/
-    -moz-transform:scale(0.5,0.5) translate(-100%, -100%); 
+    background: #ffffff;
+    width: 350px;
+    margin: 8px;
+    padding: 10px
   }
  .first_main_imgs ul li:hover{
    box-shadow: inset 0 0 10px 0px #ccc;
+   border: 1px solid #1989FA;
  }
  .first_main_imgs ul li img{
    max-width: 100%;
@@ -795,13 +899,11 @@ export default {
     font-size: 14px;
     color: #333333;
 }
-.first_main_imgs{
-    width: 343px;
-    border: 1px solid #E7ECF2;
-    margin-left: 25px;
+ .first_main_imgs{
+    margin-left: 7px;
     margin-top: 10px;
-    min-height: 745px;
-}
+    min-height: 705px;
+ }
 .acticle_list{
     width: 368px;
     margin: 20px;

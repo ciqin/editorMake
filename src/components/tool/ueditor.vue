@@ -196,7 +196,7 @@ import '#/UEditor/lang/zh-cn/zh-cn.js'
 import html2Canvas from 'html2canvas'
 import JsPDF from 'jspdf'
 // 接口加载
-import { submitData ,newSave,listBtn,releaseManuscript,deleteManuscript,subAdopt,subFinalJudgment,revision,withdraw,hasReject,subReject} from "@/http/api"
+import { submitData ,newSave,listBtn,deleteManuscript,subAdopt,subFinalJudgment,revision,withdraw,hasReject,subReject} from "@/http/api"
 import { store ,mutations} from '@/store'
 import {mapActions, mapGetters} from 'vuex';
 import Submit from "../Popup/submit"

@@ -68,7 +68,7 @@ button{outline-style: none;}
   position: relative;
 }
 .el-tabs__item,.el-form-item__label,.first_nav_top ul li{
-  color: #666666;
+  color: #000000;
 }
 .impression .el-form-item__label {
     overflow: hidden;
@@ -148,5 +148,18 @@ button{outline-style: none;}
 }
 #edui68,#edui69{
     display: none !important;
+}
+.bg-purple-light .el-input__inner{
+    height: 34px;
+}
+.bg-purple-light .el-textarea__inner,.bg-purple-light .el-input__inner{
+  width: 290px;
+}
+.bg-purple-light .el-textarea__inner,.bg-purple-light .el-input__inner,.bg-purple-light .el-button{
+    border: 1px solid #A0A2B2;
+}
+
+.tabsContainer .el-input__inner{
+  width: 100px;
 }
 </style>

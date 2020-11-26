@@ -65,10 +65,10 @@ export default {
      
     },
     created(){
+      console.log(123456,'shou')
       let param = {
            content: store.uedstr,
         }
-
         ilgcreations().then(res=>{
               getRelatedArticles(param).then(res=>{
                   if(res){  

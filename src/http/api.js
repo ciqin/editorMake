@@ -36,8 +36,8 @@ export const getJson = data => getHttp('../../static/test/test.json', data)
 // 新建稿件删除接口
 export const deleteManuscript= data => postHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/create/cancel', data)
 
-// 新建稿件释放接口
-export const releaseManuscript= data => postHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/hold/release', data)
+// // 新建稿件释放接口
+// export const releaseManuscript= data => postHttp(caiApi+'/sprint/rest/workflow/stories/'+libId+'/'+newManuscriptId+'/hold/release', data)
 
 //  采编文件保存提交数据接口
 export const submitData = data => postHttp('../../static/test/test.json', data)

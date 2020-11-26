@@ -65,8 +65,8 @@
           <el-button icon="el-icon-search" @click="searchShare()">搜索</el-button>
         </div>
 
-　　　　　<div v-loading="loading">
-              <div v-if="Libraryarr.length>0">
+　　　　　<div class='infinite-list-wrapper' v-loading="loading">
+              <div v-if="Libraryarr.length>0" style='height: 790px;overflow-y: auto;overflow-x:hidden'  v-infinite-scroll="loadMedialist" infinite-scroll-disabled="disabledLibraryarr">
                 <div class="libisryarr" v-for="(item,key) in Libraryarr" :key = key>
                     <div class='libisryarr_list' @click="LibraryClick(item)">
                         <div class='collection_icon' @click.stop="collectionIconclick(key,Libraryarr)" :class='item.isFavorite == true ? "collectionAcitve" : "nocollectionAcitve" '>
@@ -86,6 +86,9 @@
                       <p>{{item.createTime}}</p>
                     </div>
                 </div>
+
+                 <p v-if="Libraryarrtemplate" style='text-align:center'>加载中...</p>
+                 <p v-if="LibraryarrnoMore" style='text-align:center'>没有更多了</p>
               </div>
               <div v-else>
                 <p style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;'><i class='el-icon-warning-outline'></i>暂无数据</p>
@@ -175,8 +178,8 @@
         activeName: '',
         templatearr:['标题','正文','图文','引导','分割线','二维码','其他'],
         texttemp:0,
-        options1: [],
-        value1: '',
+        options1: [{value:'全部',label:'全部'}],
+        value1: '全部',
         seen:false,
         options2: [{
           value: 1,
@@ -211,11 +214,13 @@
         ManuscrippageNum:10,//稿件每次加载条数
         ManuscripIDarr:[],//稿件id
 
+        Libraryarrtemplate:false,
         Shareinput:'',//媒资库检索的关键字
         Libraryarr:[],//媒资库检索结果
         mediapageSize:20,//媒资库每页条数
         mediapageNum:1,//媒资库页数
         mediaIDarr:[],//媒资库id
+        mediatotal:'',//媒资库的总页数
 
         loadingManuscript:true,
         templeteType:1,
@@ -225,19 +230,24 @@
       };
     },
     created(){
+      console.log(123456)
       this.tenantId = window.localStorage.getItem("tenantId")
       if(store.letfTab1Idx=='0'){
           this.activeName = 'first'
           this.templateimgarr=[]
           this.templatepage=0
           this.loading = true
-          this.loadTemplates();
+          ilgcreations().then(res=>{
+            if(res){
+              this.loadTemplates();
+            }
+          })
       }else if(store.letfTab1Idx=='1'){
           this.activeName = 'second'
-          this.options1 = []
+          this.options1 = [{value:'全部',label:'全部'}]
             //获取分类
             let param = {
-              tenantId: this.tenantId,
+              tenantId: 5,
             }
             classifygetAll(param).then(res=>{
               if(res){
@@ -307,7 +317,11 @@
           this.templateimgarr=[]
           this.templatepage=0
           this.loading = true
-          this.loadTemplates();
+          ilgcreations().then(res=>{
+            if(res){
+              this.loadTemplates();
+            }
+          })
       }
     },
   
@@ -326,6 +340,14 @@
       },
       disabledtemplate (){
           return this.loadimgtemplate || this.templatenoMore
+      },
+
+      //媒资库
+      LibraryarrnoMore(){
+          return this.Libraryarr.length == this.mediatotal
+      },
+      disabledLibraryarr(){
+          return this.Libraryarrtemplate || this.LibraryarrnoMore
       }
     },
 
@@ -333,10 +355,10 @@
       handleClick(tab, event) {
         if(tab.label=='媒资库'){
             this.datavalue = ''
-            this.options1 = []
+            this.options1 = [{value:'全部',label:'全部'}]
             //获取分类
             let param = {
-              tenantId: this.tenantId,
+              tenantId: 5,
             }
             classifygetAll(param).then(res=>{
               if(res){
@@ -349,7 +371,7 @@
               }
             })
             this.Libraryarr=[];
-            this.mediapageNum=0;
+            this.mediapageNum=1;
             this.loading = true
             this.loadMedialist()
         }else if(tab.label=='稿库'){
@@ -674,13 +696,17 @@
         
       }, 
       loadMedialist(){
-          let _that = this
-          if(this.value1=='分类' || this.value2=='全部'){
-              this.value1 = 1
+            let _that = this
+            if(this.value1=='全部' || this.value2=='全部'){
+              this.value1 = '全部'
               this.value2 = 0
             }
+
             let value1arr = []
-            value1arr.push(this.value1)
+            if(this.value1!=='全部'){
+              value1arr.push(this.value1)
+            }
+            
             let Searchparam = {
                 classifyIds:value1arr, //分类的id
                 keyWords:this.Shareinput,//关键字
@@ -690,6 +716,7 @@
                 sortType:'desc',
                 pageNum: this.mediapageNum,
                 pageSize: this.mediapageSize,
+                isClassifyRecursion:true,
             }
             SearchShareAssets(Searchparam).then(res=>{  //媒资库检索
               if(res){
@@ -703,6 +730,9 @@
                 Mediacollectlist(parmas).then((res)=>{
                   if(res.message=='获取成功'){
                      this.mediaIDarr = res.data
+
+                    _that.mediapageNum = Number(_that.mediapageNum)+1
+                    _that.mediatotal = res.total
 
                      rescontent.forEach(function (item) {
                         item.show=false
@@ -753,13 +783,16 @@
    .el-message-box{
      width: 1100px;
    }
+   .nav_top_temlaptes .el-tabs__nav-wrap{
+     background: #F6F8FA; 
+   }
    .nav_top_temlaptes .is-active {
-      color: #D72323;
+      color: #1A1A1A;
+      background: #ffffff;
+      font-weight: bold;
    }
    .nav_top_temlaptes .el-tabs__active-bar{
-      width: 112px;
-      height: 4px;
-      background-color: #D72323;
+      display: none;
    }
    .nav_top_temlaptes .el-tabs__item:hover{
      color:#D72323
@@ -768,14 +801,14 @@
     stroke: #d72323;
    }
    .nav_top_temlaptes .el-tabs--top .el-tabs__item.is-top{
-      width: 112px;
+      width: 130px;
       text-align: center;
+      padding-right:0
    }
    .nav_top_temlaptes .el-tabs__nav{
-     margin-left: 32px;
-     height: 60px;
-     line-height: 70px;
-     font-size: 14px;
+      height: 40px;
+      line-height: 40px;
+      font-size: 14px;
    }
    .third_search .el-input__inner{
      border-right: none;
@@ -806,33 +839,30 @@
 </style>
 <style scoped>
  .first_nav_top ul{
-   margin-left: 15px;
+   margin-left: 8px;
    overflow: hidden;
  }
  .first_nav_top ul li{
     width:48px;
-    height:32px;
+    height:25px;
     background: #EEF3F9;
     border-radius: 4px;
     font-family: PingFangSC-Regular;
-    font-size: 14px;
-    color: #333333;
-    line-height: 32px;
+    font-size: 12px;
+    color: #9193AC;
+    line-height: 25px;
     text-align: center;
     float: left;
-    margin:0 2px;
+    margin:0 3px;
     cursor: pointer;
  }
  .first_nav_top ul .templateactive{
-    background: #ffe1e1;
-    color: #EA5E5E;
-    border-radius: 4px;
-    border-radius: 4px;
+   color: #0170FF;
+   background: #0170ff3b;
+   border-radius: 4px;
  }
  .first_main_imgs{
-    width: 343px;
-    border: 1px solid #E7ECF2;
-    margin-left: 25px;
+    margin-left: 7px;
     margin-top: 10px;
     min-height: 705px;
  }
@@ -852,25 +882,28 @@
  }
 
  .first_main_imgs ul li{
-    width: 150px;
-    height: 150px;
+    width: 366px;
     text-align: center;
     position: relative;
     float: left;
-    margin: 9px;
+    margin: 4px;
+    margin-bottom: 0;
     background: #F6F8FA;
  }
 
+.first_main_imgs ul li:nth-of-type(odd){ 
+  margin-right:0;
+}
+
   .first_main_imgs ul li .beijing{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-     transform:scale(0.5,0.5) translate(-100%, -100%);
-    -webkit-transform:scale(0.5,0.5) translate(-100%, -100%);  /*兼容-webkit-引擎浏览器*/
-    -moz-transform:scale(0.5,0.5) translate(-100%, -100%); 
+    background: #ffffff;
+    width: 350px;
+    margin: 8px;
+    padding: 10px
   }
  .first_main_imgs ul li:hover{
    box-shadow: inset 0 0 10px 0px #ccc;
+   border: 1px solid #1989FA;
  }
  .first_main_imgs ul li img{
    width: 90%;
@@ -909,7 +942,7 @@
     width: 173px;
     height: 180px;
     float: left;
-    margin: 10px 0px 20px 18px;
+    margin: 10px 0px 20px 10px;
 }
 .libisryarr_list{
   width: 173px;
