@@ -17,6 +17,7 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 99.8vh;
+  overflow: hidden;
 }
 /* 设置谷歌滚动条 */
 ::-webkit-scrollbar {
@@ -171,5 +172,10 @@ button{outline-style: none;}
 }
 .NavContainer .el-input__icon{
   line-height: 30px;
+}
+.edui-editor-toolbarboxouter{
+ border: none !important;
+ box-shadow: none !important;
+ background: #ffffff !important;
 }
 </style>

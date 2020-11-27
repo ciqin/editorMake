@@ -14,7 +14,7 @@
            <div class='first_texttemp'>内部资源 > 模板 > {{templatearr[texttemp]}} </div>
            <div>
               <div class="first_main_imgs infinite-list-wrapper" v-loading="loading" >
-                  <ul v-if="templateimgarr.length>0" style='height: 755px;overflow: auto;'>
+                  <ul v-if="templateimgarr.length>0" style='height: 785px;overflow: auto;'>
                     <li v-for="(item,key) in templateimgarr" :key = key :title="item.label" @click="templeteSource(key,item)" :class="{show_list_start:item.show===true}">
                       <div class='beijing' v-html = item.templeteSource ></div>
                       <div class='collection_icon' :connectid="item.userId"   @click.stop="collectionIconclick(key,templateimgarr)" :class='item.userId ? "collectionAcitve" : "nocollectionAcitve" '>
@@ -39,15 +39,16 @@
             <el-button icon="el-icon-search" @click="Manuscriptsearch()">搜索</el-button>
           </div>
 
-          <div class="third_data">
-              <el-date-picker
+         <div class="third_data">
+           <el-date-picker
               v-model="datavalue"
-              type="date"
-              placeholder="选择日期"
-              value-format="yyyy-MM-dd"
-              >
-            </el-date-picker>
-          </div>
+              type="daterange"
+              value-format="yyyy-MM-dd"    
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期">
+           </el-date-picker>
+        </div>
 
            <div v-loading="loadingmusc">
               <div class='infinite-list-wrapper'  v-loading="loadingmusc">
@@ -104,8 +105,13 @@
                     <div v-if='item.content!=""'>
                       <div class="acticle_list_bottom">
                         <div class='acticle_list_content' v-if="item.iscontent" @mouseup="listcontentup" >{{item.content}}</div>
-                        <div class='acticle_list_content' v-else @mouseup="listcontentup">{{item.partcontent}}</div>
+                        <div class='acticle_list_content' v-else @mouseup="listcontentup">{{item.partcontent?item.partcontent:''}}</div>
                       </div>
+                    </div>
+
+                    <div v-else>
+                          <div class='acticle_list_keyword'>关联点：{{item.words?item.words:''}}</div>
+                          <div class='acticle_list_Similarity' style="padding-bottom: 10px;">关联度：{{item.similarity?item.similarity:''}}</div>
                     </div>
                 </div>
                 <p v-if="loadimgRelated" style='text-align:center'>加载中...</p>
@@ -438,7 +444,7 @@ export default {
         }else if(arr == this.Relatedarr){
             let Relateparam = { 
                 uuid:this.Relatedarr[index].uuid,
-                tenantId:5,
+                tenantId:this.tenantId,
                 title:this.Relatedarr[index].title,
                 content:this.Relatedarr[index].content,
                 pubtime:this.Relatedarr[index].pubtime
@@ -583,8 +589,8 @@ export default {
             number: _that.Manuscrippage,
             count: 10,
             favorIds:JSON.stringify(_that.Manuscriptidarr)=='{}'?'':JSON.stringify(_that.Manuscriptidarr),
-            startDate:_that.datavalue,
-            endDate:_that.datavalue,
+            startDate:_that.datavalue[0],
+            endDate:_that.datavalue[1],
             ContentType:true,
         }
         listObjects(Objectparam).then((res)=>{
@@ -765,7 +771,7 @@ export default {
  .third_data{
    width:140px;
    height:35px;
-   margin-left: 240px;
+   margin-left: 143px;
  }
  .first_main_imgs .collection_icon,.third_libisryarr .collection_icon{
     width: 18px;

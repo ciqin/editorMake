@@ -84,6 +84,7 @@ const router = new Router({
       name: 'audio',
       component: resolve => require(['@/components/manuscript/audio'], resolve),
     }
+    
   ]
 })
 export default router

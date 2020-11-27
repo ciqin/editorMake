@@ -15,7 +15,7 @@
 
         <div>
           <div class="first_main_imgs infinite-list-wrapper" v-loading="loading" >
-              <ul v-if="templateimgarr.length>0" style='height: 750px;overflow-y: auto;' v-infinite-scroll="loadTemplates" infinite-scroll-disabled="disabledtemplate">
+              <ul v-if="templateimgarr.length>0" style='height: 785px;overflow-y: auto;' v-infinite-scroll="loadTemplates" infinite-scroll-disabled="disabledtemplate">
                 <li v-for="(item,key) in templateimgarr" :key = key :title="item.label" @click="templeteSource(key,item)" :class="{show_list_start:item.show===true}" @mouseover="collectionIconmouseover(key,item,templateimgarr)"  @mouseout="collectionIconmouseout(key,item,templateimgarr)">
                     <div class='beijing' v-html = item.templeteSource></div>
                     <div class='collection_icon' :connectid="item.userId"   @click.stop="collectionIconclick(key,templateimgarr)" :class='item.isFavorite==1 ? "collectionAcitve" : "nocollectionAcitve" '>
@@ -66,7 +66,7 @@
         </div>
 
 　　　　　<div class='infinite-list-wrapper' v-loading="loading">
-              <div v-if="Libraryarr.length>0" style='height: 790px;overflow-y: auto;overflow-x:hidden'  v-infinite-scroll="loadMedialist" infinite-scroll-disabled="disabledLibraryarr">
+              <div v-if="Libraryarr.length>0" style='height: 805px;overflow-y: auto;overflow-x:hidden'  v-infinite-scroll="loadMedialist" infinite-scroll-disabled="disabledLibraryarr">
                 <div class="libisryarr" v-for="(item,key) in Libraryarr" :key = key>
                     <div class='libisryarr_list' @click="LibraryClick(item)">
                         <div class='collection_icon' @click.stop="collectionIconclick(key,Libraryarr)" :class='item.isFavorite == true ? "collectionAcitve" : "nocollectionAcitve" '>
@@ -115,7 +115,7 @@
         </div>
 
         <div class='infinite-list-wrapper' v-loading="loadingManuscript">
-            <div v-if="Manuscript.length>0 && loadingManuscript==false"  style="height: 746px;overflow-y: auto;margin-top: 20px;" v-infinite-scroll="loadManuscript" infinite-scroll-disabled="disabled">
+            <div v-if="Manuscript.length>0 && loadingManuscript==false"  style="height: 805px;overflow-y: auto;margin-top: 20px;" v-infinite-scroll="loadManuscript" infinite-scroll-disabled="disabled">
               <div class="third_libisryarr" v-for="(item,key) in Manuscript" :key = key>
                  <div v-if="item.thumbnailUrl && item.htmlContent" style='display: flex;position: relative;' :class="{show_list_start:item.show===true}" @mouseover="collectionIconmouseover(key,item,Manuscript)"  @mouseout="collectionIconmouseout(key,item,Manuscript)">
                       <div class='third_libisryarr_list'> 
@@ -247,7 +247,7 @@
           this.options1 = [{value:'全部',label:'全部'}]
             //获取分类
             let param = {
-              tenantId: 5,
+              tenantId: this.tenantId,
             }
             classifygetAll(param).then(res=>{
               if(res){
@@ -358,7 +358,7 @@
             this.options1 = [{value:'全部',label:'全部'}]
             //获取分类
             let param = {
-              tenantId: 5,
+              tenantId: this.tenantId,
             }
             classifygetAll(param).then(res=>{
               if(res){

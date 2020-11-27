@@ -20,14 +20,14 @@
               <div v-if='item.content!=""'>
                 <div class="acticle_list_bottom">
                   <div class='acticle_list_content' v-if="item.iscontent" @mouseup="listcontentup" v-html='item.content'></div>
-                  <div class='acticle_list_content' v-else @mouseup="listcontentup" v-html='item.partcontent'></div>
-                  <div class='acticle_list_keyword'>关联点：{{item.words}}</div>
+                  <div class='acticle_list_content' v-else @mouseup="listcontentup" v-html='item.partcontent?item.partcontent:""'></div>
+                  <div class='acticle_list_keyword'>关联点：{{item.words?item.words:''}}</div>
                 </div>
               </div>
 
               <div v-else>
-                    <div class='acticle_list_keyword'>关联点：{{item.words}}</div>
-                    <div class='acticle_list_Similarity' style="padding-bottom: 10px;">关联度：{{item.similarity}}</div>
+                    <div class='acticle_list_keyword'>关联点：{{item.words?item.words:''}}</div>
+                    <div class='acticle_list_Similarity' style="padding-bottom: 10px;">关联度：{{item.similarity?item.similarity:''}}</div>
               </div>
           </div>
 
@@ -65,7 +65,6 @@ export default {
      
     },
     created(){
-      console.log(123456,'shou')
       let param = {
            content: store.uedstr,
         }
@@ -84,19 +83,19 @@ export default {
                         item.iscontent  = true;
                       }
 
-                      if(item.content.length>125){
-                          item.partcontent = item.content.slice(0,125) + '...';
-                      }else{
-                          item.partcontent = item.content
+                      if(item.content!==''){
+                        if(item.content.length>125){
+                            item.partcontent = item.content.slice(0,125) + '...';
+                        }else{
+                            item.partcontent = item.content
+                        }
                       }
                     })
                   }else{
                     this.loading = false
                   }
               })
-        })
-
-        
+        })   
     },
     computed:{
        listen(){

@@ -8,7 +8,7 @@
             <p @click="pictureBTN('关联文章')">关联文章</p>
             <div class='popper__arrow'></div>
         </div>
-        <div class="OperationButton" :style="{'left':btnLeft, 'position':'absolute', 'bottom': '0%'}">    
+        <div class="OperationButton" :style="{'left':btnLeft, 'position':'absolute', 'bottom': '15%'}">    
             <ul> 
                <li v-if="storyDeliver"><el-button type="text" @click="opaBtn1"><a href="javascript:" style="color:#fff;"><i class="el-icon-position" style="color: #d72323;font-size: 18px;"></i></a><span>传稿</span></el-button></li>
                <li v-if="storyCheckin"><el-button type="text" @click="opaBtn2"><a href="javascript:" style="color:#fff;"><i class="el-icon-link" style="color: #d72323;font-size: 18px;"></i></a><span>签入</span></el-button></li>
@@ -963,8 +963,17 @@ export default {
 .mobileContainer img{
   max-width: 100%;
 }
+.edui-default .edui-editor-toolbarbox{
+    box-shadow: none;
+}
+.edui-default .edui-toolbar .edui-button, .edui-default .edui-toolbar .edui-splitbutton, .edui-default .edui-toolbar .edui-menubutton, .edui-default .edui-toolbar .edui-combox {
+    margin: 10px;
+}
 </style>
 <style scoped>
+.edui-default .edui-editor-toolbarbox{
+    box-shadow: none;
+}
 .edui-editort {
     margin: 0 auto;
 }
