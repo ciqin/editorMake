@@ -343,10 +343,10 @@ export default {
                 ],
                 levelId:1,
                 coverType:1,
-                addImg:"http://127.0.0.1:9080/sprint/assets/img/add.png",
-                opaImg1:"http://127.0.0.1:9080/sprint/assets/img/add.png",
-                opaImg2:"http://127.0.0.1:9080/sprint/assets/img/add.png",
-                opaImg3:"http://127.0.0.1:9080/sprint/assets/img/add.png",
+                addImg:"http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png",
+                opaImg1:"http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png",
+                opaImg2:"http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png",
+                opaImg3:"http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png",
             },
             options: [{
                 value: '选项1',
@@ -485,9 +485,9 @@ export default {
         if(this.$store.state.title && this.coverList && !this.coverflag){
            this.loadcoverAutoIllu()
         }else{
-           this.form.opaImg1 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
-           this.form.opaImg2 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
-           this.form.opaImg3 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
+           this.form.opaImg1 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
+           this.form.opaImg2 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
+           this.form.opaImg3 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
         }
 
         this.opaBtn1 = true;
@@ -503,9 +503,9 @@ export default {
         if(this.$store.state.title && this.coverList && !this.coverflag){
            this.loadcoverAutoIllu()
         }else{
-            this.form.opaImg1 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
-            this.form.opaImg2 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
-            this.form.opaImg3 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
+            this.form.opaImg1 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
+            this.form.opaImg2 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
+            this.form.opaImg3 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
         }
         this.opaBtn1 = false;
         this.opaBtn2 = true;
@@ -520,9 +520,9 @@ export default {
         if(this.$store.state.title && this.coverList && !this.coverflag){
            this.loadcoverAutoIllu()
         }else{
-            this.form.opaImg1 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
-            this.form.opaImg2 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
-            this.form.opaImg3 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
+            this.form.opaImg1 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
+            this.form.opaImg2 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
+            this.form.opaImg3 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
         }
         this.opaBtn1 = true;
         this.opaBtn2 = true;

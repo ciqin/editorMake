@@ -359,7 +359,7 @@ export default {
             styles:{
                 "width":"348px",
                 "height": "638.5px",
-                "background":"url(http://127.0.0.1:9080/sprint/assets/img/iPhone.png) 0% 0%/100% 100% no-repeat",
+                "background":"url(http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/iPhone.png) 0% 0%/100% 100% no-repeat",
                 "padding":"127px 38px 87px 47px"
             },
             eventName: "click",
@@ -764,7 +764,7 @@ export default {
             savedisabled = true
             if(newData.libid =="product") {
                 let newUrl = '';
-                /\_blank/.test(newData.objid)?"":newUrl = 'http://127.0.0.1:9080/sprint/rest/workflow/stories/'+newData.libid+'/'+newData.objid+'/save/smartWrite/process'
+                /\_blank/.test(newData.objid)?"":newUrl = 'http://qhcloudhongqi.wengegroup.com:9080/sprint/rest/workflow/stories/'+newData.libid+'/'+newData.objid+'/save/smartWrite/process'
                 revision(newData,newUrl).then(res=>{
                     if(res) {
                         savedisabled = false
@@ -788,7 +788,7 @@ export default {
                 })
             }else {
                 let newUrl = '';
-                /\_blank/.test(newData.objid)?"":newUrl = 'http://127.0.0.1:9080/sprint/rest/workflow/stories/'+newData.libid+'/'+newData.objid+'/save/smartWrite/process'
+                /\_blank/.test(newData.objid)?"":newUrl = 'http://qhcloudhongqi.wengegroup.com:9080/sprint/rest/workflow/stories/'+newData.libid+'/'+newData.objid+'/save/smartWrite/process'
                 newSave(newData,newUrl).then(res=>{
                     if(res) {
                         savedisabled = flase
@@ -894,7 +894,7 @@ export default {
             this.styles = {
                 "width":"389px",
                 "height": "725px",
-                "background":"url(http://127.0.0.1:9080/sprint/assets/img/iPhone.png) 0% 0%/100% 100% no-repeat",
+                "background":"url(http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/iPhone.png) 0% 0%/100% 100% no-repeat",
                 "padding":"89px 23px 22px 16px;"
             }
         },
@@ -903,7 +903,7 @@ export default {
             this.styles = {
                 "width":"389px",
                 "height": "713px",
-                "background":"url(http://127.0.0.1:9080/sprint/assets/img/iPhone.png) 0% 0%/100% 100%  no-repeat",
+                "background":"url(http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/iPhone.png) 0% 0%/100% 100%  no-repeat",
                 "padding":"127px 38px 87px 47px"
             }
         },
@@ -912,7 +912,7 @@ export default {
             this.styles = {
                 "width":"348px",
                 "height": "638.5px",
-                "background":"url(http://127.0.0.1:9080/sprint/assets/img/iPhone.png) 0% 0%/100% 100% no-repeat",
+                "background":"url(http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/iPhone.png) 0% 0%/100% 100% no-repeat",
                 "padding":"127px 38px 87px 47px"
             }
         },
