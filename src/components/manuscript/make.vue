@@ -7,9 +7,9 @@
             <div class="grid-content bg-purple">
                <div class="iconNav">
                    <ul>
-                       <li  @click="leftToggle('letfTab1')" :class="{Navcurrent:Navcurrent=='letfTab1'}"><i class="el-icon-s-unfold"></i><p>资源</p><div class='saucxs'></div></li>
-                       <li  @click="leftToggle('letfTab2')" :class="{Navcurrent:Navcurrent=='letfTab2'}"><i class="el-icon-s-order" ></i><p>供稿</p><div class='saucxs'></div></li>
-                       <li  @click="leftToggle('letfTab3')" :class="{Navcurrent:Navcurrent=='letfTab3'}"><i class="el-icon-star-on"></i><p>收藏</p><div class='saucxs'></div></li>
+                       <li  @click="leftToggle('letfTab1')" :class="{Navcurrent:Navcurrent=='letfTab1'}"><b></b><i class="el-icon-s-unfold"></i><p>资源</p><div class='saucxs'></div></li>
+                       <li  @click="leftToggle('letfTab2')" :class="{Navcurrent:Navcurrent=='letfTab2'}"><b></b><i class="el-icon-s-order" ></i><p>供稿</p><div class='saucxs'></div></li>
+                       <li  @click="leftToggle('letfTab3')" :class="{Navcurrent:Navcurrent=='letfTab3'}"><b></b><i class="el-icon-star-on"></i><p>收藏</p><div class='saucxs'></div></li>
                    </ul>
                </div>
                <div class="NavContainer">
@@ -349,6 +349,10 @@ export default {
     text-align: center;
     background: #fff;
     margin-bottom:16px;
+    position: relative;
+}
+.iconNav li b{
+    display:none
 }
 .iconNav ul li p{
     font-size: 12px;
@@ -410,10 +414,14 @@ ul li.active img{
 }
 
 /*右边菜单点击事件 */
-.Navcurrent{
-    border-left: 6px solid #D72323;
-    background: #F2F2F2 !important;
-    width: 58px !important;
+.Navcurrent b{
+    display:block !important;
+    background: #D72323 !important;
+    width: 6px !important;
+    position:absolute;
+    left: 0;
+    height: 60px;
+
 }
 
 .Navcurrent i,.Navcurrent p{

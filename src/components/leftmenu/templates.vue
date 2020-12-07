@@ -36,36 +36,39 @@
       </el-tab-pane>
 
       <el-tab-pane label="媒资库" name="second">
-       <div class="labelselect">
-          <label for="">分类</label>
-          <el-select v-model="value1" placeholder="请选择">
-            <el-option
-              v-for="item in options1"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-       </div>
+          <div>
+            <div class="labelselect">
+                <label for="">分类</label>
+                <el-select v-model="value1" placeholder="请选择">
+                  <el-option
+                    v-for="item in options1"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+            </div>
 
-        <div class="labelselect">
-          <label for="">类型</label>
-          <el-select v-model="value2" placeholder="请选择">
-            <el-option
-              v-for="item in options2"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-       </div>
+              <div class="labelselect">
+                <label for="">类型</label>
+                <el-select v-model="value2" placeholder="请选择">
+                  <el-option
+                    v-for="item in options2"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+            </div>
+          </div>
 
-        <div class='third_search' style='padding: 10px 20px;display:flex'>
-          <el-input v-model="Shareinput" placeholder="请输入关键字(名称,内容)"></el-input>
-          <el-button icon="el-icon-search" @click="searchShare()">搜索</el-button>
-        </div>
+           <div class='third_search' style='padding: 10px 20px;display:flex'>
+            <el-input v-model="Shareinput" placeholder="请输入关键字(名称,内容)"></el-input>
+            <el-button icon="el-icon-search" @click="searchShare()">搜索</el-button>
+          </div>
 
-　　　　　<div class='infinite-list-wrapper' v-loading="loading">
+
+　　　　　<div class='infinite-list-wrapper' v-loading="loading" style='display:flex'>
               <div v-if="Libraryarr.length>0" style='height: 805px;overflow-y: auto;overflow-x:hidden'  v-infinite-scroll="loadMedialist" infinite-scroll-disabled="disabledLibraryarr">
                 <div class="libisryarr" v-for="(item,key) in Libraryarr" :key = key>
                     <div class='libisryarr_list' @click="LibraryClick(item)">
@@ -77,7 +80,7 @@
                             </video>
                         </div>
 
-                        <div class="libisryarr_img" v-else-if="item.fileFormat=='jpg'">
+                        <div class="libisryarr_img" v-else-if="item.fileFormat=='jpg'||item.fileFormat=='png'||item.fileFormat=='jpeg' || item.fileFormat=='mov' || item.fileFormat=='gif'">
                             <img :src="item.url" alt="">
                         </div>
                     </div>
@@ -90,8 +93,8 @@
                  <p v-if="Libraryarrtemplate" style='text-align:center'>加载中...</p>
                  <p v-if="LibraryarrnoMore" style='text-align:center'>没有更多了</p>
               </div>
-              <div v-else>
-                <p style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;'><i class='el-icon-warning-outline'></i>暂无数据</p>
+              <div v-else style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;width: 100%;'>
+                <p><i class='el-icon-warning-outline'></i>暂无数据</p>
               </div>
          </div>
 
@@ -803,22 +806,27 @@
    .nav_top_temlaptes .el-tabs--top .el-tabs__item.is-top{
       width: 130px;
       text-align: center;
-      padding-right:0
+      padding:0
    }
    .nav_top_temlaptes .el-tabs__nav{
       height: 40px;
       line-height: 40px;
       font-size: 14px;
    }
+
    .third_search .el-input__inner{
+     border: 1px solid #A0A2B2;
      border-right: none;
+     border-radius: 4px 0 0 4px;
    }
    .third_search .el-button{
-     border-radius: 0px 4px 4px 0px;
+     border: 1px solid #A0A2B2;
+     border-radius: 0px 4px 4px 0;
    }
    .third_data .el-input__inner{
-     height: 30px;
+     height: 40px;
    }
+  
    .third_data .el-date-editor .el-range-input{
     width: 85px;
   }
@@ -833,7 +841,7 @@
   }
    .nav_top_temlaptes .labelselect .el-input--suffix .el-input__inner{
       background: #FFFFFF;
-      border: 1px solid #D9D9D9;
+      border: 1px solid #A0A2B2;
       border-radius: 4px;
    }
 </style>
@@ -922,8 +930,8 @@
     text-align: center;
     border-radius: 4px;
     position: absolute;
-    right: 0px;
-    top: 5px;
+    right: 9px;
+    top: 9px;
     font-size: 14px;
     cursor: pointer;
 }
@@ -932,6 +940,7 @@
     color: #ffffff;
     background: #f99b47;
     border: 1px solid #f99b47;
+    display: block !important;
 }
 .nocollectionAcitve{
     color: #999999;
@@ -995,41 +1004,43 @@
 }
 
 .third_libisryarr>div{
-    width: 364px;
-    height: 125px;
+    width: 365px;
+    height: 92px;
     float: left;
     margin: 0px 18px 0px 18px;
-    border-bottom:1px solid #dcdfe6
+    background: #F6F8FA;
+    border-radius: 4px;
+    margin-bottom: 8px;
 }
-.third_libisryarr:first-child>div{
-    border-top:1px solid #dcdfe6
-}
+
 .third_libisryarr>div:hover{
    box-shadow: inset 0 0 10px 0px #ccc;
  }
 .third_libisryarr_botal{
     padding:10px;
-    height: 124px;
+    height: 92px;
 }
 .third_libisryarr_botal_title{
+    width: 200px;
     font-size: 14px;
     line-height: 22px;
-    height: 92px;
+    height: 52px;
     display:inline-block;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 4;
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
 }
 .third_title{
-    height: 90px;
+    width: 315px;
+    height: 52px;
     font-size: 14px;
     line-height: 22px;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 4;
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
 }
 .third_libisryarr_botal_biaoshi{
@@ -1048,9 +1059,9 @@
 }
 
 .third_libisryarr_img{
-      width: 120px;
-      height: 104px;
-      margin: 10px;
+      width: 110px;
+      height: 76px;
+      margin: 8px;
 }
 .third_libisryarr_img img,.third_libisryarr_img video{
     width: 100%;
@@ -1072,7 +1083,7 @@
    cursor: pointer;
 }
 .preview{
-  font-size: 14px;
+  font-size: 12px;
   position: absolute;
   right: 7px;
   bottom: 9px;

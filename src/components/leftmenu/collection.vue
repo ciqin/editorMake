@@ -781,8 +781,8 @@ export default {
     text-align: center;
     border-radius: 4px;
     position: absolute;
-    right: 0px;
-    top: 5px;
+    right: 9px;
+    top: 9px;
     font-size: 14px;
 }
 
@@ -790,6 +790,7 @@ export default {
     color: #ffffff;
     background: #f99b47;
     border: 1px solid #f99b47;
+    display:block !important
 }
 .nocollectionAcitve{
     color: #999999;
@@ -853,15 +854,13 @@ export default {
 }
 
 .third_libisryarr>div{
-    width: 364px;
-    height: 125px;
+    width: 365px;
+    height: 92px;
     float: left;
     margin: 0px 18px 0px 18px;
     border-bottom:1px solid #dcdfe6
 }
-.third_libisryarr:first-child>div{
-    border-top:1px solid #dcdfe6
-}
+
 .third_libisryarr>div:hover{
    box-shadow: inset 0 0 10px 0px #ccc;
  }
@@ -890,7 +889,7 @@ export default {
 
 .third_libisryarr_img{
       width: 120px;
-      height: 104px;
+      height: 76px;
       margin: 10px;
 }
 .third_libisryarr_img img,.third_libisryarr_img video{

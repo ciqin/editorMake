@@ -58,13 +58,14 @@ export default {
         loading:true,
         text:'',//滑过获取关联文章
         Tooltipstyle:'display:none',//滑过获取关联文章样式
-
+        tenantId:''
       };
     },
     mounted(){
      
     },
     created(){
+      this.tenantId = window.localStorage.getItem("tenantId")
       let param = {
            content: store.uedstr,
         }
@@ -142,7 +143,7 @@ export default {
     collectionIconclick(index){
       let param = {
           uuid:this.Relatedarr[index].uuid,
-          tenantId:5,
+          tenantId:this.tenantId,
           title:this.Relatedarr[index].title,
           content:this.Relatedarr[index].content,
           pubtime:this.Relatedarr[index].pubtime,  

@@ -21,7 +21,9 @@ Axios.get(caiApi+"/sprint/userinfo/rest/getInfo").then(res=>{
     // 设置tenantId
     if(res.data.tenantId){
         // 设置全局租户id
-        window.localStorage.setItem('tenantId',res.data.tenantId);
+        console.log('获取tenantId')
+        console.log(res.data.group.tenantId)
+        window.localStorage.setItem('tenantId',res.data.group.tenantId);
         window.localStorage.setItem('userID',res.data.uuid);
     }
 })

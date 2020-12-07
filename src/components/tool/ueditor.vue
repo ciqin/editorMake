@@ -25,8 +25,9 @@
                 <li><el-button type="text" @click="contributionFun"  v-if="contribution"><a href="javascript:" style="color:#fff;"><i class="el-icon-smoking" style="color: #d72323;font-size: 18px;"></i></a><span>撤稿</span></el-button></li>
                 <!-- <li><el-button type="text" @click="manyContributionFun"  v-if="manyContribution"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>一键撤稿</span></el-button></li> -->
                 <li><el-button type="text" @click="centerDialogVisible = true"><a href="javascript:" @click="hasUe" style="color:#fff;"><img src="@/assets/icon1.png"  width="20" alt=""></a><span>预览</span></el-button></li>
-                <li><a href="javascript:" @click="save" class="autoClick" :style='savestyle' :disabled='savedisabled'>
+                <li><el-button type="text" :disabled='savedisabled'  @click="save" ><a href="javascript:" class="autoClick">
                     <img src="@/assets/icon2.png" width="20" alt=""></a>保存
+                    </el-button>
                 </li>
                 <li @mouseenter="onMouseOver" @mouseleave="onMouseOut" style="position:relative;"><a href="javascript:">
                     <img src="@/assets/icon3.png" width="20" alt=""></a>下载
@@ -358,7 +359,7 @@ export default {
             styles:{
                 "width":"348px",
                 "height": "638.5px",
-                "background":"url(http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/iPhone.png) 0% 0%/100% 100% no-repeat",
+                "background":"url(http://127.0.0.1:9080/sprint/assets/img/iPhone.png) 0% 0%/100% 100% no-repeat",
                 "padding":"127px 38px 87px 47px"
             },
             eventName: "click",
@@ -369,7 +370,7 @@ export default {
             gettaxt:'',
             Tooltipstyle:'display:none,z-index:2000',//滑过获取关联文章样式
             savestyle:'cursor: pointer',
-            savedisabled:'true'
+            savedisabled:false,
         };
     },
     created(){
@@ -755,19 +756,18 @@ export default {
         },
         save(){
             let newData = this.saveParme();
-            let savestyle = this.savestyle
             let savedisabled = this.savedisabled
             if(this.$store.state.title =="") {
                 return  this.$message.error('标题不能为空！');
             }
 
-            savestyle = 'cursor: not-allowed'
-            savedisabled = 'false'
+            savedisabled = true
             if(newData.libid =="product") {
                 let newUrl = '';
-                /\_blank/.test(newData.objid)?"":newUrl = 'http://qhcloudhongqi.wengegroup.com:9080/sprint/rest/workflow/stories/'+newData.libid+'/'+newData.objid+'/save/smartWrite/process'
+                /\_blank/.test(newData.objid)?"":newUrl = 'http://127.0.0.1:9080/sprint/rest/workflow/stories/'+newData.libid+'/'+newData.objid+'/save/smartWrite/process'
                 revision(newData,newUrl).then(res=>{
                     if(res) {
+                        savedisabled = false
                         this.$message({
                             message: '保存成功！',
                             type: 'success'
@@ -780,19 +780,18 @@ export default {
                     setTimeout(() => {
                         self.opener.$LibrarySearchController.searchObjects()
                     }, 500);
-
-                    savestyle = 'cursor: pointer'
-                    savedisabled = 'true'
-
+                
                 }).catch(error=>{
-                    savestyle = 'cursor: pointer'
-                    savedisabled = 'true'
+                    savedisabled = flase
+                    console.log('123')
+                    this.$message.error('保存失败！');
                 })
             }else {
                 let newUrl = '';
-                /\_blank/.test(newData.objid)?"":newUrl = 'http://qhcloudhongqi.wengegroup.com:9080/sprint/rest/workflow/stories/'+newData.libid+'/'+newData.objid+'/save/smartWrite/process'
+                /\_blank/.test(newData.objid)?"":newUrl = 'http://127.0.0.1:9080/sprint/rest/workflow/stories/'+newData.libid+'/'+newData.objid+'/save/smartWrite/process'
                 newSave(newData,newUrl).then(res=>{
                     if(res) {
+                        savedisabled = flase
                         this.$message({
                             message: '保存成功！',
                             type: 'success'
@@ -805,10 +804,10 @@ export default {
                         self.opener.$LibrarySearchController.searchObjects()
                     }, 500);
 
-                    savestyle = 'cursor: pointer'
                 }).catch(error=>{
-                    savestyle = 'cursor: pointer'
-                    savedisabled = 'true'
+                    console.log('456')
+                    this.$message.error('保存失败！');
+                    savedisabled = false
                 })
             }
         },
@@ -895,7 +894,7 @@ export default {
             this.styles = {
                 "width":"389px",
                 "height": "725px",
-                "background":"url(http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/iPhone.png) 0% 0%/100% 100% no-repeat",
+                "background":"url(http://127.0.0.1:9080/sprint/assets/img/iPhone.png) 0% 0%/100% 100% no-repeat",
                 "padding":"89px 23px 22px 16px;"
             }
         },
@@ -904,7 +903,7 @@ export default {
             this.styles = {
                 "width":"389px",
                 "height": "713px",
-                "background":"url(http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/iPhone.png) 0% 0%/100% 100%  no-repeat",
+                "background":"url(http://127.0.0.1:9080/sprint/assets/img/iPhone.png) 0% 0%/100% 100%  no-repeat",
                 "padding":"127px 38px 87px 47px"
             }
         },
@@ -913,7 +912,7 @@ export default {
             this.styles = {
                 "width":"348px",
                 "height": "638.5px",
-                "background":"url(http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/iPhone.png) 0% 0%/100% 100% no-repeat",
+                "background":"url(http://127.0.0.1:9080/sprint/assets/img/iPhone.png) 0% 0%/100% 100% no-repeat",
                 "padding":"127px 38px 87px 47px"
             }
         },
@@ -967,7 +966,7 @@ export default {
     box-shadow: none;
 }
 .edui-default .edui-toolbar .edui-button, .edui-default .edui-toolbar .edui-splitbutton, .edui-default .edui-toolbar .edui-menubutton, .edui-default .edui-toolbar .edui-combox {
-    margin: 10px;
+    margin: 10px !important;
 }
 </style>
 <style scoped>

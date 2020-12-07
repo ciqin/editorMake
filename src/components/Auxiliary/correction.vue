@@ -38,9 +38,9 @@ import { store } from '@/store'
 import $ from 'jquery'
 export default {
   created(){
-    getJson({aaa:true,id:111}).then(res => {
-        // this.productArr = res
-    })
+    // getJson({aaa:true,id:111}).then(res => {
+    //     // this.productArr = res
+    // })
   },
   data(){
     return {
@@ -84,7 +84,7 @@ export default {
     clearWords(){
       let spans = $(store.ueditor.body).find(".colormark");
       spans.each((index,item)=>{
-        $(item).attr("style","")
+        $(item).removeAttr("style")
       })
     }
   }

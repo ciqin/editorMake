@@ -11,7 +11,7 @@
                     </el-radio-group>
                 </el-form-item>
 
-                <el-form-item v-loading='loading' class='picture_mull' v-if='this.$store.state.title && titleimg.length>0'>
+                <el-form-item v-loading='loading' class='picture_mull' v-if='this.$store.state.title && titleimg.length>0 && !this.coverflag'>
                     <div  style='display:flex'>
                         <div v-for='(item,index) in showTitleimg' @click="setShowTitleimg(index)" :key = 'index' @mouseover='titleimgover(item,index)' @mouseout='titleimgout(item,index)' style='position:relative;margin-right: 15px;'>
                                 <img :src="item.url" alt="" style="cursor: pointer;" width="100" height="70">
@@ -73,7 +73,7 @@
                     </div>
                 </el-form-item>
 
-                <el-form-item  v-else-if='!this.$store.state.title && titleimg.length==0 && coverflag' label=""  class="cover">  
+                <el-form-item  v-else-if='this.coverflag' label=""  class="cover">  
                         <el-row :gutter="20">
                                 <el-col :span="8">
                                     <div class="grid-content bg-purple" style="width:100px">
@@ -228,7 +228,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                    <el-form-item label="选题">
+                <el-form-item label="选题">
                     <el-select v-model="form.topicsId" placeholder="请选择" size="mini">
                         <el-option
                             v-for="item in form.topics"
@@ -343,10 +343,10 @@ export default {
                 ],
                 levelId:1,
                 coverType:1,
-                addImg:"http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png",
-                opaImg1:"http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png",
-                opaImg2:"http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png",
-                opaImg3:"http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png",
+                addImg:"http://127.0.0.1:9080/sprint/assets/img/add.png",
+                opaImg1:"http://127.0.0.1:9080/sprint/assets/img/add.png",
+                opaImg2:"http://127.0.0.1:9080/sprint/assets/img/add.png",
+                opaImg3:"http://127.0.0.1:9080/sprint/assets/img/add.png",
             },
             options: [{
                 value: '选项1',
@@ -392,7 +392,7 @@ export default {
             showTitleimgNum:0,
             isdisshow:'cursor: not-allowed',
             isrefreshshow:'display:flex',
-            coverflag:true
+            coverflag:false
         }
     },
     inject:['app'],
@@ -482,12 +482,12 @@ export default {
     // 小图操作函数
     coverSmall(){
         this.num = 1
-        if(this.$store.state.title && this.coverList){
+        if(this.$store.state.title && this.coverList && !this.coverflag){
            this.loadcoverAutoIllu()
         }else{
-           this.form.opaImg1 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
-           this.form.opaImg2 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
-           this.form.opaImg3 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
+           this.form.opaImg1 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
+           this.form.opaImg2 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
+           this.form.opaImg3 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
         }
 
         this.opaBtn1 = true;
@@ -500,12 +500,12 @@ export default {
     // 大图操作函数
     coverBig(){
         this.num = 2
-        if(this.$store.state.title && this.coverList){
+        if(this.$store.state.title && this.coverList && !this.coverflag){
            this.loadcoverAutoIllu()
         }else{
-            this.form.opaImg1 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
-            this.form.opaImg2 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
-            this.form.opaImg3 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
+            this.form.opaImg1 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
+            this.form.opaImg2 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
+            this.form.opaImg3 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
         }
         this.opaBtn1 = false;
         this.opaBtn2 = true;
@@ -517,12 +517,12 @@ export default {
     // 三图操作函数
     coverMany(){
         this.num = 3
-        if(this.$store.state.title && this.coverList){
+        if(this.$store.state.title && this.coverList && !this.coverflag){
            this.loadcoverAutoIllu()
         }else{
-            this.form.opaImg1 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
-            this.form.opaImg2 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
-            this.form.opaImg3 = "http://qhcloudhongqi.wengegroup.com:9080/sprint/assets/img/add.png";
+            this.form.opaImg1 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
+            this.form.opaImg2 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
+            this.form.opaImg3 = "http://127.0.0.1:9080/sprint/assets/img/add.png";
         }
         this.opaBtn1 = true;
         this.opaBtn2 = true;
@@ -758,50 +758,54 @@ export default {
     }
     
     },
-     mounted(){
+    mounted(){
+        let _that = this
           // 初始化稿签数据
         newSignature().then(res=>{
             if(/系统登录认证信息输入区域/.test(res) && /智能采编平台/.test(res)) {
                 this.$router.push("/login") 
             }
             if(res.coverList) {
-                this.coverflag = true
+                _that.coverflag = true
                 switch(res.coverType){
                     case 1:
-                        this.radio = 3;
-                        this.form.opaImg1 = res.coverList[0].data;
-                        this.opaBtn1 = true;
-                        this.opaBtn2 = false;
-                        this.opaBtn3 = false;
+                        _that.radio = 3;
+                        _that.form.opaImg1 = res.coverList[0].data;
+                        _that.opaBtn1 = true;
+                        _that.opaBtn2 = false;
+                        _that.opaBtn3 = false;
                         break;
                     case 2:
-                        this.radio = 6;
-                        this.form.opaImg2 = res.coverList[0].data
-                        this.opaBtn1 = false;
-                        this.opaBtn2 = true;
-                        this.opaBtn3 = false;
+                        _that.radio = 6;
+                        _that.form.opaImg2 = res.coverList[0].data
+                        _that.opaBtn1 = false;
+                        _that.opaBtn2 = true;
+                        _that.opaBtn3 = false;
                         break;
                     case 3:
-                        this.radio = 9;
+                        _that.radio = 9;
                         res.coverList.forEach((item,index)=>{
-                            this.form['opaImg'+(index+1)] = res.coverList[index].data
+                            _that.form['opaImg'+(index+1)] = res.coverList[index].data
                         })
-                        this.opaBtn1 = true;
-                        this.opaBtn2 = true;
-                        this.opaBtn3 = true;
+                        _that.opaBtn1 = true;
+                        _that.opaBtn2 = true;
+                        _that.opaBtn3 = true;
                         break;
                     case 0:
-                        this.radio = 12;
-                        this.opaBtn1 = false;
-                        this.opaBtn2 = false;
-                        this.opaBtn3 = false;
+                        _that.radio = 12;
+                        _that.opaBtn1 = false;
+                        _that.opaBtn2 = false;
+                        _that.opaBtn3 = false;
                         break;
                 }
             }
-            if(!this.$store.state.title){
-                this.$store.dispatch('modifyDataTitle',res.story.title);
+            if(res.shareCover){
+              _that.form.addImg = res.shareCover
             }
-            this.$store.dispatch('modifyDatahtmlContent',res.story.htmlContent);
+            if(!_that.$store.state.title){
+                _that.$store.dispatch('modifyDataTitle',res.story.title);
+            }
+            _that.$store.dispatch('modifyDatahtmlContent',res.story.htmlContent);
             let originations = [];
             res.originations.split(",").forEach((item,index)=>{
                 originations.push({
@@ -810,26 +814,26 @@ export default {
                 })
             })
             // 组件值回传
-            this.app.form = this.form
-            this.form.originations = originations;
-            this.form.summary = res.story.summary;
-            this.form.signature = res.story.signature;
+            _that.app.form = _that.form
+            _that.form.originations = originations;
+            _that.form.summary = res.story.summary;
+            _that.form.signature = res.story.signature;
            
-            this.form.topics = res.topics;
-            this.form.linkHeadline = res.linkHeadline;
-            this.form.properties.leadinLineUrl = res.properties.leadinLineUrl;
-            this.form.comment = res.comment;
+            _that.form.topics = res.topics;
+            _that.form.linkHeadline = res.linkHeadline;
+            _that.form.properties.leadinLineUrl = res.properties.leadinLineUrl;
+            _that.form.comment = res.comment;
             res.story.keywords?res.story.keywords.split(",").forEach(item=>{
-                this.form.dynamicTags.push(item)
+                _that.form.dynamicTags.push(item)
             }):"";
-            this.form.origination = res.story.origination;
-            this.form.levelId = res.story.level;
-            this.form.topicsId= res.story.topic;
-            this.form.canComment=res.story.canComment;
-            this.form.properties.ad=res.properties.ad==1?true:false;
-            this.form.properties.watermark=res.properties.watermark==1?true:false;  
-            this.form.folder = res.story.folder
-            this.form.libid = res.story.libid
+            _that.form.origination = res.story.origination;
+            _that.form.levelId = res.story.level;
+            _that.form.topicsId= res.story.topic;
+            _that.form.canComment=res.story.canComment;
+            _that.form.properties.ad=res.properties.ad==1?true:false;
+            _that.form.properties.watermark=res.properties.watermark==1?true:false;  
+            _that.form.folder = res.story.folder
+            _that.form.libid = res.story.libid
         })
        
      },
