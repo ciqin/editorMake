@@ -25,7 +25,7 @@ const API_URL  = {
 //    baseURL:  process.env.NODE_ENV !== 'development' ? path.API_URL : ''
 //   //baseURL: path.API_URL
 // })
-
+Axios.defaults.withCredentials = true
 // 请求拦截
 Axios.interceptors.request.use(config => {
   if (config.data && config.data.ContentType) {
