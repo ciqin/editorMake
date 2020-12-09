@@ -10,9 +10,9 @@
                         <el-radio :label="12" @change="coverNone">无图</el-radio>
                     </el-radio-group>
                 </el-form-item>
-
-                <el-form-item v-loading='loading' class='picture_mull' v-if='this.$store.state.title && titleimg.length>0 && !this.coverflag'>
-                    <div  style='display:flex'>
+                
+                <el-form-item class='picture_mull' v-if='this.$store.state.title && titleimg.length>0 && !this.coverflag'>
+                    <div v-loading='loading'  style='display:flex'>
                         <div v-for='(item,index) in showTitleimg' @click="setShowTitleimg(index)" :key = 'index' @mouseover='titleimgover(item,index)' @mouseout='titleimgout(item,index)' style='position:relative;margin-right: 15px;'>
                                 <img :src="item.url" alt="" style="cursor: pointer;" width="100" height="70">
 
@@ -73,7 +73,7 @@
                     </div>
                 </el-form-item>
 
-                <el-form-item  v-else-if='this.coverflag' label=""  class="cover">  
+                <el-form-item  v-else-if='this.$store.state.title==""' label=""  class="cover">  
                         <el-row :gutter="20">
                                 <el-col :span="8">
                                     <div class="grid-content bg-purple" style="width:100px">

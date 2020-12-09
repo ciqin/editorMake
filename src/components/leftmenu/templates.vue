@@ -39,19 +39,20 @@
           <div>
             <div class="labelselect">
                 <label for="">分类</label>
-                <el-select v-model="value1" placeholder="请选择">
+                <el-select v-model="value1" placeholder="请选择" @change="searchShare()">
                   <el-option
                     v-for="item in options1"
                     :key="item.value"
                     :label="item.label"
-                    :value="item.value">
+                    :value="item.value"
+                    >
                   </el-option>
                 </el-select>
             </div>
 
               <div class="labelselect">
                 <label for="">类型</label>
-                <el-select v-model="value2" placeholder="请选择">
+                <el-select v-model="value2" placeholder="请选择" @change="searchShare()">
                   <el-option
                     v-for="item in options2"
                     :key="item.value"
@@ -778,7 +779,7 @@
           newList.push(val)
         })
         this.arr = newList;
-      }
+      },
     }
   };
 </script>
