@@ -55,7 +55,7 @@ export default {
     }
   },
   created(){
-    // this.textareavalue = store.gettaxt
+       this.textareavalue = store.gettaxt
     // this.tabs=[]
     // this.loading=true
     // autoIllustrated({content: this.textareavalue}).then((res)=>{
