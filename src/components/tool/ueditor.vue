@@ -3,13 +3,19 @@
     <!--下面通过传递进来的id完成初始化-->
     <div style="position:relative;">
         <div :id="randomId" ref="ueditor"></div>
-        <div  id="pictureMabth" :style="Tooltipstyle">
+        <!-- <div  id="pictureMabth" :style="Tooltipstyle">
             <p @click="picturetuBTN('自动配图')">自动配图</p>
             <p @click="pictureBTN('关联文章')">关联文章</p>
             <div class='popper__arrow'></div>
+        </div> -->
+        <div  id="pictureMabth" :style="Tooltipstyle">
+            <span @click="picturetuBTN('自动配图')">自动配图</span>
+            <span class="devide"></span>
+            <span @click="picturetuBTN('关联文章')">关联文章</span>
+            <div class='popper_arrow'></div>
         </div>
-        <div class="OperationButton" :style="{'left':btnLeft, 'position':'absolute', 'bottom': '15%'}">    
-            <ul> 
+        <div class="OperationButton" :style="{'left':btnLeft, 'position':'absolute', 'bottom': '15%'}">
+            <ul>
                <li v-if="storyDeliver"><el-button type="text" @click="opaBtn1"><a href="javascript:" style="color:#fff;"><i class="el-icon-position" style="color: #d72323;font-size: 18px;"></i></a><span>传稿</span></el-button></li>
                <li v-if="storyCheckin"><el-button type="text" @click="opaBtn2"><a href="javascript:" style="color:#fff;"><i class="el-icon-link" style="color: #d72323;font-size: 18px;"></i></a><span>签入</span></el-button></li>
                <li v-if="storySubmit"><el-button type="text" @click="opaBtn3"><a href="javascript:" style="color:#fff;"><i class="el-icon-finished" style="color: #d72323;font-size: 18px;"></i></a><span>提交</span></el-button></li>
@@ -37,7 +43,7 @@
                                 <li @click="downloadImg">下载img</li>
                                 <li @click="downloadPdf">下载pdf</li>
                             </ul>
-                        </transition> 
+                        </transition>
                     </div>
                 </li>
                 <!-- <li><a href="javascript:"><img src="@/assets/icon4.png" width="20" alt=""></a>提交审核</li> -->
@@ -142,7 +148,7 @@
                     <!-- <el-col :span="24">
                         <div style="margin:10px;">备注</div>
                         <el-input type="textarea" v-model="commit" size="mini" placeholder="请输入备注内容" style="width:100%;margin-left:10px;margin-bottom:16px;"></el-input>
-                       
+
                     </el-col> -->
                     <el-form-item label="备注:" style="margin-top:40px;">
                         <el-input  type="textarea"
@@ -154,7 +160,7 @@
                     </el-form-item>
                 </el-row>
             </el-form>
-            <div slot="footer" class="dialog-footer" style="text-align:right;">            
+            <div slot="footer" class="dialog-footer" style="text-align:right;">
                 <el-button @click="closeModale"  size="mini">取消</el-button>
                 <el-button type="primary" @click="rejectSubmit"  size="mini">确定驳回</el-button>
             </div>
@@ -218,7 +224,7 @@ export default {
                 return ''
             }
         },
-        
+
     },
     inject:['app'],
     data() {
@@ -342,7 +348,7 @@ export default {
                     // 'charts', // 图表
                 ]
             ],
-            
+
             },
             storyDeliver:false,
             storySubmit:false,
@@ -374,7 +380,7 @@ export default {
         };
     },
     created(){
-        
+
     },
     watch: {
         value: function(val, oldVal) {
@@ -453,7 +459,7 @@ export default {
                             status = "待审批"
                             break
                         case 1:
-                            status = "已驳回" 
+                            status = "已驳回"
                             break
                         case 2:
                             status = "已通过"
@@ -476,7 +482,7 @@ export default {
                 })
             })
         }
-       
+
     },
 
     beforeDestroy() {
@@ -572,7 +578,7 @@ export default {
             })
         },
         closeModale(){
-            
+
         },
         // 终审
         finalJudgment(){
@@ -587,7 +593,7 @@ export default {
                 },1000)
             })
         },
-        
+
         initEditor() {
             const _this = this;
             //dom元素已经挂载上去了
@@ -603,7 +609,7 @@ export default {
                     UE.dom.domUtils.on(this.instance.body,"keyup",function(oEvent){
                         //获取键盘的keyCode值
                         var nKeyCode = oEvent.keyCode || oEvent.which || oEvent.charCode;
-                        var oEvent = oEvent || window.oEvent; 
+                        var oEvent = oEvent || window.oEvent;
 
                         let selection = _that.instance.selection._bakRange
                         let str = _that.instance.getContentTxt()
@@ -629,9 +635,9 @@ export default {
                     })
 
 
-                    
+
                     UE.dom.domUtils.on(this.instance.body,"mouseup",function(oEvent){
-                        var oEvent = oEvent || window.oEvent; 
+                        var oEvent = oEvent || window.oEvent;
                         let gettaxts = _that.instance.selection.getText()
 
                         if(gettaxts!=''){
@@ -684,7 +690,7 @@ export default {
                     }else{
                         reference+="##"+$(item).attr("src");
                         related+="##related"+index;
-                    }  
+                    }
                 })
             }
             let isnew = true;
@@ -716,7 +722,7 @@ export default {
                 sourceType: "用户创建",
                 system: "智能采编",
                 canComment: data.canComment?1:0,
-                relateModifyStories:"", 
+                relateModifyStories:"",
                 coverType: data.coverType,
                 defaultCoverSwitch: 0,
                 isNewEditor: 0,
@@ -782,7 +788,7 @@ export default {
                     setTimeout(() => {
                         self.opener.$LibrarySearchController.searchObjects()
                     }, 500);
-                
+
                 }).catch(error=>{
                     savedisabled = flase
                     this.$message.error('保存失败！');
@@ -944,7 +950,7 @@ export default {
            this.radio = data.lable;
            this.rejectUuid = data.uuid;
         },
-        
+
         //自动配图
         pictureBTN(){
           this.$emit('listenEvent',this.ueconter)
@@ -988,7 +994,7 @@ export default {
 }
 .OperationButton  li {
     margin-bottom: 10px;
-    font-size: 12px;   
+    font-size: 12px;
     text-align: center;
     cursor: pointer;
 }
@@ -1072,20 +1078,44 @@ export default {
 }
 
 #pictureMabth{
-     width: 90px;
-    line-height: 30px;
-    height: 66px;
-    background: rgb(255, 255, 255);
+    height:40px;
+    line-height: 40px;
+    background: #F6F8FA;
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
+    border: 1px solid #D5D8DE;
     text-align: center;
-    box-shadow: rgba(212, 212, 212, 0.3) 0px 1px 3px inset;
     border-radius: 4px;
-    border: 1px solid #EBEEF5;
-    color:#000;
+    color:#2F3033;
     display:none;
+    font-size:16px;
+    padding:0 25px;
+}
+#pictureMabth .devide{
+  width: 1px;
+  height: 14px;
+  background-color: #B7BCC5;
+  display: inline-block;
+  margin:0 15px;
+}
+#pictureMabth .popper_arrow{
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 13px solid #F6F8FA;
+  position: absolute;
+  top: -13px;
+  left: 98px;
 }
 
-#pictureMabth p:active{
-    color:red
+#pictureMabth span{
+    cursor: pointer;
+}
+#pictureMabth span:active{
+    color:#E21937;
+}
+#pictureMabth span:hover {
+  color:#E21937;
 }
 #edui68,#edui69{
     display: none !important;

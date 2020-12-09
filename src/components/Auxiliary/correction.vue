@@ -1,15 +1,15 @@
 <template>
-  <div> 
+  <div>
       <el-form ref="form"  label-width="80px">
       <div class="p30">
           <h6 class="wordTitle">文稿纠错</h6>
-          <span class="tip">识别文稿中用语规范的错误</span> 
+          <span class="tip">识别文稿中用语规范的错误</span>
       </div>
-      
+
       <div class="line"></div>
       <div style="text-align:center;padding:0 20px;">
-         <el-button type="primary" size="mini" @click="sensitiveWords" style="background: #303841;border:none;">开始分析</el-button>
-         <el-button type="primary" size="mini" @click="clearWords" style="background: #303841;border:none;">一键清除样式</el-button>
+         <el-button type="primary" size="mini" @click="sensitiveWords" style="background: #326EFF;border:none;">开始分析</el-button>
+         <el-button type="primary" size="mini" @click="clearWords" style="background: #326EFF;border:none;">一键清除样式</el-button>
          <div>
            <el-table
               :data="tableData"
@@ -27,7 +27,7 @@
               </el-table-column>
             </el-table>
          </div>
-         
+
       </div>
     </el-form>
   </div>
@@ -79,7 +79,7 @@ export default {
       }else{
 
       }
-      
+
     },
     clearWords(){
       let spans = $(store.ueditor.body).find(".colormark");

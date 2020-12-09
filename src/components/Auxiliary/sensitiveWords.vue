@@ -1,9 +1,9 @@
 <template>
-  <div> 
+  <div>
     <el-form ref="form"  label-width="130px">
       <div class="p30">
           <h6 class="wordTitle">敏感词分析</h6>
-          <span class="tip">识别文本中涉黄、涉政或其他违禁等敏感词汇</span> 
+          <span class="tip">识别文本中涉黄、涉政或其他违禁等敏感词汇</span>
       </div>
       <!-- <el-form-item label="敏感词分析"   class="p30">
               <el-switch
@@ -11,12 +11,12 @@
                   active-color="#d52324"
                   inactive-color="#d52324">
               </el-switch>
-              <span class="tip">识别文本中涉黄、涉政或其他违禁等敏感词汇</span>  
+              <span class="tip">识别文本中涉黄、涉政或其他违禁等敏感词汇</span>
       </el-form-item> -->
       <div class="line"></div>
        <div style="text-align:center;padding:0 20px;">
-         <el-button type="primary" size="mini" @click="sensitiveWords" style="background: #303841;border:none;">开始分析</el-button>
-         <el-button type="primary" size="mini" @click="clearWords" style="background: #303841;border:none;">一键清除样式</el-button>
+         <el-button type="primary" size="mini" @click="sensitiveWords" style="background: #326EFF;border:none;">开始分析</el-button>
+         <el-button type="primary" size="mini" @click="clearWords" style="background: #326EFF;border:none;">一键清除样式</el-button>
          <div>
            <el-table
               :data="tableData"
@@ -34,7 +34,7 @@
               </el-table-column>
             </el-table>
          </div>
-         
+
       </div>
     </el-form>
   </div>
@@ -59,7 +59,7 @@ export default {
   },
    methods: {
       sensitiveWords(){
-        if(store.ueditor) { 
+        if(store.ueditor) {
             let data = {
               title:this.$store.state.title,
               content:store.ueditor.getContent()
@@ -126,4 +126,3 @@ export default {
   line-height: 16px;
 }
 </style>
-

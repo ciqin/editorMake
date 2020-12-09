@@ -1,5 +1,5 @@
 <template>
-   <div class="nav_top_temlaptes">
+   <div class="nav_top_temlaptes" >
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="模板" name="first">
         <div class='first_nav_top'>
@@ -7,7 +7,7 @@
             <li v-for="(item,key) in templatearr" :key=key @click="templatearrclick(key)" :class="{templateactive:key==texttemp}">{{item}}</li>
           </ul>
         </div>
-        <div class='third_search' style='padding: 20px 21px 10px 19px;display:flex'>
+        <div class='third_search' style='padding: 15px 0 0 0;display:flex'>
           <el-input v-model="templateinput" placeholder="请输入关键字(名称,内容)"></el-input>
           <el-button icon="el-icon-search" @click="searchtemplate()">搜索</el-button>
         </div>
@@ -26,7 +26,7 @@
                  <p v-if="loadimgtemplate" style='text-align:center'>加载中...</p>
                  <p v-if="templatenoMore" style='text-align:center'>没有更多了</p>
               </ul>
-            
+
               <div v-else>
                   <p style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;'><i class='el-icon-warning-outline'></i>暂无数据</p>
               </div>
@@ -36,6 +36,10 @@
       </el-tab-pane>
 
       <el-tab-pane label="媒资库" name="second">
+        <div class='third_search' style='padding: 0 0 15px;display:flex'>
+         <el-input v-model="Shareinput" placeholder="请输入关键字(名称,内容)"></el-input>
+         <el-button icon="el-icon-search" @click="searchShare()">搜索</el-button>
+       </div>
           <div>
             <div class="labelselect">
                 <label for="">分类</label>
@@ -61,30 +65,29 @@
                   </el-option>
                 </el-select>
             </div>
-          </div>
-
-           <div class='third_search' style='padding: 10px 20px;display:flex'>
-            <el-input v-model="Shareinput" placeholder="请输入关键字(名称,内容)"></el-input>
-            <el-button icon="el-icon-search" @click="searchShare()">搜索</el-button>
+            <div class="clear"></div>
           </div>
 
 
 　　　　　<div class='infinite-list-wrapper' v-loading="loading" style='display:flex'>
               <div v-if="Libraryarr.length>0" style='height: 805px;overflow-y: auto;overflow-x:hidden'  v-infinite-scroll="loadMedialist" infinite-scroll-disabled="disabledLibraryarr">
-                <div class="libisryarr" v-for="(item,key) in Libraryarr" :key = key>
-                    <div class='libisryarr_list' @click="LibraryClick(item)">
-                        <div class='collection_icon' @click.stop="collectionIconclick(key,Libraryarr)" :class='item.isFavorite == true ? "collectionAcitve" : "nocollectionAcitve" '>
-                            <i class="el-icon-star-on"></i>
-                        </div>
-                        <div class="libisryarr_img" v-if="item.fileFormat=='mp4'">
-                            <video :src="item.url" controls="controls" :poster="item.coverImageUrl">
-                            </video>
-                        </div>
+                <div class="libisryarr" v-for="(item,key) in Libraryarr" :key = 'key'>
+                    <div class='libisryarr_list_div'>
+                      <div class='libisryarr_list' @click="LibraryClick(item)">
+                          <div class='collection_icon' @click.stop="collectionIconclick(key,Libraryarr)" :class='item.isFavorite == true ? "collectionAcitve" : "nocollectionAcitve" '>
+                              <i class="el-icon-star-on"></i>
+                          </div>
+                          <div class="libisryarr_img" v-if="item.fileFormat=='mp4'">
+                              <video :src="item.url" controls="controls" :poster="item.coverImageUrl">
+                              </video>
+                          </div>
 
-                        <div class="libisryarr_img" v-else-if="item.fileFormat=='jpg'||item.fileFormat=='png'||item.fileFormat=='jpeg' || item.fileFormat=='mov' || item.fileFormat=='gif'">
-                            <img :src="item.url" alt="">
-                        </div>
+                          <div class="libisryarr_img" v-else-if="item.fileFormat=='jpg'||item.fileFormat=='png'||item.fileFormat=='jpeg' || item.fileFormat=='mov' || item.fileFormat=='gif'">
+                              <img :src="item.url" alt="">
+                          </div>
+                      </div>
                     </div>
+
                     <div class="libisryarr_botal">
                       <p>{{item.mediaName}}</p>
                       <p>{{item.createTime}}</p>
@@ -102,27 +105,29 @@
       </el-tab-pane>
 
       <el-tab-pane label="稿库" name="third">
-        <div class='third_search' style='padding: 10px 20px;display:flex'>
+        <div class='third_search' style='padding: 10px 0;display:flex'>
           <el-input v-model="Manuscriptinput" placeholder="请输入关键字(名称,内容)"></el-input>
           <el-button icon="el-icon-search" @click.stop="Manuscriptsearch()">搜索</el-button>
         </div>
 
         <div class="third_data">
+          <label for="">时间:</label>
            <el-date-picker
               v-model="datavalue"
               type="daterange"
-              value-format="yyyy-MM-dd"    
+              value-format="yyyy-MM-dd"
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期">
            </el-date-picker>
+           <div class="clear"></div>
         </div>
 
         <div class='infinite-list-wrapper' v-loading="loadingManuscript">
             <div v-if="Manuscript.length>0 && loadingManuscript==false"  style="height: 805px;overflow-y: auto;margin-top: 20px;" v-infinite-scroll="loadManuscript" infinite-scroll-disabled="disabled">
               <div class="third_libisryarr" v-for="(item,key) in Manuscript" :key = key>
                  <div v-if="item.thumbnailUrl && item.htmlContent" style='display: flex;position: relative;' :class="{show_list_start:item.show===true}" @mouseover="collectionIconmouseover(key,item,Manuscript)"  @mouseout="collectionIconmouseout(key,item,Manuscript)">
-                      <div class='third_libisryarr_list'> 
+                      <div class='third_libisryarr_list'>
                            <div class='collection_icon' @click.stop="collectionIconclick(key,Manuscript)" :class='item.isFavorite==true ? "collectionAcitve" : "nocollectionAcitve" '>
                               <i class="el-icon-star-on"></i>
                           </div> 
@@ -134,7 +139,7 @@
                         <p class='third_libisryarr_botal_title'><span class='third_libisryarr_botal_biaoshi'>图文</span>{{item.title?item.title:'暂无标题'}}</p>
                         <p>{{item.time}}</p>
                       </div>
-                      <div class='preview'><span @click="preview(item)"><i class='el-icon-view'></i>预览</span><span @click='ManuscriptClick(item)'><i  class='el-icon-download'></i>插入</span></div>     
+                      <div class='preview'><span @click="preview(item)"><i class='el-icon-view'></i>预览</span><span @click='ManuscriptClick(item)'><i  class='el-icon-download'></i>插入</span></div>
                  </div>
 
                  <div v-else-if="!item.thumbnailUrl && item.htmlContent" :class="{show_list_start:item.show===true}" @mouseover="collectionIconmouseover(key,item,Manuscript)"  @mouseout="collectionIconmouseout(key,item,Manuscript)">
@@ -143,7 +148,7 @@
                               <i class="el-icon-star-on"></i>
                           </div> 
                           <p class='third_title'>{{item.title}}</p>
-                          <div class='preview'><span @click="preview(item)"><i class='el-icon-view'></i>预览</span><span @click='ManuscriptClick(item)'><i  class='el-icon-download'></i>插入</span></div>     
+                          <div class='preview'><span @click="preview(item)"><i class='el-icon-view'></i>预览</span><span @click='ManuscriptClick(item)'><i  class='el-icon-download'></i>插入</span></div>
                       </div>
                  </div>
               </div>
@@ -314,7 +319,7 @@
                         }
                       })
                     }
-               }) 
+               })
             })
       }else{
           this.activeName = 'first'
@@ -328,10 +333,10 @@
           })
       }
     },
-  
+
     computed: {
       //稿库=========================================================
-      collectionnoMore () {  
+      collectionnoMore () {
         return this.Manuscript.length == this.Manuscriptotal
       },
       disabled () {
@@ -423,7 +428,7 @@
                         }
                       })
                     }
-               }) 
+               })
             })
         }else if(tab.label=='模板'){
           this.datavalue = ''
@@ -445,7 +450,7 @@
           this.texttemp = index
           this.templeteType = index+1
           this.loadTemplates();
-         
+
       },
       collectionIconclick(index,arr){
         if(arr == this.templateimgarr){
@@ -467,7 +472,7 @@
                     }
                   })
                 })
-                
+
             }else{
                 ilgcreations().then(res=>{
                   favorTemplate(param).then(res=>{ //模板收藏
@@ -480,8 +485,8 @@
                     }else{
                       this.$message('收藏失败');
                     }
-                  }) 
-                })         
+                  })
+                })
             }
         }else if(arr == this.Libraryarr){
             let libraryparam = {
@@ -504,7 +509,7 @@
                     }
                   })
                 })
-                
+
            }else{
                 ilgcreations().then(res=>{
                   Mediadd(libraryparam).then(res=>{ //媒资库收藏
@@ -520,7 +525,7 @@
                     console.log(res)
                   })
                 })
-                
+
            }
         }else if(arr == this.Manuscript){
           let favoriteparam = {
@@ -554,7 +559,7 @@
                   }
               })
             })
-           
+
           }
         }
       },
@@ -612,7 +617,7 @@
                         uuids:_that.ManuscripIDarr
                       }
                       FavoriteMixmdedia(parmas).then((res)=>{
-                        if(res){  
+                        if(res){
                           rescontent.forEach(function (item) {
                               item.show=false
                               if(res.data.indexOf(item.id)>=0){
@@ -665,10 +670,10 @@
                       item.show=false
                       _that.Manuscript.push(item);
                       _that.ManuscripIDarr.push(item.id)
-                    }); 
+                    });
                 }
               })
-            }) 
+            })
           }
       },
       loadTemplates(){
@@ -693,12 +698,12 @@
                   res.list.forEach(function (item) {
                     item.show = false
                     _that.templateimgarr.push(item);
-                  });  
+                  });
                 }
             })
         }
-        
-      }, 
+
+      },
       loadMedialist(){
             let _that = this
             if(this.value1=='全部' || this.value2=='全部'){
@@ -710,7 +715,7 @@
             if(this.value1!=='全部'){
               value1arr.push(this.value1)
             }
-            
+
             let Searchparam = {
                 classifyIds:value1arr, //分类的id
                 keyWords:this.Shareinput,//关键字
@@ -747,8 +752,8 @@
                         }
                         _that.Libraryarr.push(item);
                     });
-                     
-                     
+
+
                   }
                 })
 
@@ -787,8 +792,15 @@
    .el-message-box{
      width: 1100px;
    }
+   .el-tabs__content {
+     padding: 0 12px;
+   }
+   .el-tabs__content .el-input__inner {
+        height: 40px;
+        line-height: 40px;
+    }
    .nav_top_temlaptes .el-tabs__nav-wrap{
-     background: #F6F8FA; 
+     background: #F6F8FA;
    }
    .nav_top_temlaptes .is-active {
       color: #1A1A1A;
@@ -809,12 +821,15 @@
       text-align: center;
       padding:0
    }
-   .nav_top_temlaptes .el-tabs__nav{
-      height: 40px;
-      line-height: 40px;
+   .nav_top_temlaptes .el-tabs__nav .el-tabs__item{
+      height: 44px;
+      line-height: 44px;
+   }
+   .nav_top_temlaptes .el-tabs__nav {
+      height: 44px;
+      line-height: 44px;
       font-size: 14px;
    }
-
    .third_search .el-input__inner{
      border: 1px solid #A0A2B2;
      border-right: none;
@@ -824,21 +839,28 @@
      border: 1px solid #A0A2B2;
      border-radius: 0px 4px 4px 0;
    }
-   .third_data .el-input__inner{
+   /* .third_data .el-input__inner{
      height: 40px;
-   }
-  
+   } */
+   .third_data label {
+        width: 45px;
+        line-height: 40px;
+        font-family: MicrosoftYaHei;
+        font-size: 14px;
+        color: #333333;
+        float:left;
+    }
    .third_data .el-date-editor .el-range-input{
     width: 85px;
   }
    .third_data .el-date-editor--daterange.el-input__inner{
-    width: 228px;
+    width: calc(100% - 45px);
   }
    .third_data .nav_top_temlaptes .el-input__icon {
     line-height: 22px;
   }
    .third_data .el-date-editor .el-range__icon,.third_data .el-date-editor .el-range-separator,.third_data .el-date-editor .el-range__close-icon{
-    line-height: 22px;
+    line-height: 34px;
   }
    .nav_top_temlaptes .labelselect .el-input--suffix .el-input__inner{
       background: #FFFFFF;
@@ -848,11 +870,10 @@
 </style>
 <style scoped>
  .first_nav_top ul{
-   margin-left: 8px;
    overflow: hidden;
  }
  .first_nav_top ul li{
-    width:48px;
+    padding:0 8px;
     height:25px;
     background: #EEF3F9;
     border-radius: 4px;
@@ -871,18 +892,19 @@
    border-radius: 4px;
  }
  .first_main_imgs{
-    margin-left: 7px;
     margin-top: 10px;
     min-height: 705px;
  }
-
+ .infinite-list-wrapper {
+   position:relative;
+   min-height: 100px;
+ }
  .first_texttemp{
     font-family: MicrosoftYaHei;
     font-size: 12px;
     color: #666666;
     letter-spacing: 2.2px;
-    margin-top: 10px;
-    margin-left: 20px;
+    margin-top: 20px;
  }
 
  .first_main_imgs ul{
@@ -897,10 +919,12 @@
     float: left;
     margin: 4px;
     margin-bottom: 0;
+    margin-left: 0;
     background: #F6F8FA;
+    border-radius: 5px;
  }
 
-.first_main_imgs ul li:nth-of-type(odd){ 
+.first_main_imgs ul li:nth-of-type(odd){
   margin-right:0;
 }
 
@@ -908,7 +932,7 @@
     background: #ffffff;
     width: 350px;
     margin: 8px;
-    padding: 10px
+    padding: 10px;
   }
  .first_main_imgs ul li:hover{
    box-shadow: inset 0 0 10px 0px #ccc;
@@ -919,8 +943,9 @@
    margin-top: 5px;
  }
  .third_data{
-    height: 35px;
-    margin-left: 143px;
+    height: 40px;
+    /* margin-left: 143px; */
+    padding:0;
  }
 
  .collection_icon{
@@ -952,11 +977,19 @@
     width: 173px;
     height: 180px;
     float: left;
-    margin: 10px 0px 20px 10px;
+    margin: 20px 0px 20px 8px;
 }
-.libisryarr_list{
+.libisryarr_list_div {
   width: 173px;
   height: 141px;
+  border-radius: 3px;
+  position: relative;
+  background-color: #F6F8FA;
+  padding:8px;
+}
+.libisryarr_list{
+  width: 100%;
+  height: 100%;
   background: #FFFFFF;
   box-shadow: 0 0 0 1px rgba(63,63,68,0.05), 0 1px 3px 0 rgba(63,63,68,0.15);
   border-radius: 3px;
@@ -966,16 +999,21 @@
     width: 157px;
     height: 125px;
 }
-.libisryarr_img img,.libisryarr_img video{
+.libisryarr_img img{
     width: 100%;
     height: 100%;
-    margin: 8px 10px 0.7% 9px;
+    border-radius: 3px;
+}
+.libisryarr_img video{
+    height: 100%;
+    width: 100%;
+    border-radius: 3px;
 }
 .libisryarr_botal{
-  font-family: MicrosoftYaHei;
-  font-size: 14px;
-  color: #212B36;
-  letter-spacing: 0;
+  font-size: 12px;
+  font-family: SourceHanSansCN-Regular, SourceHanSansCN;
+  font-weight: 400;
+  color: #B7BCC5;
   line-height: 24px;
 }
 .libisryarr_botal p:first-child{
@@ -983,6 +1021,10 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  font-size: 14px;
+  font-family: SourceHanSansCN-Regular, SourceHanSansCN;
+  font-weight: 400;
+  color: #212B36;
 }
 .libisryarr_list .collection_icon{
   display: block !important;
@@ -993,22 +1035,24 @@
 .labelselect{
     width: 50%;
     float: left;
-    padding: 10px 20px;
+    padding: 0 0 0 10px;
     display: flex;
 }
 .labelselect label{
     width: 82px;
-    line-height: 30px;
+    line-height: 40px;
     font-family: MicrosoftYaHei;
     font-size: 14px;
     color: #333333;
 }
-
+.clear {
+  clear:both;
+}
 .third_libisryarr>div{
     width: 365px;
     height: 92px;
     float: left;
-    margin: 0px 18px 0px 18px;
+    margin: 0;
     background: #F6F8FA;
     border-radius: 4px;
     margin-bottom: 8px;
@@ -1067,6 +1111,7 @@
 .third_libisryarr_img img,.third_libisryarr_img video{
     width: 100%;
     height: 100%;
+    border-radius: 5px;
 }
 .sort_naver{
     padding: 10px 20px;
@@ -1093,7 +1138,7 @@
 .preview span{
   margin-right: 10px;
   cursor: pointer;
-} 
+}
 
 .preview span i{
   margin-right: 5px;

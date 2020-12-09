@@ -43,7 +43,7 @@
              <div id='newsection_charts'></div>
            </div>
            <div class='new_bottom'>
- 
+
            </div>
         </div> -->
     </div>
@@ -60,7 +60,7 @@
                charNum:'',
                sentenceNum:'',
                wordNum:'',
-               remotionvalue:'-1',//政负情感  
+               remotionvalue:'-1',//政负情感
             }
         },
      mounted(){
@@ -140,7 +140,7 @@
                 }]
               }]
           });
-         
+
          //政负情感
          this.loadleftChartremotion()
 
@@ -194,7 +194,7 @@
                         },
                         splitLine: {           // 分隔线
                             show: true,        // 默认显示，属性show控制显示与否
-                            lineStyle: { 
+                            lineStyle: {
                                 color: "#ffffff",      // 属性lineStyle（详见lineStyle）控制线条样式
                                 width: 1,
                             },
@@ -205,7 +205,7 @@
                         },
                         data: [{ value: 90.7 }]
                     }
-                ] 
+                ]
          })
 
      },
@@ -256,7 +256,7 @@
                 }
             ]);
 
-        
+
             leftChartremotion.setOption({
                   series: [{
                             center: [50, 80], //仪表的位置
@@ -350,7 +350,7 @@
                         }]
                     }]
             })
-  
+
         }
      }
     }
@@ -378,10 +378,10 @@
        text-align: center;
    }
 
-   .button_mainner button{    
+   .button_mainner button{
         width:100px;
         height:40px;
-        background: #303841;
+        background: #326EFF;
         border-radius: 4px;
         border-radius: 4px;
         outline: none;
@@ -416,7 +416,7 @@
        margin:0 10px 10px 10px;
        height: 98px;
    }
-   
+
 
    .essential_sec{
        display: flex;

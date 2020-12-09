@@ -7,13 +7,13 @@
             <div class="grid-content bg-purple">
                <div class="iconNav">
                    <ul>
-                       <li  @click="leftToggle('letfTab1')" :class="{Navcurrent:Navcurrent=='letfTab1'}"><b></b><i class="el-icon-s-unfold"></i><p>资源</p><div class='saucxs'></div></li>
-                       <li  @click="leftToggle('letfTab2')" :class="{Navcurrent:Navcurrent=='letfTab2'}"><b></b><i class="el-icon-s-order" ></i><p>供稿</p><div class='saucxs'></div></li>
-                       <li  @click="leftToggle('letfTab3')" :class="{Navcurrent:Navcurrent=='letfTab3'}"><b></b><i class="el-icon-star-on"></i><p>收藏</p><div class='saucxs'></div></li>
+                       <li  @click="leftToggle('letfTab1')" :class="{Navcurrent:Navcurrent=='letfTab1'}"><b></b><i class="el-icon-menu"></i><p>资源</p></li> <!-- <div class='saucxs'></div> -->
+                       <li  @click="leftToggle('letfTab2')" :class="{Navcurrent:Navcurrent=='letfTab2'}"><b></b><i class="el-icon-tickets" ></i><p>供稿</p></li>
+                       <li  @click="leftToggle('letfTab3')" :class="{Navcurrent:Navcurrent=='letfTab3'}"><b></b><i class="el-icon-star-off"></i><p>收藏</p></li>
                    </ul>
                </div>
                <div class="NavContainer">
-                    <component :is="Navcurrent" :uestrvalue = uedstr></component>
+                    <component :is="Navcurrent" :uestrvalue ='uedstr'></component>
                </div>
             </div>
         </el-col>
@@ -41,7 +41,7 @@
                             </ul>
                         </div>
                     </el-col>
-                    <el-col :span="21" style="overflow:auto;padding-top:16px;">
+                    <el-col :span="21" style="overflow:auto;padding-top:20px;">
                         <!--:is实现多个组件实现同一个挂载点-->
                         <Tab1 :style='style1'/>
                         <Tab2 :style='style2'/>
@@ -169,7 +169,7 @@ export default {
                 {
                     type:'Tab4',
                     view:`<svg width="19px" height="18px" viewBox="0 0 19 18" version="1.1">
-                
+
                             <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                 <g id="资源1" transform="translate(-1457.000000, -338.000000)">
                                     <g id="tab" transform="translate(1443.000000, 66.000000)">
@@ -221,7 +221,7 @@ export default {
         resTitle(newVal){
             this.input = newVal
         }
-    }, 
+    },
     provide(){
         return {
             'app':this
@@ -266,7 +266,7 @@ export default {
                this.style4 = 'display:none'
                this.style5 = 'display:block'
             }
-            
+
         },
         leftToggle(v){
           this.Navcurrent = v
@@ -290,7 +290,7 @@ export default {
         inputChange(e){
             this.$store.dispatch('modifyDataTitle',this.input);
         },
-        
+
     },
     components:{
         Tab1,Tab2,Tab3,Ueditor,letfTab1,letfTab2,Tab4,letfTab3,Tab5
@@ -340,14 +340,17 @@ export default {
     height: 100%;
     background: #ffffff;
 }
+.iconNav li.Navcurrent{
+  background-color: #F2F2F2;
+}
 .iconNav li{
     width: 64px;
     height: 60px;
     display: inline-block;
     text-align: center;
     background: #fff;
-    margin-bottom:16px;
     position: relative;
+    cursor:pointer;
 }
 .iconNav li b{
     display:none
@@ -385,7 +388,7 @@ export default {
 .el-tabs__nav-wrap::after {
     background-color: transparent;
 }
-/* 右侧功能切换 */ 
+/* 右侧功能切换 */
 .rightTab li{
     text-align: center;
     height: 60px;
