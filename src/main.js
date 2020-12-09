@@ -9,7 +9,6 @@ import router from './router'
 import store from './storex/index'
 import echarts from 'echarts'
 
-
 Vue.config.productionTip = false
 Vue.prototype.$echarts = echarts
 

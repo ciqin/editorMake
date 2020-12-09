@@ -1,20 +1,20 @@
 <template>
-  <div> 
+  <div>
       <el-form ref="form"  label-width="80px">
       <div class="p30">
           <h6 class="wordTitle">关联配图</h6>
-          <span class="tip">根据文字内容，可自动配图</span> 
+          <span class="tip">根据文字内容，可自动配图</span>
       </div>
-      
+
       <div class="line"></div>
-      <div style="text-align:center;padding:0 20px;">
-          <el-card class="box-card">
-              <div class="cardCon">
-                <h5>原文内容</h5>
+      <div style="text-align:center;padding:0 12px;">
+          <div class="box-card">
+
+                <div class="title">原文内容</div>
                 <div class='cardCon_input' contenteditable='true'>{{context}}</div>
-              </div>
-              <el-button @click="picture_btn" type="primary" size="mini" style="background: #303841;border:none;margin-top:16px;">更新配图</el-button>
-          </el-card>
+
+              <el-button @click="picture_btn" type="primary" size="mini" style="background: #326EFF;border:none;margin-top:16px;">更新配图</el-button>
+          </div>
           <div class="imgContainer" v-loading="loading">
             <ul v-if='tabs.length>0' style='margin-top:20px'>
               <li v-for="(tab,index) in tabs"><img :src='tab.url' alt="" width="170" height="120" style='margin-top:29px'><el-checkbox @change="checkedclik(tab,index)" v-model='tab.checked' style="position:absolute;right:8px;top:3px;"></el-checkbox></li>
@@ -99,7 +99,7 @@ export default {
           store.ueditor.focus()
           store.ueditor.execCommand('inserthtml',`<img src=${item.url}>`)
         }
-        
+
     }
   }
 
@@ -108,7 +108,7 @@ export default {
 </script>
 <style scoped>
 .p30 {
-  padding: 0 30px;
+  padding: 0 12px;
 }
 .line {
   border-bottom: 1px solid #DCDEE3;
@@ -135,25 +135,31 @@ export default {
   height: 200px;
   padding: 10px 5px;
 }
-.cardCon .cardCon_input{
-    min-width: 90%;
-    max-width: 90%;
-    max-height: 144px;
-    line-height:25px;
-    background: rgb(246, 247, 249);
-    border: none;
-    margin: 0px;
-    height: 158px;
-    width: 294px;
-    text-align:left;
-    padding:10px
+.box-card .cardCon_input{
+    height:85px;
+    text-align: left;
+    border:0;
+    font-size: 13px;
+    font-family: SourceHanSansCN-Regular, SourceHanSansCN;
+    font-weight: 400;
+    color: #666666;
+    line-height: 20px;
+    overflow-y: auto;
 }
-.cardCon h5 {
+.box-card .cardCon_input:focus {
+  border:0;
+  outline:none;
+}
+.box-card .title {
   text-align: left;
-  color: #666666;
+  height: 19px;
+  font-size: 14px;
+  font-family: MicrosoftYaHei;
+  color: #333330;
+  line-height: 19px;
   margin-bottom: 10px;
 }
-.cardCon p {
+.box-card p {
   height: 109px;
   font-size: 13px;
   font-family: MicrosoftYaHei;
@@ -186,5 +192,8 @@ export default {
     box-shadow: 0 9px 9px 0 rgba(0,0,0,0.02), 0 3px 3px 0 rgba(0,0,0,0.02), 0 1px 1px 0 rgba(0,0,0,0.02);
     border-radius: 4px;
     border-radius: 4px;
+    height: 185px;
+    background-color:#F6F8FA;
+    padding:12px 24px;
 }
 </style>

@@ -22,7 +22,7 @@ export default {
 /* 设置谷歌滚动条 */
 ::-webkit-scrollbar {
     width: 4px;
-    height: 2px 
+    height: 2px
 }
 ::-webkit-scrollbar-thumb {
     box-shadow: 0px 1px 3px rgba(212, 212, 212, 0.3) inset;

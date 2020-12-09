@@ -1,5 +1,5 @@
 <template>
-  <div class='collect_list'> 
+  <div class='collect_list'>
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="我的模板" name="first">
           <div class='first_nav_top'>
@@ -7,7 +7,7 @@
               <li v-for="(item,key) in templatearr" :key = key    @click="templatearrclick(key)" :class="{templateactive:key==texttemp}">{{item}}</li>
             </ul>
           </div>
-          <div class='third_search' style='padding: 20px 21px 10px 19px;display:flex'>
+          <div class='third_search' style='padding: 15px 0 0;display:flex'>
             <el-input v-model="templateinput" placeholder="请输入关键字(名称,内容)"></el-input>
             <el-button icon="el-icon-search" @click="searchtemplate()">搜索</el-button>
           </div>
@@ -22,10 +22,10 @@
                         </div>
                     </li>
 
-                    <p v-if="loadimgtemplate" style='text-align:center'>加载中...</p>
-                    <p v-if="templatenoMore" style='text-align:center'>没有更多了</p>
+                    <p v-if="loadimgtemplate" style='text-align:center;height:50px;line-height:50px;'>加载中...</p>
+                    <p v-if="templatenoMore" style='text-align:center;height:50px;line-height:50px;'>没有更多了</p>
                   </ul>
-                
+
                   <div v-else>
                     <p style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;'><i class='el-icon-warning-outline'></i>暂无数据</p>
                   </div>
@@ -34,20 +34,22 @@
         </el-tab-pane>
 
         <el-tab-pane label="我的稿件" name="third">
-          <div class='third_search' style='padding: 10px 20px;display:flex'>
+          <div class='third_search' style='padding: 0 0 15px;display:flex'>
             <el-input v-model="Manuscriptinput" placeholder="请输入关键字(名称,内容)"></el-input>
             <el-button icon="el-icon-search" @click="Manuscriptsearch()">搜索</el-button>
           </div>
 
          <div class="third_data">
+           <label for="">时间:</label>
            <el-date-picker
               v-model="datavalue"
               type="daterange"
-              value-format="yyyy-MM-dd"    
+              value-format="yyyy-MM-dd"
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期">
            </el-date-picker>
+           <div class="clear"></div>
         </div>
 
            <div v-loading="loadingmusc">
@@ -55,7 +57,7 @@
                   <div v-if="Manuscript.length>0 && loadingmusc==false"  style="height: 778px;overflow-y: auto;margin-top: 20px;padding-bottom: 20px;" v-infinite-scroll="loadgetFavorite" infinite-scroll-disabled="disabled">
                         <div class="third_libisryarr" v-for="(item,key) in Manuscript" :key = key @click='ManuscriptClick(item)'>
                                  <div v-if="item.thumbnailUrl && item.htmlContent" style='display: flex;position: relative;' :class="{show_list_start:item.show===true}">
-                                      <div class='third_libisryarr_list'> 
+                                      <div class='third_libisryarr_list'>
                                            <div class='collection_icon collectionAcitve' @click.stop="collectionIconclick(key,Manuscript)" >
                                               <i class="el-icon-star-on"></i>
                                           </div> 
@@ -88,7 +90,7 @@
 
         <el-tab-pane label="关联文章" name="four">
           <div v-loading="loading" style='height: 894px;overflow-y: auto;'>
-              <div v-if="Relatedarr.length>0 && loading==false"> 
+              <div v-if="Relatedarr.length>0 && loading==false">
                 <div v-for="(item,key) in  Relatedarr" :key = key  class='acticle_list' v-infinite-scroll="loadRelated" infinite-scroll-disabled="disabledRelated">
                     <div class='collection_icon collectionAcitve' @click="collectionIconclick(key,Relatedarr)">
                       <i class="el-icon-star-on"></i>
@@ -114,8 +116,8 @@
                           <div class='acticle_list_Similarity' style="padding-bottom: 10px;">关联度：{{item.similarity?item.similarity:''}}</div>
                     </div>
                 </div>
-                <p v-if="loadimgRelated" style='text-align:center'>加载中...</p>
-                <p v-if="noMoreRelated" style='text-align:center'>没有更多了</p>
+                <p v-if="loadimgRelated" style='text-align:center;height:50px;line-height:50px;'>加载中...</p>
+                <p v-if="noMoreRelated" style='text-align:center;height:50px;line-height:50px;'>没有更多了</p>
                 <div class="Tooltip" :style="Tooltipstyle">
                     <div class="arrow"></div>
                     <p @click="Tooltipbtn">插入正文</p>
@@ -128,8 +130,13 @@
         </el-tab-pane>
 
         <el-tab-pane label="我的媒资库" name="second">
+          <div class='third_search' style='padding: 0 0 15px;display:flex'>
+            <el-input v-model="Shareinput" placeholder="请输入关键字(名称,内容)"></el-input>
+            <el-button icon="el-icon-search" @click="searchShare()">搜索</el-button>
+          </div>
+          <div>
             <div class="labelselect">
-                <label for="">分类</label>
+                <label for="">分类:</label>
                 <el-select v-model="value1" placeholder="请选择">
                   <el-option
                     v-for="item in options1"
@@ -141,7 +148,7 @@
             </div>
 
               <div class="labelselect">
-                <label for="">类型</label>
+                <label for="">类型:</label>
                 <el-select v-model="value2" placeholder="请选择">
                   <el-option
                     v-for="item in options2"
@@ -151,13 +158,13 @@
                   </el-option>
                 </el-select>
             </div>
+            <div class="clear"></div>
+          </div>
 
-            <div class='third_search' style='padding: 10px 20px;display:flex'>
-              <el-input v-model="Shareinput" placeholder="请输入关键字(名称,内容)"></el-input>
-              <el-button icon="el-icon-search" @click="searchShare()">搜索</el-button>
-            </div>
 
-    　　　　　<div v-loading="loading">
+
+
+    　　　　　<div v-loading="loading" >
                   <div v-if="Libraryarr.length>0">
                     <div class="libisryarr" v-for="(item,key) in Libraryarr" :key = key>
                         <div class='libisryarr_list' @click="LibraryClick(item)">
@@ -184,8 +191,8 @@
                   </div>
          </div>
 
-        </el-tab-pane> 
-      </el-tabs> 
+        </el-tab-pane>
+      </el-tabs>
   </div>
 </template>
 <script>
@@ -266,7 +273,7 @@ export default {
     },
 
     //稿库=========================================================
-    collectionnoMore () {  
+    collectionnoMore () {
       return this.Manuscript.length == this.Manuscriptotal
     },
     disabled () {
@@ -275,13 +282,13 @@ export default {
 
     //关联文章收藏的滚动加载
     noMoreRelated(){
-     return this.Relatedarr.length == this.Relatedtotal 
+     return this.Relatedarr.length == this.Relatedtotal
     },
 
     disabledRelated(){
-      return this.loadimgRelated || this.noMoreRelated 
+      return this.loadimgRelated || this.noMoreRelated
     },
-    
+
 
   },
   created(){
@@ -337,7 +344,7 @@ export default {
               this.loadgetFavorite()
             })
           })
-          
+
         }else if(tab.label=='关联文章'){
            this.Relatedarr=[]
            this.actpageNum=0
@@ -426,7 +433,7 @@ export default {
             let favoriteparam = {
             uuid:arr[index].id,
             }
-        
+
             ilgcreations().then(res=>{
               favoritedell(favoriteparam).then((res)=>{
                 if(res.message='取消收藏成功'){
@@ -440,9 +447,9 @@ export default {
                 }
               })
             })
-            
+
         }else if(arr == this.Relatedarr){
-            let Relateparam = { 
+            let Relateparam = {
                 uuid:this.Relatedarr[index].uuid,
                 tenantId:this.tenantId,
                 title:this.Relatedarr[index].title,
@@ -463,14 +470,14 @@ export default {
                 }
               })
             })
-            
+
         }else if(arr == this.Libraryarr){
             let libraryparam = {
               assetId:arr[index].assetId,
               tenantId:this.tenantId,
               url:arr[index].url
             }
-            
+
             Mediadell(libraryparam).then(res=>{ //取消媒资库收藏
                 if(res.message='取消收藏成功'){
                   this.$message({
@@ -536,19 +543,19 @@ export default {
                 res.list.forEach(function (item) {
                   item.show = false
                   _that.templateimgarr.push(item);
-                });  
+                });
               }
             })
           })
         }
-        
-      }, 
+
+      },
       loadRelated(){
          let actparam = {
             pageNum:this.actpageNum,
             pageSize:10
           }
-          
+
           if(this.Relatedarr!==this.Relatedtotal){
              ilgcreations().then(res=>{
                getTopics(actparam).then((res)=>{
@@ -648,14 +655,14 @@ export default {
                       rescontent.forEach(function (item) {
                           _that.Libraryarr.push(item);
                       });
-      
+
                     }
                   })
                }
             })
 
 
-          
+
       }
 
   }
@@ -664,7 +671,7 @@ export default {
 <style>
 
    .collect_list .el-tabs__nav-wrap{
-     background: #F6F8FA; 
+     background: #F6F8FA;
    }
    .collect_list .is-active {
       color: #1A1A1A;
@@ -685,9 +692,13 @@ export default {
       text-align: center;
       padding: 0;
    }
+   .collect_list .el-tabs__nav .el-tabs__item{
+      height: 44px;
+      line-height: 44px;
+   }
    .collect_list .el-tabs__nav{
-      height: 40px;
-      line-height: 40px;
+      height: 44px;
+      line-height: 44px;
       font-size: 14px;
    }
 </style>
@@ -700,39 +711,39 @@ export default {
     color: #D72323;
 }
  .first_nav_top ul{
-   margin-left: 15px;
    overflow: hidden;
  }
  .first_nav_top ul li{
-    width:48px;
-    height:32px;
+   padding:0 8px;
+    height:25px;
     background: #EEF3F9;
     border-radius: 4px;
     font-family: PingFangSC-Regular;
     font-size: 14px;
     color: #333333;
-    line-height: 32px;
+    line-height: 25px;
     text-align: center;
     float: left;
     margin:0 2px;
     cursor: pointer;
  }
  .first_nav_top ul .templateactive{
-    background: #ffe1e1;
-    color: #EA5E5E;
-    border-radius: 4px;
-    border-radius: 4px;
+   color: #0170FF;
+   background: #0170ff3b;
+   border-radius: 4px;
  }
  .first_texttemp{
     font-family: MicrosoftYaHei;
     font-size: 12px;
     color: #666666;
     letter-spacing: 2.2px;
-    margin-top: 10px;
-    margin-left: 20px;
+    margin-top: 20px;
  }
 
- 
+.infinite-list-wrapper{
+  position: relative;
+  min-height: 100px;
+}
 
 
  .first_main_imgs ul{
@@ -745,12 +756,13 @@ export default {
     text-align: center;
     position: relative;
     float: left;
-    margin: 4px;
+    margin: 4px 0;
     margin-bottom: 0;
     background: #F6F8FA;
+    border-radius: 5px;
  }
 
-.first_main_imgs ul li:nth-of-type(odd){ 
+.first_main_imgs ul li:nth-of-type(odd){
   margin-right:0;
 }
 
@@ -769,9 +781,7 @@ export default {
    margin-top: 5px;
  }
  .third_data{
-   width:140px;
-   height:35px;
-   margin-left: 143px;
+   height:40px;
  }
  .first_main_imgs .collection_icon,.third_libisryarr .collection_icon{
     width: 18px;
@@ -801,7 +811,7 @@ export default {
     width: 173px;
     height: 180px;
     float: left;
-    margin: 10px 0px 20px 18px;
+    margin: 20px 0px 20px 0;
 }
 .libisryarr_list{
   width: 173px;
@@ -842,12 +852,12 @@ export default {
 .labelselect{
     width: 50%;
     float: left;
-    padding: 10px 20px;
+    padding: 0 0 0 10px;
     display: flex;
 }
 .labelselect label{
     width: 82px;
-    line-height: 38px;
+    line-height: 40px;
     font-family: MicrosoftYaHei;
     font-size: 14px;
     color: #333333;
@@ -857,7 +867,7 @@ export default {
     width: 365px;
     height: 92px;
     float: left;
-    margin: 0px 18px 0px 18px;
+    margin: 0;
     border-bottom:1px solid #dcdfe6
 }
 
@@ -905,13 +915,12 @@ export default {
     color: #333333;
 }
  .first_main_imgs{
-    margin-left: 7px;
     margin-top: 10px;
     min-height: 705px;
  }
 .acticle_list{
     width: 368px;
-    margin: 20px;
+    margin: 20px 0;
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 10px;

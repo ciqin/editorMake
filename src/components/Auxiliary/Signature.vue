@@ -17,7 +17,7 @@
                                 <img :src="item.url" alt="" style="cursor: pointer;" width="100" height="70">
 
                                 <div class='titleimgbottom' :style="item.show==true?'display:flex':'display:none'">
-                                        <span class='titleimgbottom_a' @click="lookmoddle(item)">预览</span> 
+                                        <span class='titleimgbottom_a' @click="lookmoddle(item)">预览</span>
                                         <ImgCutter v-if='num==1' ref="imgCutterModal1"
                                                     :cross-origin="true"
                                                             :tool-bgc="none"
@@ -30,7 +30,7 @@
                                                             :cut-height="200"
                                                             :size-change="true"
                                                             :move-able="true"
-                                                            @cutDown="xztpCutDownSmall">         
+                                                            @cutDown="xztpCutDownSmall">
                                                             <button class='titleimgbottom_b'  @click="loadpicture(index)">本地上传</button>
                                         </ImgCutter>
                                         <ImgCutter v-else-if='num==2' ref="imgCutterModal2"
@@ -61,19 +61,19 @@
                                                                 :size-change="true"
                                                                 :move-able="true"
                                                                 @cutDown="xztpCutDownMany">
-                                                                <button class='titleimgbottom_b'  @click="loadpicture(index)">本地上传</button>  
+                                                                <button class='titleimgbottom_b'  @click="loadpicture(index)">本地上传</button>
                                         </ImgCutter>
                                 </div>
-                        </div> 
+                        </div>
                     </div>
-                    
+
                     <div class='refrech_img' style='display: flex;padding-left: 100px;' :style="isrefreshshow">
                         <p @click="refreshbtnprev" :style='isdisshow'><i class='el-icon-top-left'></i>上一张</p>
                         <p @click="refreshbtn"><i class='el-icon-refresh'></i>换一张</p>
                     </div>
                 </el-form-item>
 
-                <el-form-item  v-else-if='this.coverflag' label=""  class="cover">  
+                <el-form-item  v-else-if='this.coverflag' label=""  class="cover">
                         <el-row :gutter="20">
                                 <el-col :span="8">
                                     <div class="grid-content bg-purple" style="width:100px">
@@ -112,7 +112,7 @@
                                                     <button slot="open" style="display:none;"></button>
                                         </ImgCutter>
                                         <img  v-if="opaBtn2" :src="form.opaImg2" alt="" slot="open" style="cursor: pointer;" width="100%" @click="loadBig(index)">
-                                    
+
                                     </div></el-col>
                                     <el-col   el-col :span="8"><div class="grid-content bg-purple" style="width:100px">
                                         <ImgCutter ref="imgCutterModal3"
@@ -133,7 +133,7 @@
                                         <img  v-if="opaBtn3" :src="form.opaImg3" alt="" slot="open" width="100%" style="cursor: pointer;" @click="loadMany(index)">
                                     </div></el-col>
                         </el-row>
-                        
+
                 </el-form-item>
 
                 <el-form-item label="分享封面"  class="cover">
@@ -187,7 +187,7 @@
                 <el-form-item label="作者">
                     <el-input v-model="form.signature" size="mini"></el-input>
                 </el-form-item>
-               
+
                 <el-form-item label="关键字">
                      <div class="tabsContainer">
                          <el-tag
@@ -217,7 +217,7 @@
                         color: #0170FF;">抽取关键字</el-button>
                     </div>
                 </el-form-item>
-                
+
                 <el-form-item label="稿件级别">
                     <el-select v-model="form.levelId" placeholder="请选择" size="mini">
                         <el-option
@@ -399,7 +399,7 @@ export default {
     computed:{
         ...mapGetters(['resTitle']),
     },
-    methods :{ 
+    methods :{
     // 自动摘要
     automaticSummary(){
         let param = {
@@ -416,7 +416,7 @@ export default {
                 });
             }
         })
-    },   
+    },
     // 抽取关键词
     hasWord(){
         let data = {
@@ -436,7 +436,7 @@ export default {
     },
     // 自动保存
     autoSave(){
-        let timer = null; 
+        let timer = null;
         if(this.form.autoSaveId){
             timer = setInterval(() => {
                 document.querySelector(".autoClick").click()
@@ -445,7 +445,7 @@ export default {
             clearInterval(timer)
         }
     },
-    xztpCutDownSmall(fileName) { 
+    xztpCutDownSmall(fileName) {
         if(this.$store.state.title && this.titleimg.length>0){
           this.showTitleimg[0].url = fileName.dataURL
           this.form.opaImg1 = fileName.dataURL
@@ -455,7 +455,7 @@ export default {
 
 
     },
-    xztpCutDownBig(fileName) { 
+    xztpCutDownBig(fileName) {
         if(this.$store.state.title && this.titleimg.length>0){
            this.showTitleimg[0].url = fileName.dataURL
            this.form.opaImg2 = fileName.dataURL
@@ -463,7 +463,7 @@ export default {
            this.form.opaImg2 = fileName.dataURL
         }
     },
-    xztpCutDownMany(fileName) { 
+    xztpCutDownMany(fileName) {
         if(this.$store.state.title && this.titleimg.length>0){
           this.showTitleimg[this.showTitleimgIdx].url = fileName.dataURL
           this.form.opaImg3 = fileName.dataURL
@@ -472,7 +472,7 @@ export default {
         }
     },
     xztpCutDownCover (fileName){
-        upload({data:fileName.dataURL,fileName:fileName.fileName,ContentType:true,}).then(res=>{ 
+        upload({data:fileName.dataURL,fileName:fileName.fileName,ContentType:true,}).then(res=>{
             if(res){
                this.form.addImg = res.shareCover
             }
@@ -493,7 +493,7 @@ export default {
         this.opaBtn1 = true;
         this.opaBtn2 = false;
         this.opaBtn3 = false;
-       
+
         this.form.coverType = 1;
         this.isrefreshshow = 'display:flex'
     },
@@ -611,7 +611,7 @@ export default {
             this.showTitleimgNum = 0;
         }else{
             this.showTitleimgNum = 1;
-        }   
+        }
         this.titleimg=[];
         this.showTitleimg=[];
          let param={
@@ -637,13 +637,13 @@ export default {
             }
          })
 
-         
 
-       
+
+
     },
 
     titleimgover(item,index){
-       this.showTitleimg[index].show=true   
+       this.showTitleimg[index].show=true
     },
 
     titleimgout(item,index){
@@ -682,7 +682,7 @@ export default {
           this.isdisshow = 'cursor: pointer'
         }
         let idx = this.showTitleimgIdx;
-        let next = this.titleimgNextIdx; 
+        let next = this.titleimgNextIdx;
         let total = this.showTitleimgNum;
         if(total+next > this.titleimg.length){
            this.$message('没有更多图片了');
@@ -707,7 +707,7 @@ export default {
     },
     refreshbtnprev(){ //上一张
         let idx = this.showTitleimgIdx;
-        let next = this.titleimgNextIdx; 
+        let next = this.titleimgNextIdx;
         let total = this.showTitleimgNum;
 
 
@@ -754,16 +754,16 @@ export default {
         }else{
            this.form.opaImg1 = this.showTitleimg[0].url;
         }
-        
+
     }
-    
+
     },
     mounted(){
         let _that = this
           // 初始化稿签数据
         newSignature().then(res=>{
             if(/系统登录认证信息输入区域/.test(res) && /智能采编平台/.test(res)) {
-                this.$router.push("/login") 
+                this.$router.push("/login")
             }
             if(res.coverList) {
                 _that.coverflag = true
@@ -818,7 +818,7 @@ export default {
             _that.form.originations = originations;
             _that.form.summary = res.story.summary;
             _that.form.signature = res.story.signature;
-           
+
             _that.form.topics = res.topics;
             _that.form.linkHeadline = res.linkHeadline;
             _that.form.properties.leadinLineUrl = res.properties.leadinLineUrl;
@@ -831,11 +831,11 @@ export default {
             _that.form.topicsId= res.story.topic;
             _that.form.canComment=res.story.canComment;
             _that.form.properties.ad=res.properties.ad==1?true:false;
-            _that.form.properties.watermark=res.properties.watermark==1?true:false;  
+            _that.form.properties.watermark=res.properties.watermark==1?true:false;
             _that.form.folder = res.story.folder
             _that.form.libid = res.story.libid
         })
-       
+
      },
      components:{
          ImgCutter
@@ -850,14 +850,21 @@ export default {
     color: #606266;
 }
 .el-radio__input.is-checked .el-radio__inner {
-    border-color: #a16c6e;
-    background: #d62425;
+    border-color: rgb(1, 112, 255);
+    background: rgb(1, 112, 255);
 }
 .el-radio__input.is-checked+.el-radio__label {
-    color: #d62425;
+    color: rgb(1, 112, 255);
+}
+.el-checkbox__input.is-checked .el-checkbox__inner {
+  border-color: rgb(1, 112, 255) !important;
+  background: rgb(1, 112, 255) !important;
+}
+.el-checkbox__input.is-checked+.el-checkbox__label {
+    color: rgb(1, 112, 255);
 }
 .el-tag {
-    margin-right: 10px;  
+    margin-right: 10px;
 }
 .button-new-tag {
     margin-right: 10px;
