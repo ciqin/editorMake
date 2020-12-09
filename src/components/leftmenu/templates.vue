@@ -70,20 +70,23 @@
 
 　　　　　<div class='infinite-list-wrapper' v-loading="loading" style='display:flex'>
               <div v-if="Libraryarr.length>0" style='height: 805px;overflow-y: auto;overflow-x:hidden'  v-infinite-scroll="loadMedialist" infinite-scroll-disabled="disabledLibraryarr">
-                <div class="libisryarr" v-for="(item,key) in Libraryarr" :key = key>
-                    <div class='libisryarr_list' @click="LibraryClick(item)">
-                        <div class='collection_icon' @click.stop="collectionIconclick(key,Libraryarr)" :class='item.isFavorite == true ? "collectionAcitve" : "nocollectionAcitve" '>
-                            <i class="el-icon-star-on"></i>
-                        </div>
-                        <div class="libisryarr_img" v-if="item.fileFormat=='mp4'">
-                            <video :src="item.url" controls="controls" :poster="item.coverImageUrl">
-                            </video>
-                        </div>
+                <div class="libisryarr" v-for="(item,key) in Libraryarr" :key = 'key'>
+                    <div class='libisryarr_list_div'>
+                      <div class='libisryarr_list' @click="LibraryClick(item)">
+                          <div class='collection_icon' @click.stop="collectionIconclick(key,Libraryarr)" :class='item.isFavorite == true ? "collectionAcitve" : "nocollectionAcitve" '>
+                              <i class="el-icon-star-on"></i>
+                          </div>
+                          <div class="libisryarr_img" v-if="item.fileFormat=='mp4'">
+                              <video :src="item.url" controls="controls" :poster="item.coverImageUrl">
+                              </video>
+                          </div>
 
-                        <div class="libisryarr_img" v-else-if="item.fileFormat=='jpg'||item.fileFormat=='png'||item.fileFormat=='jpeg' || item.fileFormat=='mov' || item.fileFormat=='gif'">
-                            <img :src="item.url" alt="">
-                        </div>
+                          <div class="libisryarr_img" v-else-if="item.fileFormat=='jpg'||item.fileFormat=='png'||item.fileFormat=='jpeg' || item.fileFormat=='mov' || item.fileFormat=='gif'">
+                              <img :src="item.url" alt="">
+                          </div>
+                      </div>
                     </div>
+
                     <div class="libisryarr_botal">
                       <p>{{item.mediaName}}</p>
                       <p>{{item.createTime}}</p>
@@ -973,11 +976,19 @@
     width: 173px;
     height: 180px;
     float: left;
-    margin: 10px 0px 20px 10px;
+    margin: 20px 0px 20px 8px;
 }
-.libisryarr_list{
+.libisryarr_list_div {
   width: 173px;
   height: 141px;
+  border-radius: 3px;
+  position: relative;
+  background-color: #F6F8FA;
+  padding:8px;
+}
+.libisryarr_list{
+  width: 100%;
+  height: 100%;
   background: #FFFFFF;
   box-shadow: 0 0 0 1px rgba(63,63,68,0.05), 0 1px 3px 0 rgba(63,63,68,0.15);
   border-radius: 3px;
@@ -987,16 +998,21 @@
     width: 157px;
     height: 125px;
 }
-.libisryarr_img img,.libisryarr_img video{
+.libisryarr_img img{
     width: 100%;
     height: 100%;
-    margin: 8px 10px 0.7% 9px;
+    border-radius: 3px;
+}
+.libisryarr_img video{
+    height: 100%;
+    width: 100%;
+    border-radius: 3px;
 }
 .libisryarr_botal{
-  font-family: MicrosoftYaHei;
-  font-size: 14px;
-  color: #212B36;
-  letter-spacing: 0;
+  font-size: 12px;
+  font-family: SourceHanSansCN-Regular, SourceHanSansCN;
+  font-weight: 400;
+  color: #B7BCC5;
   line-height: 24px;
 }
 .libisryarr_botal p:first-child{
@@ -1004,6 +1020,10 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  font-size: 14px;
+  font-family: SourceHanSansCN-Regular, SourceHanSansCN;
+  font-weight: 400;
+  color: #212B36;
 }
 .libisryarr_list .collection_icon{
   display: block !important;
