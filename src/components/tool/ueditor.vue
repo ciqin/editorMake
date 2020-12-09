@@ -631,6 +631,7 @@ export default {
                             _that.ueconter = uearr[i]
                         }
                         _that.$emit('listenEvent',_that.ueconter)
+                        store.gettaxt = str
                     })
 
 
@@ -646,6 +647,7 @@ export default {
                            _that.gettaxt = '';
                            _that.Tooltipstyle = 'display:none;z-index:8888'
                         }
+                        
                     })
 
                 });
@@ -789,7 +791,6 @@ export default {
 
                 }).catch(error=>{
                     savedisabled = flase
-                    console.log('123')
                     this.$message.error('保存失败！');
                 })
             }else {
@@ -811,7 +812,6 @@ export default {
                     }, 500);
 
                 }).catch(error=>{
-                    console.log('456')
                     this.$message.error('保存失败！');
                     savedisabled = false
                 })

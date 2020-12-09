@@ -20,7 +20,7 @@ let libId = manuscriptId.split("?")[1].split("&")[1].split("=")[1];
 // 获取tenantId
 Axios.get(caiApi+"/sprint/userinfo/rest/getInfo").then(res=>{
     // 设置tenantId
-    if(res.data.tenantId){
+    if(res.data){
         // 设置全局租户id
         console.log('获取tenantId')
         console.log(res.data.group.tenantId)

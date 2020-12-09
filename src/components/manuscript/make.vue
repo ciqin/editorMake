@@ -274,9 +274,7 @@ export default {
         uedior(param){  //获取ueditor根据符号检索的值
           this.uedstr = param;
           this.Navcurrent = 'letfTab2'
-
           store.uedstr = param
-          console.log(param)
         },
 
         uedior2(){
