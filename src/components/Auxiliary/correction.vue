@@ -19,11 +19,11 @@
               <el-table-column
                 prop="date"
                 label="错误字词"
-                width="120" align="center">
+                min-width="50" align="left">
               </el-table-column>
               <el-table-column
                 prop="name"
-                label="错误原因" align="center">
+                min-width="50" label="错误原因" align="left">
               </el-table-column>
             </el-table>
          </div>
@@ -115,5 +115,13 @@ export default {
   font-size: 12px;
   color: #999999;
   line-height: 16px;
+}
+/deep/.el-table th {
+    height:44px;
+    padding: 8px 16px;
+}
+/deep/.el-table td {
+    height:44px;
+    padding: 8px 16px;
 }
 </style>

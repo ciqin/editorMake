@@ -26,11 +26,12 @@
               <el-table-column
                 prop="name"
                 label="敏感词"
-                width="120" align="center">
+                min-width="50" align="left">
               </el-table-column>
               <el-table-column
                 prop="date"
-                label="敏感词个数" align="center">
+                min-width="50"
+                label="敏感词个数" align="left">
               </el-table-column>
             </el-table>
          </div>
@@ -123,5 +124,13 @@ export default {
   font-family: MicrosoftYaHei;
   color: #999999;
   line-height: 16px;
+}
+/deep/.el-table th {
+    height:44px;
+    padding: 8px 16px;
+}
+/deep/.el-table td {
+    height:44px;
+    padding: 8px 16px;
 }
 </style>
