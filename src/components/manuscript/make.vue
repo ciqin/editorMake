@@ -365,7 +365,7 @@ export default {
 }
 /* 导航展示内容 */
 .NavContainer {
-    width: 390px;
+    width: calc(100% - 65px);
     background: #fff;
     height: 100%;
     margin-left: 65px;

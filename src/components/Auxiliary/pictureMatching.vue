@@ -194,6 +194,6 @@ export default {
     border-radius: 4px;
     height: 185px;
     background-color:#F6F8FA;
-    padding:12px 24px;
+    padding:12px;
 }
 </style>

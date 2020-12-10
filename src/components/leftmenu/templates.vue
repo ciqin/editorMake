@@ -69,7 +69,7 @@
           </div>
 
 
-　　　　　<div class='infinite-list-wrapper' v-loading="loading" style='display:flex'>
+　　　　　<div class='infinite-list-wrapper' v-loading="loading" style='display:flex;margin-top:20px;'>
               <div v-if="Libraryarr.length>0" style='height: 805px;overflow-y: auto;overflow-x:hidden'  v-infinite-scroll="loadMedialist" infinite-scroll-disabled="disabledLibraryarr">
                 <div class="libisryarr" v-for="(item,key) in Libraryarr" :key = 'key'>
                     <div class='libisryarr_list_div'>
@@ -817,7 +817,7 @@
     stroke: #d72323;
    }
    .nav_top_temlaptes .el-tabs--top .el-tabs__item.is-top{
-      width: 130px;
+      width: 33.3%;
       text-align: center;
       padding:0
    }
@@ -829,6 +829,7 @@
       height: 44px;
       line-height: 44px;
       font-size: 14px;
+      width: 100%;
    }
    .third_search .el-input__inner{
      border: 1px solid #A0A2B2;
@@ -975,9 +976,11 @@
 }
 .libisryarr{
     width: 173px;
-    height: 180px;
     float: left;
-    margin: 20px 0px 20px 8px;
+
+}
+.libisryarr:nth-child(odd) {
+  margin: 0 14px 15px 0;
 }
 .libisryarr_list_div {
   width: 173px;
