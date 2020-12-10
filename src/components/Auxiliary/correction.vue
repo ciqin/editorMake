@@ -7,9 +7,9 @@
       </div>
 
       <div class="line"></div>
-      <div style="text-align:center;padding:0 20px;">
-         <el-button type="primary" size="mini" @click="sensitiveWords" style="background: #326EFF;border:none;">开始分析</el-button>
-         <el-button type="primary" size="mini" @click="clearWords" style="background: #326EFF;border:none;">一键清除样式</el-button>
+      <div style="text-align:center;padding:0 12px;">
+         <el-button type="primary" @click="sensitiveWords" style="background: #326EFF;border:none;">开始分析</el-button>
+         <el-button type="primary" @click="clearWords" style="background: #326EFF;border:none;">一键清除样式</el-button>
          <div>
            <el-table
               :data="tableData"
@@ -92,7 +92,7 @@ export default {
 </script>
 <style scoped>
 .p30 {
-  padding: 0 30px;
+  padding: 0 12px;
 }
 .mt11{
   margin-top:11px;
@@ -109,7 +109,6 @@ export default {
   font-family: MicrosoftYaHei;
   color: #666666;
   line-height: 21px;
-  margin-bottom: 12px;
 }
 .tip {
   height: 16px;

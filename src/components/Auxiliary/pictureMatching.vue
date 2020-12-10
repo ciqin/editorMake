@@ -13,7 +13,7 @@
                 <div class="title">原文内容</div>
                 <div class='cardCon_input' contenteditable='true'>{{context}}</div>
 
-              <el-button @click="picture_btn" type="primary" size="mini" style="background: #326EFF;border:none;margin-top:16px;">更新配图</el-button>
+              <el-button @click="picture_btn" type="primary" style="background: #326EFF;border:none;margin-top:16px;">更新配图</el-button>
           </div>
           <div class="imgContainer" v-loading="loading">
             <ul v-if='tabs.length>0' style='margin-top:20px'>
@@ -136,7 +136,7 @@ export default {
   padding: 10px 5px;
 }
 .box-card .cardCon_input{
-    height:85px;
+    height:75px;
     text-align: left;
     border:0;
     font-size: 13px;

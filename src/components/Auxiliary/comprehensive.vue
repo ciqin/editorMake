@@ -4,12 +4,13 @@
             <h2>综合分析</h2>
             <p>根据文稿内容，对文稿进行综合分析，包括文字的易读性，情感属性等</p>
         </div>
-        <div class="button_mainner">
-             <button @click="InfosStart">开始分析</button>
+        <div class="button_mainner" @click="InfosStart">
+             <!-- <button @click="InfosStart">开始分析</button> -->
+             <AnalysisBtn :title='analysisTitle' :animate='beginAnalysis' ></AnalysisBtn>
         </div>
         <div class='information_box essential_information'>
             <p>基本信息：</p>
-            <div class="essential_sec">
+            <div class="essential_sec" style="margin-top: 20px;">
                 <p>字数：<span>{{charNum}}</span>个</p>
                 <p>词数：<span>{{wordNum}}</span>个</p>
                 <p>句数：<span>{{sentenceNum}}</span>个</p>
@@ -27,9 +28,12 @@
 
         <div  class='information_box information_emotion'>
            <p>情感得分：</p>
-           <div style='display:flex'>
+           <div style='display:flex;margin-top:28px;'>
               <div class='emotion_left'>
                 <div id='emotion_leftchaerts'></div>
+                <div class="emotion_leftchaerts_leftVal" v-show='isShow_emotion_leftchaerts'>-1</div>
+                <div class="emotion_leftchaerts_rightVal" v-show='isShow_emotion_leftchaerts'>+1</div>
+
               </div>
               <div class='emotion_right'>
                     <div id='emotion_rightchaerts'></div>
@@ -52,7 +56,11 @@
    import { basicInfos } from '@/http/api'
    import { emotionScore } from '@/http/api'
    import { store } from '@/store'
+   import AnalysisBtn from '@/components/analysisBtn'
    export default {
+     components: {
+       AnalysisBtn
+     },
      data() {
         return {
                readervalue:8, //阅读统计图的
@@ -61,8 +69,12 @@
                sentenceNum:'',
                wordNum:'',
                remotionvalue:'-1',//政负情感
+               isShow_emotion_leftchaerts:false,
+               beginAnalysis:false,
+               analysisTitle:'开始分析'
             }
         },
+
      mounted(){
          //阅读
          let myChartreader = this.$echarts.init(document.getElementById('readerecharts'))
@@ -212,7 +224,8 @@
 
      methods:{
         InfosStart(){
-
+          this.beginAnalysis = true;
+          this.analysisTitle = '正在分析';
           if(store.ueditor.getContentTxt()==''&&this.$store.state.title==''){
               this.$message('请输入标题内容及文章内容');
               return false
@@ -220,6 +233,8 @@
 
            //基本信息
            basicInfos({content:store.ueditor.getContentTxt()}).then((res)=>{
+              this.beginAnalysis = false;
+              this.analysisTitle = '开始分析';
                if(res.message='获取成功'){
                    this.charNum = res.data[0].charNum
                    this.sentenceNum = res.data[0].sentenceNum
@@ -242,6 +257,7 @@
         //正负情感
         loadleftChartremotion(){
          console.log(Number(this.remotionvalue))
+         this.isShow_emotion_leftchaerts = true;
          let _that = this
             //政负情感
          let leftChartremotion = this.$echarts.init(document.getElementById('emotion_leftchaerts'))
@@ -259,7 +275,7 @@
 
             leftChartremotion.setOption({
                   series: [{
-                            center: [50, 80], //仪表的位置
+                            center: ["50%", "50%"], //仪表的位置
                             type: "gauge", //统计图类型为仪表
                             radius: '60%', //统计图的半径大小
                             min: 0, //最小刻度
@@ -357,12 +373,11 @@
 </script>
 <style scoped>
    .title_mainner{
-     height:84px;
      border-bottom:1px solid #ccc;
-     padding-left: 20px;
+     padding-left: 12px;
+     padding-bottom: 20px;
    }
    .title_mainner h2{
-       padding-top: 10px;
        font-family: MicrosoftYaHei;
        font-size: 16px;
        color: #666666;
@@ -374,7 +389,6 @@
         line-height: 30px;
    }
    .button_mainner{
-       height: 115px;
        text-align: center;
    }
 
@@ -404,27 +418,26 @@
    }
 
    .information_box p{
-       padding-top: 15px;
        font-family: MicrosoftYaHei;
        font-size: 14px;
        color: #333333;
        letter-spacing: 0;
-       line-height: 22px;
+
    }
 
    .essential_information{
-       margin:0 10px 10px 10px;
+       margin:0 12px 12px 12px;
        height: 98px;
+       padding: 18px 20px;
    }
 
 
    .essential_sec{
-       display: flex;
+      display: flex;
    }
 
    .essential_sec p{
        flex: 1;
-       line-height: 35px;
    }
 
    .essential_sec p span{
@@ -442,6 +455,8 @@
 
     .information_emotion{
         height: 185px;
+        margin: 0 12px 12px 12px;
+        padding: 18px 20px;
     }
 
     .information_new{
@@ -461,7 +476,24 @@
     .reader_right{
         padding-top: 38px;
     }
-
+    .emotion_left {
+      width:180px;
+      height: 145px;
+      overflow: hidden;
+      position: relative;
+    }
+    .emotion_leftchaerts_leftVal {
+      position:absolute;
+      left: 27px;
+      top: 73px;
+      font-size: 13px;
+    }
+    .emotion_leftchaerts_rightVal {
+      position:absolute;
+      left: 140px;
+      top: 73px;
+      font-size: 13px;
+    }
     #emotion_leftchaerts{
          width:180px;
         height: 145px;
