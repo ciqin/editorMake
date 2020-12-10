@@ -164,7 +164,7 @@
 
 
 
-    　　　　　<div v-loading="loading" >
+    　　　　　<div v-loading="loading" style="min-height:100px;">
                   <div v-if="Libraryarr.length>0">
                     <div class="libisryarr" v-for="(item,key) in Libraryarr" :key = key>
                         <div class='libisryarr_list' @click="LibraryClick(item)">
@@ -688,7 +688,7 @@ export default {
      color:#D72323
    }
    .collect_list .el-tabs--top .el-tabs__item.is-top{
-      width: 97px;
+      width: 25%;
       text-align: center;
       padding: 0;
    }
@@ -700,6 +700,7 @@ export default {
       height: 44px;
       line-height: 44px;
       font-size: 14px;
+      width: 100%;
    }
 </style>
 <style scoped>
@@ -1032,5 +1033,8 @@ export default {
    text-align: center;
    font-size: 14px;
    cursor: pointer;
+}
+.clear {
+  clear:both;
 }
 </style>
