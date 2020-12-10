@@ -5,7 +5,9 @@
       <div class="logo_div">
         <img src="./assets/img/logo.png"/>
       </div>
-
+      <div class="logo_title">
+        智能创作
+      </div>
     </div>
     <router-view/>
   </div>
@@ -31,6 +33,16 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.logo_title {
+  height:66px;
+  line-height: 66px;
+  font-size: 24px;
+  font-family: MicrosoftYaHei-Bold, MicrosoftYaHei;
+  font-weight: bold;
+  color: #FFFFFF;
+  margin-left: 32px;
+  float: left;
 }
 #app {
   font-family: "PingFangSC-Regular, PingFang SC";
