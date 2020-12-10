@@ -1,6 +1,12 @@
 <template>
   <div id="app">
     <!-- <img src="./assets/logo.png"> -->
+    <div class="head">
+      <div class="logo_div">
+        <img src="./assets/img/logo.png"/>
+      </div>
+
+    </div>
     <router-view/>
   </div>
 </template>
@@ -12,6 +18,20 @@ export default {
 </script>
 
 <style>
+.head {
+  width: 100%;
+  height: 66px;
+  background: #E21837;
+}
+.logo_div {
+  height:66px;
+  float: left;
+  width: 64px;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 #app {
   font-family: "PingFangSC-Regular, PingFang SC";
   -webkit-font-smoothing: antialiased;
