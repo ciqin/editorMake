@@ -98,7 +98,7 @@ export default {
 </script>
 <style scoped>
 .p30 {
-  padding: 0 30px;
+  padding: 0 12px;
 }
 .mt11{
   margin-top:11px;
@@ -118,12 +118,11 @@ export default {
   line-height: 21px;
 }
 .tip {
-  height: 16px;
   display: block;
   font-size: 12px;
   font-family: MicrosoftYaHei;
   color: #999999;
-  line-height: 16px;
+  line-height: 30px;
 }
 /deep/.el-table th {
     height:44px;

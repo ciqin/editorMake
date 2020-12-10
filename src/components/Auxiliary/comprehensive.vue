@@ -228,6 +228,8 @@
           this.analysisTitle = '正在分析';
           if(store.ueditor.getContentTxt()==''&&this.$store.state.title==''){
               this.$message('请输入标题内容及文章内容');
+              this.beginAnalysis = false;
+              this.analysisTitle = '开始分析';
               return false
           }
 

@@ -111,10 +111,9 @@ export default {
   line-height: 21px;
 }
 .tip {
-  height: 16px;
   font-size: 12px;
   color: #999999;
-  line-height: 16px;
+  line-height: 30px;
 }
 /deep/.el-table th {
     height:44px;

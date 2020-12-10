@@ -16,15 +16,15 @@
         <div>
           <div class="first_main_imgs infinite-list-wrapper" v-loading="loading" >
               <ul v-if="templateimgarr.length>0" style='height: 785px;overflow-y: auto;' v-infinite-scroll="loadTemplates" infinite-scroll-disabled="disabledtemplate">
-                <li v-for="(item,key) in templateimgarr" :key = key :title="item.label" @click="templeteSource(key,item)" :class="{show_list_start:item.show===true}" @mouseover="collectionIconmouseover(key,item,templateimgarr)"  @mouseout="collectionIconmouseout(key,item,templateimgarr)">
-                    <div class='beijing' v-html = item.templeteSource></div>
+                <li v-for="(item,key) in templateimgarr" :key = 'key' :title="item.label" @click="templeteSource(key,item)" :class="{show_list_start:item.show===true}" @mouseover="collectionIconmouseover(key,item,templateimgarr)"  @mouseout="collectionIconmouseout(key,item,templateimgarr)">
+                    <div class='beijing' v-html = 'item.templeteSource'></div>
                     <div class='collection_icon' :connectid="item.userId"   @click.stop="collectionIconclick(key,templateimgarr)" :class='item.isFavorite==1 ? "collectionAcitve" : "nocollectionAcitve" '>
                            <i class="el-icon-star-on"></i>
                     </div>
                 </li>
 
-                 <p v-if="loadimgtemplate" style='text-align:center'>加载中...</p>
-                 <p v-if="templatenoMore" style='text-align:center'>没有更多了</p>
+                 <div v-if="loadimgtemplate" style='text-align:center;height:50px;line-height:50px;float:left;width: 100%;'>加载中...</div>
+                 <div v-if="templatenoMore" style='text-align:center;height:50px;line-height:50px;float:left;width: 100%;'>没有更多了</div>
               </ul>
 
               <div v-else>
@@ -94,8 +94,9 @@
                     </div>
                 </div>
 
-                 <p v-if="Libraryarrtemplate" style='text-align:center'>加载中...</p>
-                 <p v-if="LibraryarrnoMore" style='text-align:center'>没有更多了</p>
+                 
+                 <div v-if="Libraryarrtemplate" style='text-align:center;height:50px;line-height:50px;float:left;width: 100%;'>加载中...</div>
+                 <div v-if="LibraryarrnoMore" style='text-align:center;height:50px;line-height:50px;float:left;width: 100%;'>没有更多了</div>
               </div>
               <div v-else style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;width: 100%;'>
                 <p><i class='el-icon-warning-outline'></i>暂无数据</p>
@@ -153,8 +154,8 @@
                  </div>
               </div>
 
-              <p v-if="loadimg" style='text-align:center'>加载中...</p>
-              <p v-if="collectionnoMore" style='text-align:center'>没有更多了</p>
+              <div v-if="loadimg" style='text-align:center;height:50px;line-height:50px;float:left;width: 100%;'>加载中...</div>
+              <div v-if="collectionnoMore" style='text-align:center;height:50px;line-height:50px;float:left;width: 100%;'>没有更多了</div>
             </div>
             <div v-else-if='Manuscript.length ==0 && loadingManuscript==false'>
                 <p style='text-align: center;color: #606266;margin-top: 50px;font-size: 18px;'><i class='el-icon-warning-outline'></i>暂无数据</p>

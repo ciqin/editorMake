@@ -2,7 +2,7 @@
   <div>
       <el-form ref="form"  label-width="80px">
       <div class="p30">
-          <h6 class="wordTitle">关联配图</h6>
+          <h2 class="wordTitle">关联配图</h2>
           <span class="tip">根据文字内容，可自动配图</span>
       </div>
 
@@ -122,13 +122,12 @@ export default {
   font-family: MicrosoftYaHei;
   color: #666666;
   line-height: 21px;
-  margin-bottom: 12px;
 }
 .tip {
   height: 16px;
   font-size: 12px;
   color: #999999;
-  line-height: 16px;
+  line-height: 30px;
 }
 .cardCon {
   background: #F6F7F9;

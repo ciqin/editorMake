@@ -15,15 +15,15 @@
            <div>
               <div class="first_main_imgs infinite-list-wrapper" v-loading="loading" >
                   <ul v-if="templateimgarr.length>0" style='height: 785px;overflow: auto;'>
-                    <li v-for="(item,key) in templateimgarr" :key = key :title="item.label" @click="templeteSource(key,item)" :class="{show_list_start:item.show===true}">
-                      <div class='beijing' v-html = item.templeteSource ></div>
+                    <li v-for="(item,key) in templateimgarr" :key = 'key' :title="item.label" @click="templeteSource(key,item)" :class="{show_list_start:item.show===true}">
+                      <div class='beijing' v-html = 'item.templeteSource' ></div>
                       <div class='collection_icon' :connectid="item.userId"   @click.stop="collectionIconclick(key,templateimgarr)" :class='item.userId ? "collectionAcitve" : "nocollectionAcitve" '>
                              <i class="el-icon-star-on"></i>
                         </div>
                     </li>
 
-                    <p v-if="loadimgtemplate" style='text-align:center;height:50px;line-height:50px;'>加载中...</p>
-                    <p v-if="templatenoMore" style='text-align:center;height:50px;line-height:50px;'>没有更多了</p>
+                    <div v-if="loadimgtemplate" style='text-align:center;height:50px;line-height:50px;float:left;width: 100%;'>加载中...</div>
+                    <div v-if="templatenoMore" style='text-align:center;height:50px;line-height:50px;float:left;width: 100%;'>没有更多了</div>
                   </ul>
 
                   <div v-else>
